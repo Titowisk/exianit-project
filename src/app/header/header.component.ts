@@ -24,8 +24,8 @@ export class HeaderComponent {
     { 
       label: 'Statement', 
       icon: 'pi pi-receipt',
-      command: () => this.navigateTo('/dashboard'),
-      routerLink: '/dashboard'
+      command: () => this.navigateTo('/statement'),
+      routerLink: '/statement'
     },
     { 
       label: 'Summaries', 
