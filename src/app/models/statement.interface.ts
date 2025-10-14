@@ -1,5 +1,5 @@
-import { ExpensesCategory } from "./expenses-category.enum";
-import { IncomesCategory } from "./incomes-category.enum";
+import { ExpensesCategory } from "./enums/expenses-category.enum";
+import { IncomesCategory } from "./enums/incomes-category.enum";
 
 export interface IncomeStatement {
     id: number;

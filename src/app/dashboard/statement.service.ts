@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Statement } from "../models/statement.interface";
-import { IncomesCategory } from "../models/incomes-category.enum";
-import { ExpensesCategory } from "../models/expenses-category.enum";
+import { IncomesCategory } from "../models/enums/incomes-category.enum";
+import { ExpensesCategory } from "../models/enums/expenses-category.enum";
 
 @Injectable({
     providedIn: 'root'

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { TableModule } from "primeng/table";
-import { Month } from '../../models/month.enum';
+import { Month } from '../../models/enums/month.enum';
 import { MonthlyExpensesByCategory } from '../../models/monthly-expenses-by-category.interface';
 import { CommonModule } from '@angular/common';
 

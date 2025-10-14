@@ -1,4 +1,4 @@
-import { Month } from './month.enum';
+import { Month } from './enums/month.enum';
 
 export interface MonthlyExpensesByCategory {
   month: Month;
