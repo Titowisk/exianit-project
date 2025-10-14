@@ -1,1 +1,45 @@
-<p>statement works!</p>
+<h1>Statements</h1>
+
+<p-table #dt2 dataKey="id" [value]="statements" [paginator]="true" [rows]="10">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Type</th>
+            <th>Origin</th>
+            <th pSortableColumn="amount">Amount</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <th>
+                <p-column-filter type="text" field="type" placeholder="Search by type" ariaLabel="Filter Type" filterOn="input"></p-column-filter>
+            </th>
+            <th>
+                <p-column-filter type="text" field="origin" placeholder="Search by origin" ariaLabel="Filter Origin" filterOn="input"></p-column-filter>
+            </th>
+            <th>
+                -
+            </th>
+            <th>
+                <p-column-filter type="text" field="date" placeholder="Search by date" ariaLabel="Filter Date" filterOn="input"></p-column-filter>
+            </th>
+            <th>
+                <p-column-filter type="text" field="category" placeholder="Search by category" ariaLabel="Filter Category" filterOn="input"></p-column-filter>
+            </th>
+            <th>
+                <p-column-filter type="text" field="description" placeholder="Search by description" ariaLabel="Filter Description" filterOn="input"></p-column-filter>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-statement>
+        <tr>
+            <td>{{ statement.type }}</td>
+            <td>{{ statement.origin }}</td>
+            <td>{{ statement.amount | currency:'BRL' }}</td>
+            <td>{{ statement.date | date:'dd/MM/yyyy' }}</td>
+            <td>{{ statement.category }}</td>
+            <td>{{ statement.description || 'N/A' }}</td>
+        </tr>
+    </ng-template>
+
+</p-table>
