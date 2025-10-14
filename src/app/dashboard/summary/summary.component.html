@@ -1,0 +1,40 @@
+<h1>Expenses Summary</h1>
+
+<p-table [value]="monthlyExpenses">
+    <ng-template #header>
+        <tr>
+            <th>-</th>
+            <th>House</th>
+            <th>Food</th>
+            <th>Groceries</th>
+            <th>Health</th>
+            <th>Leisure</th>
+            <th>Shop</th>
+            <th>Donations</th>
+            <th>Transport</th>
+            <th>Education</th>
+            <th>TaxAndTributes</th>
+            <th>Investments</th>
+        </tr>
+    </ng-template>
+    <ng-template #body let-expense>
+        <tr>
+            <td>{{ expense.month }}</td>
+            <td>R$ {{ expense.houseTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.foodTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.groceriesTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.healthTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.leisureTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.shopTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.donationsTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.transportTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.educationTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.taxAndTributesTotal | number: '1.2-2' }}</td>
+            <td>R$ {{ expense.investmentsTotal | number: '1.2-2' }}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<h1>Incomes Summary</h1>
+
+<p-table></p-table>

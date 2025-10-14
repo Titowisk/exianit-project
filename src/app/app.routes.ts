@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { Component } from '@angular/core';
 import { StatementComponent } from './dashboard/statement/statement.component';
+import { SummaryComponent } from './dashboard/summary/summary.component';
 
 // Simple placeholder components for demonstration
 @Component({
@@ -58,12 +59,11 @@ export class SettingsComponent { }
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'statement', component: StatementComponent },
+  { path: 'summary', component: SummaryComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'analytics', component: AnalyticsComponent },
   { path: 'users', component: UsersComponent },
   { path: 'settings', component: SettingsComponent },
-  { path: 'reports', component: DashboardComponent }, // Reusing for demo
-  { path: 'messages', component: DashboardComponent }, // Reusing for demo  
   { path: 'notifications', component: DashboardComponent }, // Reusing for demo
   { path: 'profile', component: SettingsComponent }, // Reusing for demo
 ];
