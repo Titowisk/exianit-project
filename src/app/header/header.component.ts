@@ -17,43 +17,43 @@ export class HeaderComponent {
   navItems = signal<MenuItem[]>([
     { 
       label: 'Dashboard', 
-      icon: '🏠',
+      icon: 'pi pi-home',
       command: () => this.navigateTo('/dashboard'),
       routerLink: '/dashboard'
     },
     { 
       label: 'Analytics', 
-      icon: '📊',
+      icon: 'pi pi-chart-bar',
       command: () => this.navigateTo('/analytics'),
       routerLink: '/analytics'
     },
     { 
       label: 'Users', 
-      icon: '👥',
+      icon: 'pi pi-users',
       command: () => this.navigateTo('/users'),
       routerLink: '/users'
     },
     { 
       label: 'Settings', 
-      icon: '⚙️',
+      icon: 'pi pi-cog',
       command: () => this.navigateTo('/settings'),
       routerLink: '/settings'
     },
     { 
       label: 'Reports', 
-      icon: '📝',
+      icon: 'pi pi-file-text',
       command: () => this.navigateTo('/reports'),
       routerLink: '/reports'
     },
     { 
       label: 'Messages', 
-      icon: '💬',
+      icon: 'pi pi-comments',
       command: () => this.navigateTo('/messages'),
       routerLink: '/messages'
     },
     { 
       label: 'Notifications', 
-      icon: '🔔',
+      icon: 'pi pi-bell',
       command: () => this.navigateTo('/notifications'),
       routerLink: '/notifications'
     }
@@ -63,7 +63,7 @@ export class HeaderComponent {
   profileItem = signal<MenuItem[]>([
     {
       label: 'Profile',
-      icon: 'pi-user',
+      icon: 'pi pi-user',
       command: () => this.navigateTo('/profile'),
       routerLink: '/profile'
     }
