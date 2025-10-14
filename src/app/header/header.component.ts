@@ -16,40 +16,34 @@ export class HeaderComponent {
   // Navigation items using PrimeNG MenuItem interface
   navItems = signal<MenuItem[]>([
     { 
-      label: 'Dashboard', 
-      icon: 'pi pi-home',
+      label: 'Imports', 
+      icon: 'pi pi-file-import',
       command: () => this.navigateTo('/dashboard'),
       routerLink: '/dashboard'
     },
     { 
-      label: 'Analytics', 
+      label: 'Statement', 
+      icon: 'pi pi-receipt',
+      command: () => this.navigateTo('/dashboard'),
+      routerLink: '/dashboard'
+    },
+    { 
+      label: 'Tables', 
+      icon: 'pi pi-table',
+      command: () => this.navigateTo('/dashboard'),
+      routerLink: '/dashboard'
+    },
+    { 
+      label: 'Charts', 
       icon: 'pi pi-chart-bar',
-      command: () => this.navigateTo('/analytics'),
-      routerLink: '/analytics'
+      command: () => this.navigateTo('/dashboard'),
+      routerLink: '/dashboard'
     },
     { 
-      label: 'Users', 
-      icon: 'pi pi-users',
-      command: () => this.navigateTo('/users'),
-      routerLink: '/users'
-    },
-    { 
-      label: 'Settings', 
-      icon: 'pi pi-cog',
-      command: () => this.navigateTo('/settings'),
-      routerLink: '/settings'
-    },
-    { 
-      label: 'Reports', 
-      icon: 'pi pi-file-text',
-      command: () => this.navigateTo('/reports'),
-      routerLink: '/reports'
-    },
-    { 
-      label: 'Messages', 
-      icon: 'pi pi-comments',
-      command: () => this.navigateTo('/messages'),
-      routerLink: '/messages'
+      label: 'Predictions', 
+      icon: 'pi pi-calendar-clock',
+      command: () => this.navigateTo('/dashboard'),
+      routerLink: '/dashboard'
     },
     { 
       label: 'Notifications', 
