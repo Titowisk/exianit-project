@@ -9,15 +9,37 @@
     <p-menu 
       [model]="navItems()" 
       [popup]="false"
-      styleClass="sidebar-menu"
-    ></p-menu>
+    >
+      <ng-template #item let-item>
+        <a pRipple
+          class="nav-link p-menu-item-link" 
+          [routerLink]="item.routerLink"
+          routerLinkActive="active"
+          (click)="item.command && item.command()"
+        >
+          <i [class]="item.icon"></i>
+          <span class="nav-label">{{ item.label }}</span>
+        </a>
+      </ng-template>
+    </p-menu>
   </div>
   
   <div class="sidebar-footer">
     <p-menu 
       [model]="profileItem()" 
       [popup]="false"
-      styleClass="profile-menu"
-    ></p-menu>
+    >
+      <ng-template #item let-item>
+        <a 
+          class="profile-link p-menu-item-link" 
+          [routerLink]="item.routerLink"
+          routerLinkActive="active"
+          (click)="item.command && item.command()"
+        >
+          <i [class]="item.icon"></i>
+          <span class="profile-label">{{ item.label }}</span>
+        </a>
+      </ng-template>
+    </p-menu>
   </div>
 </nav>

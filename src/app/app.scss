@@ -5,11 +5,11 @@
   box-sizing: border-box;
 }
 
+$sidebar-width: 220px;
 .main-content {
-  margin-left: 200px; /* Space for the fixed sidebar */
+  margin-left: $sidebar-width; /* Space for the fixed sidebar */
   min-height: 100vh;
   padding: 2rem;
-  // background: linear-gradient(135deg, #415468 0%, #173966 100%);
   background: linear-gradient(135deg, #e4e7f3 0%, #7c7b7c 100%);
 
 }
