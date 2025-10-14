@@ -34,10 +34,10 @@ export class HeaderComponent {
       routerLink: '/summary'
     },
     { 
-      label: 'Monthly', 
+      label: 'Analytics', 
       icon: 'pi pi-chart-bar',
-      command: () => this.navigateTo('/dashboard'),
-      routerLink: '/dashboard'
+      command: () => this.navigateTo('/analytics'),
+      routerLink: '/analytics'
     },
     { 
       label: 'Predictions', 
@@ -48,8 +48,8 @@ export class HeaderComponent {
     { 
       label: 'Notifications', 
       icon: 'pi pi-bell',
-      command: () => this.navigateTo('/notifications'),
-      routerLink: '/notifications'
+      command: () => this.navigateTo('/dashboard'),
+      routerLink: '/dashboard'
     }
   ]);
 
@@ -58,8 +58,8 @@ export class HeaderComponent {
     {
       label: 'Profile',
       icon: 'pi pi-user',
-      command: () => this.navigateTo('/profile'),
-      routerLink: '/profile'
+      command: () => this.navigateTo('/dashboard'),
+      routerLink: '/dashboard'
     }
   ]);
 
