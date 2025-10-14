@@ -6,7 +6,7 @@ import { HeaderComponent } from "./header/header.component";
   selector: 'app-root',
   imports: [RouterOutlet, HeaderComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.scss'
 })
 export class App {
   protected title = 'exianit-project';

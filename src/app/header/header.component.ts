@@ -13,7 +13,7 @@ interface NavItem {
   selector: 'app-header',
   imports: [CommonModule, RouterModule],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
   private router = inject(Router);
