@@ -2,7 +2,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 80px;
+  width: 200px;
   height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
@@ -11,11 +11,6 @@
   padding: 1rem 0;
   box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  transition: width 0.3s ease;
-}
-
-.sidebar:hover {
-  width: 240px;
 }
 
 .sidebar-header {
@@ -55,7 +50,7 @@
   display: flex;
   align-items: center;
   padding: 0.75rem 1rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(252, 252, 252);
   text-decoration: none;
   border-radius: 12px;
   margin: 0 0.5rem;
@@ -65,11 +60,11 @@
   white-space: nowrap;
 }
 
-.nav-link:hover {
+/* .nav-link:hover {
   background: rgba(255, 255, 255, 0.1);
   color: white;
   transform: translateX(4px);
-}
+} */
 
 .nav-link.active {
   background: rgba(255, 255, 255, 0.2);
@@ -101,12 +96,6 @@
   margin-left: 1rem;
   font-weight: 500;
   font-size: 14px;
-  opacity: 0;
-  transform: translateX(-20px);
-  transition: all 0.3s ease;
-}
-
-.sidebar:hover .nav-label {
   opacity: 1;
   transform: translateX(0);
 }
@@ -128,11 +117,7 @@
 /* Responsive design */
 @media (max-width: 768px) {
   .sidebar {
-    width: 64px;
-  }
-  
-  .sidebar:hover {
-    width: 200px;
+    width: 180px;
   }
   
   .logo {
