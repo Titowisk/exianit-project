@@ -28,13 +28,13 @@ export class HeaderComponent {
       routerLink: '/dashboard'
     },
     { 
-      label: 'Tables', 
+      label: 'Summaries', 
       icon: 'pi pi-table',
       command: () => this.navigateTo('/dashboard'),
       routerLink: '/dashboard'
     },
     { 
-      label: 'Charts', 
+      label: 'Monthly', 
       icon: 'pi pi-chart-bar',
       command: () => this.navigateTo('/dashboard'),
       routerLink: '/dashboard'
