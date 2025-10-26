@@ -1,15 +1,23 @@
-/* Global app styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.app-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  height: 100vh;
+  width: 100%;
 }
 
-$sidebar-width: 220px;
-.main-content {
-  margin-left: $sidebar-width; /* Space for the fixed sidebar */
-  min-height: 100vh;
-  padding: 2rem;
+.side-menu {
+  order: 1;
+  flex-grow: 0;
+  height: 100%;
+  background: linear-gradient(135deg, #e4e7f3 0%, #7c7b7c 100%);
+}
+
+.main-content{
+  order: 2;
+  flex-grow: 8;
+  height: 100%;
+  padding: 1rem;
   background: linear-gradient(135deg, #e4e7f3 0%, #7c7b7c 100%);
 
 }
