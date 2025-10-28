@@ -28,12 +28,6 @@ export class HeaderComponent {
       routerLink: '/statement'
     },
     { 
-      label: 'Summary', 
-      icon: 'pi pi-table',
-      command: () => this.navigateTo('/summary'),
-      routerLink: '/summary'
-    },
-    { 
       label: 'Expenses', 
       icon: 'pi pi-table',
       command: () => this.navigateTo('/expenses'),
