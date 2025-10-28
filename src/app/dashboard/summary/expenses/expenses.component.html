@@ -18,8 +18,8 @@
           <th>Transport</th>
           <th>Education</th>
           <th>TaxAndTributes</th>
-          <th>Investments</th>
           <th>Total</th>
+          <th>Investments</th>
         </tr>
       </ng-template>
       <ng-template #body let-expense>
@@ -35,8 +35,8 @@
           <td>R$ {{ expense.transportTotal | number : "1.2-2" }}</td>
           <td>R$ {{ expense.educationTotal | number : "1.2-2" }}</td>
           <td>R$ {{ expense.taxAndTributesTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.investmentsTotal | number : "1.2-2" }}</td>
           <td>R$ {{ expense.totalMonth | number : "1.2-2" }}</td>
+          <td>R$ {{ expense.investmentsTotal | number : "1.2-2" }}</td>
         </tr>
       </ng-template>
       <ng-template #footer>
