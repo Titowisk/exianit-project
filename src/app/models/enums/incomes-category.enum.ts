@@ -1,4 +1,8 @@
 export enum IncomesCategory {
     Salary = 1,
-    Benefits
+    Benefits,
+    TaxReturns,
+    Bonus,
+    PaidVacation,
+    Others
 }
