@@ -1,0 +1,33 @@
+<div class="dashboard-container">
+  <div class="dashboard-title">
+      <h1>Incomes Summary</h1>
+  </div>
+    
+  <section class="dashboard-content">
+    <p-table [value]="monthlyIncomes">
+      <ng-template #header>
+        <tr>
+          <th>-</th>
+          <th>Salary</th>
+          <th>Benefits</th>
+          <th>Tax Returns</th>
+          <th>Bonus</th>
+          <th>Paid Vacation</th>
+          <th>Others</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-income>
+        <tr>
+          <td>{{ income.month }}</td>
+          <td>R$ {{ income.salary | number : "1.2-2" }}</td>
+          <td>R$ {{ income.benefits | number : "1.2-2" }}</td>
+          <td>R$ {{ income.taxReturns | number : "1.2-2" }}</td>
+          <td>R$ {{ income.bonus | number : "1.2-2" }}</td>
+          <td>R$ {{ income.paidVacation | number : "1.2-2" }}</td>
+          <td>R$ {{ income.others | number : "1.2-2" }}</td>
+        </tr>
+      </ng-template>
+      <ng-template #footer></ng-template>
+    </p-table>
+  </section>
+</div>

@@ -4,6 +4,7 @@ import { StatementComponent } from './dashboard/statement/statement.component';
 import { SummaryComponent } from './dashboard/summary/summary.component';
 import { AnalyticsComponent } from './dashboard/analytics/analytics.component';
 import { ExpensesComponent } from './dashboard/summary/expenses/expenses.component';
+import { IncomesComponent } from './dashboard/summary/incomes/incomes.component';
 
 
 
@@ -26,6 +27,7 @@ export const routes: Routes = [
   { path: 'statement', component: StatementComponent },
   { path: 'summary', component: SummaryComponent },
   { path: 'expenses', component: ExpensesComponent },
+  { path: 'incomes', component: IncomesComponent },
   { path: 'summary', component: SummaryComponent },
   { path: 'analytics', component: AnalyticsComponent },
   { path: 'users', component: UsersComponent },
