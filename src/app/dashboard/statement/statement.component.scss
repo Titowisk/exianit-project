@@ -1,7 +1,9 @@
+@use '../../_variables';
+
 .dashboard-title {
-    margin-bottom: var(--dashboard-title-margin-bottom);
+    margin-bottom: variables.$default-title-margin-bottom;
 }
 
 .dashboard-content {
-    margin-bottom: var(--dashboard-content-margin-bottom);
+    margin-bottom: variables.$default-content-margin-bottom;
 }
