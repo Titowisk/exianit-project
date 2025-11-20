@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
 import { Month } from '../../models/enums/month.enum';
 import { MonthlyExpensesByCategory } from '../../models/monthly-expenses-by-category.interface';
 import { MONTHLY_EXPENSES_DATA } from '../../data/monthly-expenses.data';
+import { YearService } from '../../header/year.service';
 
 @Component({
   selector: 'app-analytics',
@@ -12,6 +13,7 @@ import { MONTHLY_EXPENSES_DATA } from '../../data/monthly-expenses.data';
 })
 export class AnalyticsComponent {
   monthlyExpenses: MonthlyExpensesByCategory[] = MONTHLY_EXPENSES_DATA;
+  yearService = inject(YearService);
 
   data = {
     labels: this.monthlyExpenses.map(expense => Month[expense.month]),

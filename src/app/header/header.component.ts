@@ -1,20 +1,23 @@
 import { Component, signal, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
 import { Button } from 'primeng/button';
 import { YearItem } from '../models/year-item.interface';
 import { Select } from 'primeng/select';
+import { YearService } from './year.service';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterModule, MenuModule, Button, Select],
+  imports: [CommonModule, RouterModule, MenuModule, Button, Select, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
   private router = inject(Router);
+  yearService = inject(YearService);
 
   toggleDarkMode() {
     const element = document.querySelector('html');
@@ -80,12 +83,13 @@ export class HeaderComponent {
   navigateTo(route: string) {
     this.router.navigate([route]);
   }
+
+  selectYearItem = signal<YearItem[]>(this.yearService.getYears());
+  selectedYearValue: YearItem = this.yearService.selectedYear();
   
-  selectYearItem = signal<YearItem[]>([
-    { year: 2024 },
-    { year: 2023 },
-    { year: 2022 },
-    { year: 2021 },
-    { year: 2020 },
-  ]);
+  onYearChange(event: any) {
+    const selectedYear = event.value;
+    this.yearService.setSelectedYear(selectedYear);
+    this.selectedYearValue = selectedYear;
+  }
 }

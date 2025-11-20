@@ -11,7 +11,13 @@
       [popup]="false"
     >
       <ng-template #start>
-        <p-select [options]="selectYearItem()" optionLabel="year" placeholder="Select a Year"></p-select>
+        <p-select 
+          [options]="selectYearItem()" 
+          optionLabel="year" 
+          placeholder="Select a Year"
+          [(ngModel)]="selectedYearValue"
+          (onChange)="onYearChange($event)">
+        </p-select>
       </ng-template>
       <ng-template #item let-item>
         <a pRipple

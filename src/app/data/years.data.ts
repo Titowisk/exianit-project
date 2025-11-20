@@ -1,0 +1,12 @@
+import { YearItem } from '../models/year-item.interface';
+
+export const YEARS_DATA: YearItem[] = [
+  { year: 2025 },
+  { year: 2024 },
+  { year: 2023 },
+  { year: 2022 },
+  { year: 2021 },
+  { year: 2020 },
+  { year: 2019 },
+  { year: 2018 },
+];
