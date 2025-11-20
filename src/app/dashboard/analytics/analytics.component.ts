@@ -4,6 +4,8 @@ import { Month } from '../../models/enums/month.enum';
 import { MonthlyExpensesByCategory } from '../../models/monthly-expenses-by-category.interface';
 import { MONTHLY_EXPENSES_DATA } from '../../data/monthly-expenses.data';
 import { YearService } from '../../header/year.service';
+import { EXPENSES_ANALYTICS_DICT } from '../../helpers/expenses-analytics.helper';
+import { ExpensesCategory } from '../../models/enums/expenses-category.enum';
 
 @Component({
   selector: 'app-analytics',
@@ -20,68 +22,68 @@ export class AnalyticsComponent {
     datasets: [
       {
         type: 'bar',
-        label: 'House',
-        backgroundColor: '#42A5F5',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.House].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.House].color,
         data: this.monthlyExpenses.map(expense => expense.houseTotal),
       },
       {
         type: 'bar',
-        label: 'Food',
-        backgroundColor: '#66BB6A',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Food].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Food].color,
         data: this.monthlyExpenses.map(expense => expense.foodTotal),
       },
       {
         type: 'bar',
-        label: 'Groceries',
-        backgroundColor: '#FFA726',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Groceries].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Groceries].color,
         data: this.monthlyExpenses.map(expense => expense.groceriesTotal),
       },
       {
         type: 'bar',
-        label: 'Health',
-        backgroundColor: '#EF5350',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Health].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Health].color,
         data: this.monthlyExpenses.map(expense => expense.healthTotal),
       },
       {
         type: 'bar',
-        label: 'Shop',
-        backgroundColor: '#AB47BC',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Shop].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Shop].color,
         data: this.monthlyExpenses.map(expense => expense.shopTotal),
       },
       {
         type: 'bar',
-        label: 'Leisure',
-        backgroundColor: '#26A69A',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Leisure].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Leisure].color,
         data: this.monthlyExpenses.map(expense => expense.leisureTotal),
       },
       {
         type: 'bar',
-        label: 'Donations',
-        backgroundColor: '#FFCA28',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Donations].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Donations].color,
         data: this.monthlyExpenses.map(expense => expense.donationsTotal),
       },
       {
         type: 'bar',
-        label: 'Transport',
-        backgroundColor: '#78909C',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Transport].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Transport].color,
         data: this.monthlyExpenses.map(expense => expense.transportTotal),
       },
       {
         type: 'bar',
-        label: 'Education',
-        backgroundColor: '#8D6E63',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Education].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Education].color,
         data: this.monthlyExpenses.map(expense => expense.educationTotal),
       },
       {
         type: 'bar',
-        label: 'Tax & Tributes',
-        backgroundColor: '#FF7043',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.TaxAndTributes].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.TaxAndTributes].color,
         data: this.monthlyExpenses.map(expense => expense.taxAndTributesTotal),
       },
       {
         type: 'bar',
-        label: 'Investments',
-        backgroundColor: '#29B6F6',
+        label: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Investments].label,
+        backgroundColor: EXPENSES_ANALYTICS_DICT[ExpensesCategory.Investments].color,
         data: this.monthlyExpenses.map(expense => expense.investmentsTotal),
       },
     ],
