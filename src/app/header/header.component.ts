@@ -3,11 +3,13 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
-import { Button, ButtonDirective } from 'primeng/button';
+import { Button } from 'primeng/button';
+import { YearItem } from '../models/year-item.interface';
+import { Select } from 'primeng/select';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterModule, MenuModule, Button, ButtonDirective],
+  imports: [CommonModule, RouterModule, MenuModule, Button, Select],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -78,4 +80,12 @@ export class HeaderComponent {
   navigateTo(route: string) {
     this.router.navigate([route]);
   }
+  
+  selectYearItem = signal<YearItem[]>([
+    { year: 2024 },
+    { year: 2023 },
+    { year: 2022 },
+    { year: 2021 },
+    { year: 2020 },
+  ]);
 }

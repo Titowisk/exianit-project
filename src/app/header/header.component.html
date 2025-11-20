@@ -10,6 +10,9 @@
       [model]="navItems()" 
       [popup]="false"
     >
+      <ng-template #start>
+        <p-select [options]="selectYearItem()" optionLabel="year" placeholder="Select a Year"></p-select>
+      </ng-template>
       <ng-template #item let-item>
         <a pRipple
           class="nav-link p-menu-item-link" 
