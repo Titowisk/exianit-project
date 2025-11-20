@@ -40,6 +40,11 @@
           <span class="profile-label">{{ item.label }}</span>
         </a>
       </ng-template>
+      <ng-template #end >
+        <p-button icon="pi pi-lightbulb" label="Toggle" (onClick)="toggleDarkMode()">
+        </p-button>
+        
+      </ng-template>
     </p-menu>
   </div>
 </div>

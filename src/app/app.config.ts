@@ -1,4 +1,8 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import {
+  ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+} from '@angular/core';
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
@@ -14,10 +18,13 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
 
     provideAnimationsAsync(),
-        providePrimeNG({
-            theme: {
-                preset: Aura
-            }
-        })
-  ]
+    providePrimeNG({
+      theme: {
+        preset: Aura,
+        options: {
+          darkModeSelector: '.my-app-dark',
+        },
+      },
+    }),
+  ],
 };

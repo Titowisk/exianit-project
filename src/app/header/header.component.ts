@@ -3,60 +3,66 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MenuItem } from 'primeng/api';
 import { MenuModule } from 'primeng/menu';
+import { Button, ButtonDirective } from 'primeng/button';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterModule, MenuModule],
+  imports: [CommonModule, RouterModule, MenuModule, Button, ButtonDirective],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
   private router = inject(Router);
-  
+
+  toggleDarkMode() {
+    const element = document.querySelector('html');
+    element!.classList.toggle('my-app-dark');
+  }
+
   // Navigation items using PrimeNG MenuItem interface
   navItems = signal<MenuItem[]>([
-    { 
-      label: 'Imports', 
+    {
+      label: 'Imports',
       icon: 'pi pi-file-import',
       command: () => this.navigateTo('/dashboard'),
-      routerLink: '/dashboard'
+      routerLink: '/dashboard',
     },
-    { 
-      label: 'Statement', 
+    {
+      label: 'Statement',
       icon: 'pi pi-receipt',
       command: () => this.navigateTo('/statement'),
-      routerLink: '/statement'
+      routerLink: '/statement',
     },
-    { 
-      label: 'Expenses', 
+    {
+      label: 'Expenses',
       icon: 'pi pi-table',
       command: () => this.navigateTo('/expenses'),
-      routerLink: '/expenses'
+      routerLink: '/expenses',
     },
-    { 
-      label: 'Incomes', 
+    {
+      label: 'Incomes',
       icon: 'pi pi-table',
       command: () => this.navigateTo('/incomes'),
-      routerLink: '/incomes'
+      routerLink: '/incomes',
     },
-    { 
-      label: 'Analytics', 
+    {
+      label: 'Analytics',
       icon: 'pi pi-chart-bar',
       command: () => this.navigateTo('/analytics'),
-      routerLink: '/analytics'
+      routerLink: '/analytics',
     },
-    { 
-      label: 'Predictions', 
+    {
+      label: 'Predictions',
       icon: 'pi pi-calendar-clock',
       command: () => this.navigateTo('/dashboard'),
-      routerLink: '/dashboard'
+      routerLink: '/dashboard',
     },
-    { 
-      label: 'Notifications', 
+    {
+      label: 'Notifications',
       icon: 'pi pi-bell',
       command: () => this.navigateTo('/dashboard'),
-      routerLink: '/dashboard'
-    }
+      routerLink: '/dashboard',
+    },
   ]);
 
   // Profile menu item
@@ -65,8 +71,8 @@ export class HeaderComponent {
       label: 'Profile',
       icon: 'pi pi-user',
       command: () => this.navigateTo('/dashboard'),
-      routerLink: '/dashboard'
-    }
+      routerLink: '/dashboard',
+    },
   ]);
 
   navigateTo(route: string) {
