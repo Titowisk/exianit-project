@@ -4,6 +4,8 @@ import { StatementComponent } from './dashboard/statement/statement.component';
 import { AnalyticsComponent } from './dashboard/analytics/analytics.component';
 import { ExpensesComponent } from './dashboard/summary/expenses/expenses.component';
 import { IncomesComponent } from './dashboard/summary/incomes/incomes.component';
+import { LoginComponent } from './dashboard/login/login.component';
+import { RegisterComponent } from './dashboard/register/register.component';
 
 
 
@@ -28,4 +30,6 @@ export const routes: Routes = [
   { path: 'incomes', component: IncomesComponent },
   { path: 'analytics', component: AnalyticsComponent },
   { path: 'users', component: UsersComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
 ];

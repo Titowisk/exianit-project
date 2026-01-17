@@ -1,0 +1,59 @@
+<div class="login-container">
+  <div class="login-card">
+    <h1>Welcome Back</h1>
+    <p class="subtitle">Sign in to your account</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <!-- Email Field -->
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input 
+          pInputText 
+          id="email" 
+          formControlName="email" 
+          type="email"
+          placeholder="Enter your email"
+          [class.ng-invalid]="hasError('email', 'required') || hasError('email', 'email')"
+          [class.ng-dirty]="email?.dirty || email?.touched"
+        />
+        @if (hasError('email', 'required')) {
+          <small class="error-message">Email is required</small>
+        }
+        @if (hasError('email', 'email') && !hasError('email', 'required')) {
+          <small class="error-message">Please enter a valid email address</small>
+        }
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-field">
+        <label for="password">Password</label>
+        <p-password 
+          id="password" 
+          formControlName="password"
+          placeholder="Enter your password"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+        @if (hasError('password', 'required')) {
+          <small class="error-message">Password is required</small>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <p-button 
+        type="submit" 
+        label="Sign In" 
+        [loading]="isLoading()"
+        [disabled]="loginForm.invalid"
+        styleClass="w-full"
+      />
+
+      <!-- Sign Up Link -->
+      <p class="auth-link">
+        Don't have an account? <a routerLink="/register">Sign up</a>
+      </p>
+    </form>
+  </div>
+</div>

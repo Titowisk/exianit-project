@@ -1,0 +1,89 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 2rem;
+  background: var(--surface-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    text-align: center;
+  }
+  
+  .subtitle {
+    color: var(--text-color-secondary);
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  
+  label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.95rem;
+  }
+  
+  input,
+  :host ::ng-deep .p-password {
+    width: 100%;
+  }
+  
+  .error-message {
+    color: var(--red-500);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+}
+
+.auth-link {
+  text-align: center;
+  margin-top: 1rem;
+  color: var(--text-color-secondary);
+  font-size: 0.95rem;
+  
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-button {
+    margin-top: 0.5rem;
+  }
+  
+  .p-password input {
+    width: 100%;
+  }
+  
+  .ng-invalid.ng-dirty {
+    border-color: var(--red-500);
+  }
+}

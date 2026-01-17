@@ -1,0 +1,103 @@
+<div class="register-container">
+  <div class="register-card">
+    <h1>Create Account</h1>
+    <p class="subtitle">Sign up to get started</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Email Field -->
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input 
+          pInputText 
+          id="email" 
+          formControlName="email" 
+          type="email"
+          placeholder="Enter your email"
+          [class.ng-invalid]="hasError('email', 'required') || hasError('email', 'email')"
+          [class.ng-dirty]="email?.dirty || email?.touched"
+        />
+        @if (hasError('email', 'required')) {
+          <small class="error-message">Email is required</small>
+        }
+        @if (hasError('email', 'email') && !hasError('email', 'required')) {
+          <small class="error-message">Please enter a valid email address</small>
+        }
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-field">
+        <label for="password">Password</label>
+        <p-password 
+          id="password" 
+          formControlName="password"
+          placeholder="Enter your password"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+        @if (hasError('password', 'required')) {
+          <small class="error-message">Password is required</small>
+        }
+        @if (!hasError('password', 'required')) {
+          <div class="password-requirements">
+            <small [class.valid]="!hasError('password', 'minlength')">
+              <i [class]="!hasError('password', 'minlength') ? 'pi pi-check' : 'pi pi-times'"></i>
+              At least 8 characters
+            </small>
+            <small [class.valid]="hasUpperCase()">
+              <i [class]="hasUpperCase() ? 'pi pi-check' : 'pi pi-times'"></i>
+              One uppercase letter
+            </small>
+            <small [class.valid]="hasLowerCase()">
+              <i [class]="hasLowerCase() ? 'pi pi-check' : 'pi pi-times'"></i>
+              One lowercase letter
+            </small>
+            <small [class.valid]="hasDigit()">
+              <i [class]="hasDigit() ? 'pi pi-check' : 'pi pi-times'"></i>
+              One digit
+            </small>
+            <small [class.valid]="hasSpecialChar()">
+              <i [class]="hasSpecialChar() ? 'pi pi-check' : 'pi pi-times'"></i>
+              One special character (@$!%*?&)
+            </small>
+          </div>
+        }
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div class="form-field">
+        <label for="confirmPassword">Confirm Password</label>
+        <p-password 
+          id="confirmPassword" 
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+        @if (hasError('confirmPassword', 'required')) {
+          <small class="error-message">Please confirm your password</small>
+        }
+        @if (registerForm.hasError('passwordMismatch') && confirmPassword?.dirty) {
+          <small class="error-message">Passwords do not match</small>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <p-button 
+        type="submit" 
+        label="Sign Up" 
+        [loading]="isLoading()"
+        [disabled]="registerForm.invalid"
+        styleClass="w-full"
+      />
+
+      <!-- Login Link -->
+      <p class="auth-link">
+        Already have an account? <a routerLink="/login">Sign in</a>
+      </p>
+    </form>
+  </div>
+</div>

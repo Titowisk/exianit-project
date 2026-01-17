@@ -78,6 +78,18 @@ export class HeaderComponent {
       command: () => this.navigateTo('/dashboard'),
       routerLink: '/dashboard',
     },
+    {
+      label: 'Register',
+      icon: 'pi pi-user-plus',
+      command: () => this.navigateTo('/register'),
+      routerLink: '/register',
+    },
+    {
+      label: 'Login',
+      icon: 'pi pi-sign-in',
+      command: () => this.navigateTo('/login'),
+      routerLink: '/login',
+    },
   ]);
 
   navigateTo(route: string) {
