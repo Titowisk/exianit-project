@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -12,6 +12,15 @@ export interface LoginResponse {
   token: string;
 }
 
+interface JwtPayload {
+  sub: string;
+  email: string;
+  jti: string;
+  exp: number;
+  iss: string;
+  aud: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -20,11 +29,25 @@ export class AuthService {
   private apiUrl = 'https://localhost:7080/api/auth';
   private readonly TOKEN_KEY = 'auth_token';
 
+  private _userId = signal<string | null>(null);
+  userId = this._userId.asReadonly();
+  
+  isAuthenticated = computed(() => !!this._userId());
+
   signUp(email: string, password: string): Observable<SignUpResponse> {
     return this.http.post<SignUpResponse>(`${this.apiUrl}/sign-up`, {
       email,
       password
     });
+  }
+
+  constructor() {
+    // Initialize userId from token if it exists
+    const token = this.getToken();
+    if (token) {
+      const userId = this.extractUserIdFromToken(token);
+      this._userId.set(userId);
+    }
   }
 
   login(email: string, password: string): Observable<LoginResponse> {
@@ -37,18 +60,47 @@ export class AuthService {
   }
 
   saveToken(token: string): void {
-    localStorage.setItem(this.TOKEN_KEY, token);
+    localStorage.setItem(this.TOKEN_KEY, token); // ToDo: is this safe ?
+    const userId = this.extractUserIdFromToken(token);
+    this._userId.set(userId);
   }
 
   getToken(): string | null {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
-  isAuthenticated(): boolean {
-    return !!this.getToken();
-  }
-
   clearToken(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    this._userId.set(null);
+  }
+
+  private extractUserIdFromToken(token: string): string | null {
+    try {
+      const payload = this.decodeToken(token);
+      return payload?.sub || null;
+    } catch (error) {
+      console.error('Failed to decode token:', error);
+      return null;
+    }
+  }
+
+  private decodeToken(token: string): JwtPayload | null {
+    try {
+      const base64Url = token.split('.')[1];
+      if (!base64Url) {
+        return null;
+      }
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 }

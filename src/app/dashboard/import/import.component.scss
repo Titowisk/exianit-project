@@ -1,0 +1,101 @@
+.import-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.import-card {
+  width: 100%;
+  max-width: 500px;
+  padding: 2rem;
+  background: var(--surface-card);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.import-title {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.loading-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  color: var(--text-color-secondary);
+  font-size: 1rem;
+
+  i {
+    font-size: 1.5rem;
+  }
+}
+
+.no-accounts-message {
+  color: var(--text-color-secondary);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.import-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .form-label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.95rem;
+  }
+
+  .error-message {
+    color: var(--red-500);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+  }
+
+  .file-info {
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+
+    i {
+      color: var(--primary-color);
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-select,
+  .p-fileupload {
+    width: 100%;
+  }
+
+  .p-button {
+    margin-top: 0.5rem;
+  }
+
+  .p-message {
+    margin-bottom: 1rem;
+  }
+
+  .ng-invalid.ng-dirty {
+    border-color: var(--red-500);
+  }
+}

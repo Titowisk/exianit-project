@@ -6,6 +6,8 @@ import { ExpensesComponent } from './dashboard/summary/expenses/expenses.compone
 import { IncomesComponent } from './dashboard/summary/incomes/incomes.component';
 import { LoginComponent } from './dashboard/login/login.component';
 import { RegisterComponent } from './dashboard/register/register.component';
+import { ImportComponent } from './dashboard/import/import.component';
+import { BankAccountComponent } from './dashboard/bank-account/bank-account.component';
 
 
 
@@ -25,11 +27,13 @@ export class UsersComponent { }
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'import', component: ImportComponent },
   { path: 'statement', component: StatementComponent },
   { path: 'expenses', component: ExpensesComponent },
   { path: 'incomes', component: IncomesComponent },
   { path: 'analytics', component: AnalyticsComponent },
   { path: 'users', component: UsersComponent },
+  { path: 'bank-account', component: BankAccountComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 ];

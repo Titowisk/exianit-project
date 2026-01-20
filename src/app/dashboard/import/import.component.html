@@ -1,0 +1,94 @@
+<div class="import-container">
+  <div class="import-card">
+    <h2 class="import-title">Import Bank Statement</h2>
+
+    @if (isLoadingAccounts()) {
+      <div class="loading-message">
+        <i class="pi pi-spin pi-spinner"></i>
+        <span>Loading bank accounts...</span>
+      </div>
+    }
+
+    @if (!hasBankAccounts() && !isLoadingAccounts()) {
+      <p-message severity="warn" text="You don't have any bank accounts configured." styleClass="w-full mb-3" />
+      <p class="no-accounts-message">
+        Please create a bank account before importing statements.
+      </p>
+      <p-button 
+        label="Manage Bank Accounts" 
+        icon="pi pi-building-columns"
+        routerLink="/bank-account"
+        styleClass="w-full"
+      />
+    }
+
+    @if (hasBankAccounts() && !isLoadingAccounts()) {
+      <form [formGroup]="importForm" (ngSubmit)="onSubmit()" class="import-form">
+        <div class="form-field">
+          <label for="bankAccount" class="form-label">Bank Account</label>
+          <p-select
+            id="bankAccount"
+            formControlName="bankAccountId"
+            [options]="bankAccounts()"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Select Bank Account"
+            styleClass="w-full"
+            [disabled]="isUploading()"
+          />
+          @if (importForm.get('bankAccountId')?.invalid && importForm.get('bankAccountId')?.touched) {
+            <small class="error-message">Please select a bank account.</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="statementType" class="form-label">Statement Type</label>
+          <p-select
+            id="statementType"
+            formControlName="statementType"
+            [options]="statementTypeOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Select Statement Type"
+            styleClass="w-full"
+            [disabled]="isUploading()"
+          />
+          @if (importForm.get('statementType')?.invalid && importForm.get('statementType')?.touched) {
+            <small class="error-message">Please select a statement type.</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="file" class="form-label">CSV File</label>
+          <p-fileUpload
+            mode="basic"
+            chooseLabel="Choose File"
+            accept=".csv"
+            [maxFileSize]="5242880"
+            [customUpload]="true"
+            (onSelect)="onFileSelect($event)"
+            [disabled]="isUploading()"
+            styleClass="w-full"
+          />
+          @if (selectedFile()) {
+            <small class="file-info">
+              <i class="pi pi-file"></i> {{ selectedFile()!.name }} ({{ (selectedFile()!.size / 1024).toFixed(2) }} KB)
+            </small>
+          }
+          @if (!selectedFile() && importForm.touched) {
+            <small class="error-message">Please select a CSV file.</small>
+          }
+        </div>
+
+        <p-button
+          type="submit"
+          label="Import Statement"
+          icon="pi pi-upload"
+          [loading]="isUploading()"
+          [disabled]="!importForm.valid || !selectedFile()"
+          styleClass="w-full"
+        />
+      </form>
+    }
+  </div>
+</div>

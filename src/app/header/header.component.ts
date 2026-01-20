@@ -29,8 +29,8 @@ export class HeaderComponent {
     {
       label: 'Imports',
       icon: 'pi pi-file-import',
-      command: () => this.navigateTo('/dashboard'),
-      routerLink: '/dashboard',
+      command: () => this.navigateTo('/import'),
+      routerLink: '/import',
     },
     {
       label: 'Statement',
