@@ -1,5 +1,6 @@
 export interface BankAccount {
   id: string;
+  userId: string;
   name: string;
-//   bankName: string;
+  bank: number;
 }

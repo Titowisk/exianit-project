@@ -1,0 +1,110 @@
+.bank-account-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .card {
+    background: var(--surface-card);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-color);
+      font-weight: 600;
+    }
+  }
+
+  .form-section {
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          font-weight: 500;
+          color: var(--text-color);
+          font-size: 0.95rem;
+        }
+
+        input,
+        p-dropdown {
+          width: 100%;
+        }
+
+        .error-message {
+          color: var(--red-500);
+          font-size: 0.875rem;
+        }
+
+        input.ng-invalid.ng-dirty,
+        p-dropdown.ng-invalid.ng-dirty {
+          border-color: var(--red-500);
+        }
+      }
+
+      p-button {
+        align-self: flex-start;
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  .list-section {
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-color-secondary);
+
+      p {
+        margin: 0.5rem 0;
+      }
+
+      .empty-state-hint {
+        font-size: 0.9rem;
+        color: var(--text-color-secondary);
+      }
+    }
+
+    ::ng-deep {
+      .p-datatable {
+        .p-datatable-thead > tr > th {
+          background: var(--surface-100);
+          color: var(--text-color);
+          font-weight: 600;
+          padding: 1rem;
+        }
+
+        .p-datatable-tbody > tr > td {
+          padding: 1rem;
+        }
+
+        .p-datatable-tbody > tr:hover {
+          background: var(--surface-hover);
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .bank-account-container {
+    flex-direction: row;
+    align-items: flex-start;
+
+    .form-section,
+    .list-section {
+      flex: 1;
+    }
+  }
+}

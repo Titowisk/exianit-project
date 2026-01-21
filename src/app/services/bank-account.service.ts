@@ -19,6 +19,11 @@ export class BankAccountService {
     return this.http.get<BankAccount[]>(`${this.apiUrl}/bank-accounts?userId=${userId}`);
   }
 
+  createBankAccount(name: string, bank: number): Observable<BankAccount> {
+    const userId = this.authService.userId();
+    return this.http.post<BankAccount>(`${this.apiUrl}/bank-accounts/${userId}`, { name, bank });
+  }
+
   uploadStatement(accountId: string, statementType: BankStatementType, file: File): Observable<ImportResponse> {
     const formData = new FormData();
     formData.append('file', file);

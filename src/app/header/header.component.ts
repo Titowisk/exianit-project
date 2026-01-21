@@ -71,7 +71,13 @@ export class HeaderComponent {
   ]);
 
   // Profile menu item
-  profileItem = signal<MenuItem[]>([
+  userItems = signal<MenuItem[]>([
+    {
+      label: 'Bank Accounts',
+      icon: 'pi pi-building-columns',
+      command: () => this.navigateTo('/bank-account'),
+      routerLink: '/bank-account',
+    },
     {
       label: 'Profile',
       icon: 'pi pi-user',
