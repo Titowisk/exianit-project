@@ -8,6 +8,7 @@ import { LoginComponent } from './dashboard/login/login.component';
 import { RegisterComponent } from './dashboard/register/register.component';
 import { ImportComponent } from './dashboard/import/import.component';
 import { BankAccountComponent } from './dashboard/bank-account/bank-account.component';
+import { authGuard } from './services/auth.guard';
 
 
 
@@ -27,13 +28,13 @@ export class UsersComponent { }
 
 export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-  { path: 'import', component: ImportComponent },
-  { path: 'statement', component: StatementComponent },
-  { path: 'expenses', component: ExpensesComponent },
-  { path: 'incomes', component: IncomesComponent },
-  { path: 'analytics', component: AnalyticsComponent },
-  { path: 'users', component: UsersComponent },
-  { path: 'bank-account', component: BankAccountComponent },
+  { path: 'import', component: ImportComponent, canActivate: [authGuard] },
+  { path: 'statement', component: StatementComponent, canActivate: [authGuard] },
+  { path: 'expenses', component: ExpensesComponent, canActivate: [authGuard] },
+  { path: 'incomes', component: IncomesComponent, canActivate: [authGuard] },
+  { path: 'analytics', component: AnalyticsComponent, canActivate: [authGuard] },
+  { path: 'users', component: UsersComponent, canActivate: [authGuard] },
+  { path: 'bank-account', component: BankAccountComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 ];

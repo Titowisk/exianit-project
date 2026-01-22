@@ -42,11 +42,16 @@ export class AuthService {
   }
 
   constructor() {
-    // Initialize userId from token if it exists
+    // Initialize userId from token if it exists and is valid
     const token = this.getToken();
     if (token) {
-      const userId = this.extractUserIdFromToken(token);
-      this._userId.set(userId);
+      // Auto-clear expired tokens on app initialization
+      if (this.isTokenExpired(token)) {
+        this.clearToken();
+      } else {
+        const userId = this.extractUserIdFromToken(token);
+        this._userId.set(userId);
+      }
     }
   }
 
@@ -72,6 +77,36 @@ export class AuthService {
   clearToken(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     this._userId.set(null);
+  }
+
+  isTokenExpired(token?: string): boolean {
+    const tokenToCheck = token || this.getToken();
+    if (!tokenToCheck) {
+      return true;
+    }
+
+    try {
+      const payload = this.decodeToken(tokenToCheck);
+      if (!payload || !payload.exp) {
+        return true;
+      }
+
+      // JWT exp is in seconds, Date.now() is in milliseconds
+      const expirationTime = payload.exp * 1000;
+      return Date.now() >= expirationTime;
+    } catch (error) {
+      console.error('Error checking token expiration:', error);
+      return true;
+    }
+  }
+
+  isTokenValid(): boolean {
+    const token = this.getToken();
+    return !!token && !this.isTokenExpired(token);
+  }
+
+  logout(): void {
+    this.clearToken();
   }
 
   private extractUserIdFromToken(token: string): string | null {
