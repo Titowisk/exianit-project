@@ -3,6 +3,7 @@ import { StatementService } from '../statement.service';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { YearService } from '../../header/year.service';
 import { StatementTransaction } from '../../models/statement.interface';
 import { ExpensesCategory } from '../../models/enums/expenses-category.enum';
@@ -19,6 +20,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 })
 export class StatementComponent {
   private statementService = inject(StatementService);
+  private messageService = inject(MessageService);
   yearService = inject(YearService);
 
   statements = signal<StatementTransaction[]>([]);
@@ -37,8 +39,15 @@ export class StatementComponent {
         this.statements.set(data);
         this.isLoading.set(false);
       },
-      error: () => {
+      error: (error) => {
         this.isLoading.set(false);
+        const errorMessage = error?.error?.message || error?.message || 'Failed to load statements. Please try again.';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Load Failed',
+          detail: errorMessage,
+          life: 5000
+        });
       }
     });
   }

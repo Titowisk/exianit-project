@@ -30,8 +30,9 @@ export class StatementService {
     getAllStatements(): Observable<StatementTransaction[]> {
         const userId = this.authService.userId();
         const year = this.yearService.selectedYear().year;
+        const url = `${this.apiUrl}/transactions?userId=${userId}&year=${year}`;
         
-        return this.http.get<ApiTransaction[]>(`${this.apiUrl}/transactions?userId=${userId}&year=${year}`)
+        return this.http.get<ApiTransaction[]>(url)
             .pipe(
                 map(transactions => this.mapApiResponse(transactions))
             );

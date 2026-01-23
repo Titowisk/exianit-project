@@ -56,5 +56,10 @@ export const EXPENSES_ANALYTICS_DICT: Record<ExpensesCategory, ExpensesAnalytics
     category: ExpensesCategory.Investments,
     label: 'Investments',
     color: '#0404e1'
+  },
+  [ExpensesCategory.Others]: {
+    category: ExpensesCategory.Others,
+    label: 'Others',
+    color: '#808080'
   }
 };
