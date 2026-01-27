@@ -1,8 +1,8 @@
 import { ExpensesCategory } from "./enums/expenses-category.enum";
 import { IncomesCategory } from "./enums/incomes-category.enum";
 
-export interface IncomeStatement {
-    id: number;
+export interface IncomeTransaction {
+    id: string;
     type: 'income';
     origin: string;
     amount: number;
@@ -11,8 +11,8 @@ export interface IncomeStatement {
     description?: string;
 }
 
-export interface ExpenseStatement {
-    id: number;
+export interface ExpenseTransaction {
+    id: string;
     type: 'expense';
     origin: string;
     amount: number;
@@ -21,4 +21,4 @@ export interface ExpenseStatement {
     description?: string;
 }
 
-export type Statement = IncomeStatement | ExpenseStatement;
+export type StatementTransaction = IncomeTransaction | ExpenseTransaction;

@@ -1,7 +1,7 @@
 import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';
@@ -20,6 +20,7 @@ export class LoginComponent {
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
   private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
 
   isLoading = signal(false);
 
@@ -64,7 +65,10 @@ export class LoginComponent {
           detail: 'Welcome back!',
           life: 3000
         });
-        this.router.navigate(['/statement']);
+
+        // Redirect to returnUrl if present, otherwise to statement page
+        const returnUrl = this.activatedRoute.snapshot.queryParamMap.get('returnUrl') || '/statement';
+        this.router.navigateByUrl(returnUrl);
       },
       error: (error) => {
         this.isLoading.set(false);

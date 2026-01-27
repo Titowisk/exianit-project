@@ -7,3 +7,10 @@
 .dashboard-content {
     margin-bottom: variables.$default-content-margin-bottom;
 }
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
