@@ -10,4 +10,5 @@ export enum ExpensesCategory {
     Education = 'Education',
     TaxAndTributes = 'TaxAndTributes',
     Investments = 'Investments',
+    Others = 'Others',
 }

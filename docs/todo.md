@@ -3,3 +3,10 @@
 - [ ] When user gets 401, redirect to login page
 - [ ] How to deal with year dropdown in the nav bar?
 - [ ] How to deal with 4xx and 5xx errors from the API?
+- [ ] Change statement component name to transaction component
+  - merge statement and transacion services
+- [ ] Add colors for expenses in transaction list and also in charts
+    - also in the dropdown selector in the statement component
+- [ ] Add colors for incomes in transaction list and also in charts
+- [ ] Add categorization mode to statement/transaction component: api always reload tables with transactions categorized as Other until user categorizes them all
+- [ ] Changing year should reload the current component
