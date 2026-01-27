@@ -12,7 +12,7 @@
       <p-table
         #dt2
         dataKey="id"
-        [value]="statements()"
+        [value]="transactions()"
         [paginator]="true"
         [rows]="10"
       >
@@ -68,32 +68,32 @@
             <th>-</th>
           </tr>
         </ng-template>
-        <ng-template #body let-statement>
+        <ng-template #body let-transaction>
           <tr>
-            <td>{{ statement.type }}</td>
-            <td>{{ statement.origin }}</td>
-            <td>{{ statement.amount | currency : "BRL" }}</td>
-            <td>{{ statement.date | date : "dd/MM/yyyy" }}</td>
+            <td>{{ transaction.type }}</td>
+            <td>{{ transaction.origin }}</td>
+            <td>{{ transaction.amount | currency : "BRL" }}</td>
+            <td>{{ transaction.date | date : "dd/MM/yyyy" }}</td>
             <td>
-              @if (editingId() === statement.id) {
+              @if (editingId() === transaction.id) {
                 <p-select
-                  [options]="getCategoryOptions(statement)"
+                  [options]="getCategoryOptions(transaction)"
                   optionLabel="label"
                   optionValue="value"
                   [(ngModel)]="editingCategory"
                   placeholder="Select category"
                 />
               } @else {
-                {{ statement.category }}
+                {{ transaction.category }}
               }
             </td>
-            <td>{{ statement.description || "N/A" }}</td>
+            <td>{{ transaction.description || "N/A" }}</td>
             <td>
-              @if (editingId() === statement.id) {
-                <p-button label="Save" (onClick)="saveCategory(statement.id)" severity="success" size="small" />
+              @if (editingId() === transaction.id) {
+                <p-button label="Save" (onClick)="saveCategory(transaction.id)" severity="success" size="small" />
                 <p-button label="Cancel" (onClick)="cancelEdit()" severity="secondary" size="small" />
               } @else {
-                <p-button label="Edit" (onClick)="startEdit(statement)" severity="info" size="small" />
+                <p-button label="Edit" (onClick)="startEdit(transaction)" severity="info" size="small" />
               }
             </td>
           </tr>

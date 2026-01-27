@@ -23,20 +23,20 @@ export class StatementComponent {
   private messageService = inject(MessageService);
   yearService = inject(YearService);
 
-  statements = signal<StatementTransaction[]>([]);
+  transactions = signal<StatementTransaction[]>([]);
   isLoading = signal<boolean>(false);
   editingId = signal<string | null>(null);
   editingCategory = signal<string>('');
 
   constructor() {
-    this.loadStatements();
+    this.loadTransactions();
   }
 
-  private loadStatements(): void {
+  private loadTransactions(): void {
     this.isLoading.set(true);
     this.statementService.getAllStatements().subscribe({
       next: (data) => {
-        this.statements.set(data);
+        this.transactions.set(data);
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -52,8 +52,8 @@ export class StatementComponent {
     });
   }
 
-  getCategoryOptions(statement: StatementTransaction): { label: string; value: string }[] {
-    if (statement.type === 'expense') {
+  getCategoryOptions(transaction: StatementTransaction): { label: string; value: string }[] {
+    if (transaction.type === 'expense') {
       return Object.values(ExpensesCategory).map(cat => ({
         label: cat,
         value: cat
@@ -66,9 +66,9 @@ export class StatementComponent {
     }
   }
 
-  startEdit(statement: StatementTransaction): void {
-    this.editingId.set(statement.id);
-    this.editingCategory.set(statement.category);
+  startEdit(transaction: StatementTransaction): void {
+    this.editingId.set(transaction.id);
+    this.editingCategory.set(transaction.category);
   }
 
   cancelEdit(): void {
