@@ -90,8 +90,32 @@
             <td>{{ transaction.description || "N/A" }}</td>
             <td>
               @if (editingId() === transaction.id) {
-                <p-button label="Save" (onClick)="saveCategory(transaction.id)" severity="success" size="small" />
-                <p-button label="Cancel" (onClick)="cancelEdit()" severity="secondary" size="small" />
+                <p-button 
+                  label="This Transaction" 
+                  icon="pi pi-check"
+                  (onClick)="saveCategory(transaction)" 
+                  severity="success" 
+                  size="small" 
+                  [loading]="savingId() === transaction.id"
+                  [disabled]="savingId() !== null"
+                />
+                <p-button 
+                  label="Similar Transactions" 
+                  icon="pi pi-copy"
+                  (onClick)="saveSimilarOriginCategory(transaction)" 
+                  severity="success" 
+                  size="small" 
+                  [loading]="savingId() === transaction.id"
+                  [disabled]="savingId() !== null"
+                />
+                <p-button 
+                  label="Cancel" 
+                  icon="pi pi-times"
+                  (onClick)="cancelEdit()" 
+                  severity="secondary" 
+                  size="small" 
+                  [disabled]="savingId() !== null"
+                />
               } @else {
                 <p-button label="Edit" (onClick)="startEdit(transaction)" severity="info" size="small" />
               }

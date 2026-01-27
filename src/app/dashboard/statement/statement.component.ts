@@ -1,5 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { StatementService } from '../statement.service';
+import { TransactionService } from '../../services/transaction.service';
+import { AuthService } from '../../services/auth.service';
+import { getCategoryValue } from '../../helpers/category-enum.helper';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -20,6 +23,8 @@ import { ProgressSpinner } from 'primeng/progressspinner';
 })
 export class StatementComponent {
   private statementService = inject(StatementService);
+  private transactionService = inject(TransactionService);
+  private authService = inject(AuthService);
   private messageService = inject(MessageService);
   yearService = inject(YearService);
 
@@ -27,6 +32,7 @@ export class StatementComponent {
   isLoading = signal<boolean>(false);
   editingId = signal<string | null>(null);
   editingCategory = signal<string>('');
+  savingId = signal<string | null>(null);
 
   constructor() {
     this.loadTransactions();
@@ -76,9 +82,83 @@ export class StatementComponent {
     this.editingCategory.set('');
   }
 
-  saveCategory(id: string): void {
-    // TODO: Implement API call to update category
-    console.log(`Saving category for transaction ${id}: ${this.editingCategory()}`);
-    this.cancelEdit();
+  saveCategory(transaction: StatementTransaction): void {
+    const userId = this.authService.userId();
+    if (!userId) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Authentication Error',
+        detail: 'User not authenticated',
+        life: 5000
+      });
+      return;
+    }
+
+    const categoryValue = getCategoryValue(this.editingCategory() as ExpensesCategory | IncomesCategory);
+    this.savingId.set(transaction.id);
+
+    this.transactionService.updateCategory(transaction.id, userId, categoryValue).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Category Updated',
+          detail: 'Transaction category updated successfully',
+          life: 3000
+        });
+        this.cancelEdit();
+        this.savingId.set(null);
+        this.loadTransactions();
+      },
+      error: (error) => {
+        this.savingId.set(null);
+        const errorMessage = error?.error?.message || error?.message || 'Failed to update category. Please try again.';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Update Failed',
+          detail: errorMessage,
+          life: 5000
+        });
+      }
+    });
+  }
+
+  saveSimilarOriginCategory(transaction: StatementTransaction): void {
+    const userId = this.authService.userId();
+    if (!userId) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Authentication Error',
+        detail: 'User not authenticated',
+        life: 5000
+      });
+      return;
+    }
+
+    const categoryValue = getCategoryValue(this.editingCategory() as ExpensesCategory | IncomesCategory);
+    this.savingId.set(transaction.id);
+
+    this.transactionService.updateSimilarOriginCategory(transaction.id, userId, categoryValue).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Categories Updated',
+          detail: `All transactions from "${transaction.origin}" updated successfully`,
+          life: 3000
+        });
+        this.cancelEdit();
+        this.savingId.set(null);
+        this.loadTransactions();
+      },
+      error: (error) => {
+        this.savingId.set(null);
+        const errorMessage = error?.error?.message || error?.message || 'Failed to update categories. Please try again.';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Update Failed',
+          detail: errorMessage,
+          life: 5000
+        });
+      }
+    });
   }
 }
