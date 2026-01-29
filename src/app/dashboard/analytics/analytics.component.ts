@@ -4,7 +4,7 @@ import { Month } from '../../models/enums/month.enum';
 import { MonthlyExpensesByCategory } from '../../models/monthly-expenses-by-category.interface';
 import { MONTHLY_EXPENSES_DATA } from '../../data/monthly-expenses.data';
 import { YearService } from '../../header/year.service';
-import { EXPENSES_ANALYTICS_DICT } from '../../helpers/expenses-analytics.helper';
+import { EXPENSES_ANALYTICS_DICT } from '../../helpers/expenses-category-colors.helper';
 import { ExpensesCategory } from '../../models/enums/expenses-category.enum';
 
 @Component({
@@ -18,7 +18,7 @@ export class AnalyticsComponent {
   yearService = inject(YearService);
 
   data = {
-    labels: this.monthlyExpenses.map(expense => Month[expense.month]),
+    labels: this.monthlyExpenses.map(expense => expense.month),
     datasets: [
       {
         type: 'bar',
