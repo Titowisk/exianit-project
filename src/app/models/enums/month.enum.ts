@@ -1,14 +1,14 @@
 export enum Month {
-    January = 1,
-    February,
-    March,
-    April,
-    May,
-    June,
-    July,
-    August,
-    September,
-    October,
-    November,
-    December = 12
+    January = "January",
+    February = "February",
+    March = "March",
+    April = "April",
+    May = "May",
+    June = "June",
+    July = "July",
+    August = "August",
+    September = "September",
+    October = "October",
+    November = "November",
+    December = "December"
 }

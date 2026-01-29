@@ -1,7 +1,7 @@
 import { ExpensesCategory } from '../models/enums/expenses-category.enum';
 import { ExpensesAnalytics } from '../models/expenses-analytics.interface';
 
-export const EXPENSES_ANALYTICS_DICT: Record<ExpensesCategory, ExpensesAnalytics> = {
+export const EXPENSES_COLORS_DICT: Record<ExpensesCategory, ExpensesAnalytics> = {
   [ExpensesCategory.House]: {
     category: ExpensesCategory.House,
     label: 'House',
@@ -30,7 +30,7 @@ export const EXPENSES_ANALYTICS_DICT: Record<ExpensesCategory, ExpensesAnalytics
   [ExpensesCategory.Leisure]: {
     category: ExpensesCategory.Leisure,
     label: 'Leisure',
-    color: '#f3e304ff'
+    color: '#ff6e4a'
   },
   [ExpensesCategory.Donations]: {
     category: ExpensesCategory.Donations,

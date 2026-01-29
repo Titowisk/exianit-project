@@ -1,76 +1,359 @@
 <div class="dashboard-container">
   <div class="dashboard-title">
-    <h1>Expenses Summary <span class="year-display">{{ yearService.selectedYearText() }}</span></h1>
+    <h1>
+      Expenses Summary
+      <span class="year-display">{{ yearService.selectedYearText() }}</span>
+    </h1>
   </div>
 
-  <section class="dashboard-content">
-    <p-table [value]="monthlyExpenses">
-      <ng-template #header>
-        <tr>
-          <th>-</th>
-          <th>House</th>
-          <th>Food</th>
-          <th>Groceries</th>
-          <th>Health</th>
-          <th>Leisure</th>
-          <th>Shop</th>
-          <th>Donations</th>
-          <th>Transport</th>
-          <th>Education</th>
-          <th>TaxAndTributes</th>
-          <th>Total</th>
-          <th>Investments</th>
-        </tr>
-      </ng-template>
-      <ng-template #body let-expense>
-        <tr>
-          <td>{{ expense.month }}</td>
-          <td>R$ {{ expense.houseTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.foodTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.groceriesTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.healthTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.leisureTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.shopTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.donationsTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.transportTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.educationTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.taxAndTributesTotal | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.totalMonth | number : "1.2-2" }}</td>
-          <td>R$ {{ expense.investmentsTotal | number : "1.2-2" }}</td>
-        </tr>
-      </ng-template>
-      <ng-template #footer>
-        <tr>
-          <td>Averages</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-        </tr>
-        <tr>
-          <td>Totals</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </section>
+  @if (isLoading()) {
+    <div class="loading-container">
+      <p-progressSpinner />
+    </div>
+  } @else if (!isLoading() && monthlyExpenses().length === 0) {
+    <div class="empty-state">
+      <p>No expense data available for this year.</p>
+    </div>
+  } @else {
+    <section class="dashboard-content">
+      <p-table [value]="monthlyExpenses()">
+        <ng-template #header>
+          <tr [style.font-weight]="'bold'">
+            <th>-</th>
+            <th
+              [style.background-color]="colors[ExpensesCategory.House].color"
+              [style.color]="'white'"
+            >
+              House
+            </th>
+            <th
+              [style.background-color]="colors[ExpensesCategory.Food].color"
+              [style.color]="'white'"
+            >
+              Food
+            </th>
+            <th
+              [style.background-color]="
+                colors[ExpensesCategory.Groceries].color
+              "
+              [style.color]="'white'"
+            >
+              Groceries
+            </th>
+            <th
+              [style.background-color]="colors[ExpensesCategory.Health].color"
+              [style.color]="'white'"
+            >
+              Health
+            </th>
+            <th
+              [style.background-color]="colors[ExpensesCategory.Leisure].color"
+              [style.color]="'white'"
+            >
+              Leisure
+            </th>
+            <th
+              [style.background-color]="colors[ExpensesCategory.Shop].color"
+              [style.color]="'white'"
+            >
+              Shop
+            </th>
+            <th
+              [style.background-color]="
+                colors[ExpensesCategory.Donations].color
+              "
+              [style.color]="'white'"
+            >
+              Donations
+            </th>
+            <th
+              [style.background-color]="
+                colors[ExpensesCategory.Transport].color
+              "
+              [style.color]="'white'"
+            >
+              Transport
+            </th>
+            <th
+              [style.background-color]="
+                colors[ExpensesCategory.Education].color
+              "
+              [style.color]="'white'"
+            >
+              Education
+            </th>
+            <th
+              [style.background-color]="
+                colors[ExpensesCategory.TaxAndTributes].color
+              "
+              [style.color]="'white'"
+            >
+              TaxAndTributes
+            </th>
+            <th>Total</th>
+            <th
+              [style.background-color]="
+                colors[ExpensesCategory.Investments].color
+              "
+              [style.color]="'white'"
+            >
+              Investments
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-expense>
+          <tr [style.font-weight]="'bold'">
+            <td>{{ expense.month }}</td>
+            <td
+              [style.background-color]="colors[ExpensesCategory.House].color"
+              [style.color]="'white'"
+            >
+              R$ {{ expense.houseTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="colors[ExpensesCategory.Food].color"
+              [style.color]="'white'"
+            >
+              R$ {{ expense.foodTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="
+                colors[ExpensesCategory.Groceries].color
+              "
+              [style.color]="'white'"
+            >
+              R$ {{ expense.groceriesTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="colors[ExpensesCategory.Health].color"
+              [style.color]="'white'"
+            >
+              R$ {{ expense.healthTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="colors[ExpensesCategory.Leisure].color"
+              [style.color]="'white'"
+            >
+              R$ {{ expense.leisureTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="colors[ExpensesCategory.Shop].color"
+              [style.color]="'white'"
+            >
+              R$ {{ expense.shopTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="
+                colors[ExpensesCategory.Donations].color
+              "
+              [style.color]="'white'"
+            >
+              R$ {{ expense.donationsTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="
+                colors[ExpensesCategory.Transport].color
+              "
+              [style.color]="'white'"
+            >
+              R$ {{ expense.transportTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="
+                colors[ExpensesCategory.Education].color
+              "
+              [style.color]="'white'"
+            >
+              R$ {{ expense.educationTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="
+                colors[ExpensesCategory.TaxAndTributes].color
+              "
+              [style.color]="'white'"
+            >
+              R$ {{ expense.taxAndTributesTotal | number: "1.2-2" }}
+            </td>
+            <td>R$ {{ expense.totalMonth | number: "1.2-2" }}</td>
+            <td
+              [style.background-color]="
+                colors[ExpensesCategory.Investments].color
+              "
+              [style.color]="'white'"
+            >
+              R$ {{ expense.investmentsTotal | number: "1.2-2" }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #footer>
+          @if (averages()) {
+            <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+              <td>Averages</td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.House].color, 1)
+                "
+              >
+                R$ {{ averages()!.houseTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Food].color, 1)
+                "
+              >
+                R$ {{ averages()!.foodTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Groceries].color, 1)
+                "
+              >
+                R$ {{ averages()!.groceriesTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Health].color, 1)
+                "
+              >
+                R$ {{ averages()!.healthTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Leisure].color, 1)
+                "
+              >
+                R$ {{ averages()!.leisureTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Shop].color, 1)
+                "
+              >
+                R$ {{ averages()!.shopTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Donations].color, 1)
+                "
+              >
+                R$ {{ averages()!.donationsTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Transport].color, 1)
+                "
+              >
+                R$ {{ averages()!.transportTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Education].color, 1)
+                "
+              >
+                R$ {{ averages()!.educationTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.TaxAndTributes].color, 1)
+                "
+              >
+                R$ {{ averages()!.taxAndTributesTotal | number: "1.2-2" }}
+              </td>
+              <td>R$ {{ averages()!.totalMonth | number: "1.2-2" }}</td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Investments].color, 1)
+                "
+              >
+                R$ {{ averages()!.investmentsTotal | number: "1.2-2" }}
+              </td>
+            </tr>
+          }
+          @if (totals()) {
+            <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+              <td>Totals</td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.House].color, 1)
+                "
+              >
+                R$ {{ totals()!.houseTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Food].color, 1)
+                "
+              >
+                R$ {{ totals()!.foodTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Groceries].color, 1)
+                "
+              >
+                R$ {{ totals()!.groceriesTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Health].color, 1)
+                "
+              >
+                R$ {{ totals()!.healthTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Leisure].color, 1)
+                "
+              >
+                R$ {{ totals()!.leisureTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Shop].color, 1)
+                "
+              >
+                R$ {{ totals()!.shopTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Donations].color, 1)
+                "
+              >
+                R$ {{ totals()!.donationsTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Transport].color, 1)
+                "
+              >
+                R$ {{ totals()!.transportTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Education].color, 1)
+                "
+              >
+                R$ {{ totals()!.educationTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.TaxAndTributes].color, 1)
+                "
+              >
+                R$ {{ totals()!.taxAndTributesTotal | number: "1.2-2" }}
+              </td>
+              <td>R$ {{ totals()!.totalMonth | number: "1.2-2" }}</td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[ExpensesCategory.Investments].color, 1)
+                "
+              >
+                R$ {{ totals()!.investmentsTotal | number: "1.2-2" }}
+              </td>
+            </tr>
+          }
+        </ng-template>
+      </p-table>
+    </section>
+  }
 </div>

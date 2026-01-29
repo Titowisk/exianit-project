@@ -1,8 +1,22 @@
-import { Month } from './enums/month.enum';
-
 export interface MonthlyExpensesByCategory {
-  month: Month;
+  month: string;
 
+  houseTotal: number;
+  foodTotal: number;
+  groceriesTotal: number;
+  healthTotal: number;
+  shopTotal: number;
+  leisureTotal: number;
+  donationsTotal: number;
+  transportTotal: number;
+  educationTotal: number;
+  taxAndTributesTotal: number;
+  investmentsTotal: number;
+
+  totalMonth: number;
+}
+
+export interface ExpensesSummaryTotals {
   houseTotal: number;
   foodTotal: number;
   groceriesTotal: number;
