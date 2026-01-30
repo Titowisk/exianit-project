@@ -2,11 +2,27 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MonthlyExpensesByCategory, ExpensesSummaryTotals } from '../models/monthly-expenses-by-category.interface';
+import { MonthlyIncomesByCategory } from '../models/monthly-incomes-by-category.interface';
 
 export interface ExpensesSummaryResponse {
   monthlyExpenses: MonthlyExpensesByCategory[];
   averages: ExpensesSummaryTotals;
   totals: ExpensesSummaryTotals;
+}
+
+export interface IncomeSummaryTotals {
+  salary: number;
+  benefits: number;
+  taxReturns: number;
+  bonus: number;
+  paidVacation: number;
+  others: number;
+}
+
+export interface IncomesSummaryResponse {
+  monthlyIncomes: MonthlyIncomesByCategory[];
+  averages: IncomeSummaryTotals;
+  totals: IncomeSummaryTotals;
 }
 
 @Injectable({
@@ -33,6 +49,12 @@ export class TransactionService {
   getExpenseSummary(userId: string, year: number): Observable<ExpensesSummaryResponse> {
     return this.http.get<ExpensesSummaryResponse>(
       `${this.apiUrl}/transactions/expense-summary?userId=${userId}&year=${year}`
+    );
+  }
+
+  getIncomeSummary(userId: string, year: number): Observable<IncomesSummaryResponse> {
+    return this.http.get<IncomesSummaryResponse>(
+      `${this.apiUrl}/transactions/income-summary?userId=${userId}&year=${year}`
     );
   }
 }

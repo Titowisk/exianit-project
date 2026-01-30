@@ -1,7 +1,5 @@
-import { Month } from './enums/month.enum';
-
 export interface MonthlyIncomesByCategory {
-  month: Month;
+  month: string;
   
   salary: number;
   benefits: number;

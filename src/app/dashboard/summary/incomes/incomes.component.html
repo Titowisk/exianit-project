@@ -1,52 +1,209 @@
 <div class="dashboard-container">
   <div class="dashboard-title">
-      <h1>Incomes Summary <span class="year-display">{{ yearService.selectedYearText() }}</span></h1>
+    <h1>
+      Incomes Summary
+      <span class="year-display">{{ yearService.selectedYearText() }}</span>
+    </h1>
   </div>
-    
-  <section class="dashboard-content">
-    <p-table [value]="monthlyIncomes">
-      <ng-template #header>
-        <tr>
-          <th>-</th>
-          <th>Salary</th>
-          <th>Benefits</th>
-          <th>Tax Returns</th>
-          <th>Bonus</th>
-          <th>Paid Vacation</th>
-          <th>Others</th>
-        </tr>
-      </ng-template>
-      <ng-template #body let-income>
-        <tr>
-          <td>{{ income.month }}</td>
-          <td>R$ {{ income.salary | number : "1.2-2" }}</td>
-          <td>R$ {{ income.benefits | number : "1.2-2" }}</td>
-          <td>R$ {{ income.taxReturns | number : "1.2-2" }}</td>
-          <td>R$ {{ income.bonus | number : "1.2-2" }}</td>
-          <td>R$ {{ income.paidVacation | number : "1.2-2" }}</td>
-          <td>R$ {{ income.others | number : "1.2-2" }}</td>
-        </tr>
-      </ng-template>
-      <ng-template #footer>
-        <tr>
-          <td>Averages</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-        </tr>
-        <tr>
-          <td>Totals</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-          <td>R$ 0.00</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </section>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <p-progressSpinner />
+    </div>
+  } @else if (!isLoading() && monthlyIncomes().length === 0) {
+    <div class="empty-state">
+      <p>No income data available for this year.</p>
+    </div>
+  } @else {
+    <section class="dashboard-content">
+      <p-table [value]="monthlyIncomes()">
+        <ng-template #header>
+          <tr [style.font-weight]="'bold'">
+            <th>-</th>
+            <th
+              [style.background-color]="colors[IncomesCategory.Salary].color"
+              [style.color]="'white'"
+            >
+              Salary
+            </th>
+            <th
+              [style.background-color]="colors[IncomesCategory.Benefits].color"
+              [style.color]="'white'"
+            >
+              Benefits
+            </th>
+            <th
+              [style.background-color]="
+                colors[IncomesCategory.TaxReturns].color
+              "
+              [style.color]="'white'"
+            >
+              Tax Returns
+            </th>
+            <th
+              [style.background-color]="colors[IncomesCategory.Bonus].color"
+              [style.color]="'white'"
+            >
+              Bonus
+            </th>
+            <th
+              [style.background-color]="
+                colors[IncomesCategory.PaidVacation].color
+              "
+              [style.color]="'white'"
+            >
+              Paid Vacation
+            </th>
+            <th
+              [style.background-color]="colors[IncomesCategory.Others].color"
+              [style.color]="'white'"
+            >
+              Others
+            </th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-income>
+          <tr [style.font-weight]="'bold'">
+            <td>{{ income.month }}</td>
+            <td
+              [style.background-color]="colors[IncomesCategory.Salary].color"
+              [style.color]="'white'"
+            >
+              R$ {{ income.salary | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="colors[IncomesCategory.Benefits].color"
+              [style.color]="'white'"
+            >
+              R$ {{ income.benefits | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="
+                colors[IncomesCategory.TaxReturns].color
+              "
+              [style.color]="'white'"
+            >
+              R$ {{ income.taxReturns | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="colors[IncomesCategory.Bonus].color"
+              [style.color]="'white'"
+            >
+              R$ {{ income.bonus | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="
+                colors[IncomesCategory.PaidVacation].color
+              "
+              [style.color]="'white'"
+            >
+              R$ {{ income.paidVacation | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="colors[IncomesCategory.Others].color"
+              [style.color]="'white'"
+            >
+              R$ {{ income.others | number: "1.2-2" }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #footer>
+          @if (averages()) {
+            <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+              <td>Averages</td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.Salary].color, 1)
+                "
+              >
+                R$ {{ averages()!.salary | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.Benefits].color, 1)
+                "
+              >
+                R$ {{ averages()!.benefits | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.TaxReturns].color, 1)
+                "
+              >
+                R$ {{ averages()!.taxReturns | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.Bonus].color, 1)
+                "
+              >
+                R$ {{ averages()!.bonus | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.PaidVacation].color, 1)
+                "
+              >
+                R$ {{ averages()!.paidVacation | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.Others].color, 1)
+                "
+              >
+                R$ {{ averages()!.others | number: "1.2-2" }}
+              </td>
+            </tr>
+          }
+          @if (totals()) {
+            <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+              <td>Totals</td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.Salary].color, 1)
+                "
+              >
+                R$ {{ totals()!.salary | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.Benefits].color, 1)
+                "
+              >
+                R$ {{ totals()!.benefits | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.TaxReturns].color, 1)
+                "
+              >
+                R$ {{ totals()!.taxReturns | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.Bonus].color, 1)
+                "
+              >
+                R$ {{ totals()!.bonus | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.PaidVacation].color, 1)
+                "
+              >
+                R$ {{ totals()!.paidVacation | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[IncomesCategory.Others].color, 1)
+                "
+              >
+                R$ {{ totals()!.others | number: "1.2-2" }}
+              </td>
+            </tr>
+          }
+        </ng-template>
+      </p-table>
+    </section>
+  }
 </div>
