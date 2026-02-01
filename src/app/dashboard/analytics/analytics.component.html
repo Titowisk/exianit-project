@@ -3,7 +3,17 @@
     <h1>Analytics <span class="year-display">{{ yearService.selectedYearText() }}</span></h1>
   </div>
 
-  <section class="dashboard-content">
-    <p-chart type="bar" [data]="data" [options]="options" class="h-[30rem]" />
-  </section>
+  @if (isLoading()) {
+    <div class="loading-container">
+      <p-progressSpinner />
+    </div>
+  } @else if (!isLoading() && monthlyExpenses().length === 0) {
+    <div class="empty-state">
+      <p>No analytics data available for this year.</p>
+    </div>
+  } @else {
+    <section class="dashboard-content">
+      <p-chart type="bar" [data]="data()" [options]="options" class="h-[30rem]" />
+    </section>
+  }
 </div>

@@ -1,93 +1,100 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ChartModule } from 'primeng/chart';
-import { Month } from '../../models/enums/month.enum';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MessageService } from 'primeng/api';
 import { MonthlyExpensesByCategory } from '../../models/monthly-expenses-by-category.interface';
-import { MONTHLY_EXPENSES_DATA } from '../../data/monthly-expenses.data';
 import { YearService } from '../../header/year.service';
 import { EXPENSES_COLORS_DICT } from '../../helpers/expenses-category-colors.helper';
 import { ExpensesCategory } from '../../models/enums/expenses-category.enum';
+import { TransactionService } from '../../services/transaction.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-analytics',
-  imports: [ChartModule],
+  imports: [ChartModule, ProgressSpinnerModule],
   templateUrl: './analytics.component.html',
   styleUrl: './analytics.component.scss',
 })
 export class AnalyticsComponent {
-  monthlyExpenses: MonthlyExpensesByCategory[] = MONTHLY_EXPENSES_DATA;
+  private transactionService = inject(TransactionService);
+  private authService = inject(AuthService);
+  private messageService = inject(MessageService);
   yearService = inject(YearService);
 
-  data = {
-    labels: this.monthlyExpenses.map(expense => expense.month),
+  monthlyExpenses = signal<MonthlyExpensesByCategory[]>([]);
+  isLoading = signal<boolean>(false);
+
+  data = computed(() => ({
+    labels: this.monthlyExpenses().map(expense => expense.month),
     datasets: [
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.House].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.House].color,
-        data: this.monthlyExpenses.map(expense => expense.houseTotal),
+        data: this.monthlyExpenses().map(expense => expense.houseTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.Food].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Food].color,
-        data: this.monthlyExpenses.map(expense => expense.foodTotal),
+        data: this.monthlyExpenses().map(expense => expense.foodTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.Groceries].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Groceries].color,
-        data: this.monthlyExpenses.map(expense => expense.groceriesTotal),
+        data: this.monthlyExpenses().map(expense => expense.groceriesTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.Health].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Health].color,
-        data: this.monthlyExpenses.map(expense => expense.healthTotal),
+        data: this.monthlyExpenses().map(expense => expense.healthTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.Shop].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Shop].color,
-        data: this.monthlyExpenses.map(expense => expense.shopTotal),
+        data: this.monthlyExpenses().map(expense => expense.shopTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.Leisure].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Leisure].color,
-        data: this.monthlyExpenses.map(expense => expense.leisureTotal),
+        data: this.monthlyExpenses().map(expense => expense.leisureTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.Donations].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Donations].color,
-        data: this.monthlyExpenses.map(expense => expense.donationsTotal),
+        data: this.monthlyExpenses().map(expense => expense.donationsTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.Transport].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Transport].color,
-        data: this.monthlyExpenses.map(expense => expense.transportTotal),
+        data: this.monthlyExpenses().map(expense => expense.transportTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.Education].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Education].color,
-        data: this.monthlyExpenses.map(expense => expense.educationTotal),
+        data: this.monthlyExpenses().map(expense => expense.educationTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.TaxAndTributes].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.TaxAndTributes].color,
-        data: this.monthlyExpenses.map(expense => expense.taxAndTributesTotal),
+        data: this.monthlyExpenses().map(expense => expense.taxAndTributesTotal),
       },
       {
         type: 'bar',
         label: EXPENSES_COLORS_DICT[ExpensesCategory.Investments].label,
         backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Investments].color,
-        data: this.monthlyExpenses.map(expense => expense.investmentsTotal),
+        data: this.monthlyExpenses().map(expense => expense.investmentsTotal),
       },
     ],
-  };
+  }));
 
   options = {
     maintainAspectRatio: false,
@@ -126,4 +133,40 @@ export class AnalyticsComponent {
       },
     },
   };
+
+  constructor() {
+    effect(() => {
+      const yearItem = this.yearService.selectedYear();
+      this.loadExpenses(yearItem.year);
+    });
+  }
+
+  private loadExpenses(year: number): void {
+    const userId = this.authService.userId();
+    if (!userId) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'User not authenticated'
+      });
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.transactionService.getExpenseSummary(userId, year).subscribe({
+      next: (response) => {
+        this.monthlyExpenses.set(response.monthlyExpenses);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading expense summary:', error);
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: error?.error?.message || 'Failed to load expense summary'
+        });
+        this.isLoading.set(false);
+      }
+    });
+  }
 }
