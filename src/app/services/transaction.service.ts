@@ -34,7 +34,7 @@ export class TransactionService {
 
   updateCategory(transactionId: string, userId: string, category: number): Observable<void> {
     return this.http.patch<void>(
-      `${this.apiUrl}/transactions/${transactionId}?userId=${userId}`,
+      `${this.apiUrl}/transactions/${transactionId}/category-only?userId=${userId}`,
       { category }
     );
   }
