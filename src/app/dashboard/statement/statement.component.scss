@@ -14,3 +14,26 @@
     align-items: center;
     min-height: 400px;
 }
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1rem 0;
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .error-message {
+            color: var(--red-500);
+            font-size: 0.875rem;
+        }
+    }
+}
