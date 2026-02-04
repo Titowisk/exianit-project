@@ -57,4 +57,17 @@ export class TransactionService {
       `${this.apiUrl}/transactions/income-summary?userId=${userId}&year=${year}`
     );
   }
+
+  updateTransactionDetails(transactionId: string, userId: string, date: string, description: string): Observable<{ id: string; date: string; description: string }> {
+    return this.http.patch<{ id: string; date: string; description: string }>(
+      `${this.apiUrl}/transactions/${transactionId}?userId=${userId}`,
+      { date, description }
+    );
+  }
+
+  deleteTransaction(transactionId: string, userId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/transactions/${transactionId}?userId=${userId}`
+    );
+  }
 }

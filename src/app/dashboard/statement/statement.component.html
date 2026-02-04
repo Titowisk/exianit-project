@@ -75,7 +75,7 @@
             <td>{{ transaction.amount | currency : "BRL" }}</td>
             <td>{{ transaction.date | date : "dd/MM/yyyy" }}</td>
             <td>
-              @if (editingId() === transaction.id) {
+              @if (categorizingId() === transaction.id) {
                 <p-select
                   [options]="getCategoryOptions(transaction)"
                   optionLabel="label"
@@ -89,7 +89,7 @@
             </td>
             <td>{{ transaction.description || "N/A" }}</td>
             <td>
-              @if (editingId() === transaction.id) {
+              @if (categorizingId() === transaction.id) {
                 <p-button 
                   label="This Transaction" 
                   icon="pi pi-check"
@@ -117,7 +117,38 @@
                   [disabled]="savingId() !== null"
                 />
               } @else {
-                <p-button label="Edit" (onClick)="startEdit(transaction)" severity="info" size="small" />
+                <p-button 
+                  icon="pi pi-pencil" 
+                  (onClick)="openEditModal(transaction)" 
+                  severity="info" 
+                  size="small"
+                  [rounded]="true"
+                  [text]="true"
+                  pTooltip="Edit Date/Description"
+                  tooltipPosition="top"
+                />
+                <p-button 
+                  icon="pi pi-trash" 
+                  (onClick)="deleteTransaction(transaction)" 
+                  severity="danger" 
+                  size="small"
+                  [rounded]="true"
+                  [text]="true"
+                  [loading]="deletingId() === transaction.id"
+                  [disabled]="deletingId() !== null"
+                  pTooltip="Delete Transaction"
+                  tooltipPosition="top"
+                />
+                <p-button 
+                  icon="pi pi-bookmark" 
+                  (onClick)="startCategorize(transaction)"
+                  severity="warn" 
+                  size="small"
+                  [rounded]="true"
+                  [text]="true"
+                  pTooltip="Update Category"
+                  tooltipPosition="top"
+                />
               }
             </td>
           </tr>
@@ -126,3 +157,62 @@
     }
   </section>
 </div>
+
+<p-dialog 
+  header="Edit Transaction" 
+  [(visible)]="showEditModal" 
+  [modal]="true" 
+  [style]="{width: '500px'}" 
+  [closable]="true"
+  (onHide)="closeEditModal()"
+>
+  <div class="edit-form">
+    <div class="form-field">
+      <label for="date">Date *</label>
+      <p-datePicker 
+        id="date"
+        [(ngModel)]="editedDate" 
+        dateFormat="yy-mm-dd" 
+        [showTime]="false"
+        [showIcon]="true"
+        placeholder="Select date"
+        [style]="{width: '100%'}"
+      />
+      @if (!editedDate()) {
+        <small class="error-message">Date is required</small>
+      }
+    </div>
+    <div class="form-field">
+      <label for="description">Description *</label>
+      <input 
+        id="description"
+        type="text" 
+        pInputText 
+        [(ngModel)]="editedDescription" 
+        placeholder="Enter description"
+        [style]="{width: '100%'}"
+      />
+      @if (!editedDescription().trim()) {
+        <small class="error-message">Description is required</small>
+      }
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button 
+      label="Cancel" 
+      icon="pi pi-times" 
+      (onClick)="closeEditModal()" 
+      severity="secondary"
+      [disabled]="isSavingDetails()"
+    />
+    <p-button 
+      label="Save" 
+      icon="pi pi-check" 
+      (onClick)="saveDetails()" 
+      [disabled]="!isFormValid() || isSavingDetails()"
+      [loading]="isSavingDetails()"
+    />
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog></p-confirmDialog>
