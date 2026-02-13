@@ -7,8 +7,8 @@ import { TransactionService } from '../../../services/transaction.service';
 import { AuthService } from '../../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { EXPENSES_COLORS_DICT } from '../../../helpers/expenses-category-colors.helper';
-import { ExpensesCategory } from '../../../models/enums/expenses-category.enum';
+import { CATEGORY_COLORS } from '../../../helpers/category-colors.helper';
+import { Category } from '../../../models/enums/category.enum';
 
 @Component({
   selector: 'app-expenses',
@@ -30,8 +30,8 @@ export class ExpensesComponent {
   isLoading = signal<boolean>(false);
 
   // Expose colors for template
-  readonly colors = EXPENSES_COLORS_DICT;
-  readonly ExpensesCategory = ExpensesCategory;
+  readonly colors = CATEGORY_COLORS;
+  readonly Category = Category;
 
   constructor() {
     // Watch for year changes and reload data

@@ -2,15 +2,14 @@ import { Component, inject, signal } from '@angular/core';
 import { StatementService } from '../statement.service';
 import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
-import { getCategoryValue } from '../../helpers/category-enum.helper';
+import { getCategoryValue, getCategoriesByType } from '../../helpers/category-enum.helper';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { YearService } from '../../header/year.service';
 import { StatementTransaction } from '../../models/statement.interface';
-import { ExpensesCategory } from '../../models/enums/expenses-category.enum';
-import { IncomesCategory } from '../../models/enums/incomes-category.enum';
+import { Category } from '../../models/enums/category.enum';
 import { Select } from 'primeng/select';
 import { Button } from 'primeng/button';
 import { ProgressSpinner } from 'primeng/progressspinner';
@@ -73,17 +72,11 @@ export class StatementComponent {
   }
 
   getCategoryOptions(transaction: StatementTransaction): { label: string; value: string }[] {
-    if (transaction.type === 'expense') {
-      return Object.values(ExpensesCategory).map(cat => ({
-        label: cat,
-        value: cat
-      }));
-    } else {
-      return Object.values(IncomesCategory).map(cat => ({
-        label: cat,
-        value: cat
-      }));
-    }
+    const categories = getCategoriesByType(transaction.type);
+    return categories.map(cat => ({
+      label: cat,
+      value: cat
+    }));
   }
 
   startCategorize(transaction: StatementTransaction): void {
@@ -108,7 +101,7 @@ export class StatementComponent {
       return;
     }
 
-    const categoryValue = getCategoryValue(this.editingCategory() as ExpensesCategory | IncomesCategory);
+    const categoryValue = getCategoryValue(this.editingCategory() as Category, transaction.type);
     this.savingId.set(transaction.id);
 
     this.transactionService.updateCategory(transaction.id, userId, categoryValue).subscribe({
@@ -148,7 +141,7 @@ export class StatementComponent {
       return;
     }
 
-    const categoryValue = getCategoryValue(this.editingCategory() as ExpensesCategory | IncomesCategory);
+    const categoryValue = getCategoryValue(this.editingCategory() as Category, transaction.type);
     this.savingId.set(transaction.id);
 
     this.transactionService.updateSimilarOriginCategory(transaction.id, userId, categoryValue).subscribe({

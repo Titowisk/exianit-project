@@ -1,34 +1,67 @@
-import { ExpensesCategory } from '../models/enums/expenses-category.enum';
-import { IncomesCategory } from '../models/enums/incomes-category.enum';
+import { Category } from '../models/enums/category.enum';
 
 /**
  * Maps category enum strings to their corresponding integer values expected by the API
  */
-export function getCategoryValue(category: ExpensesCategory | IncomesCategory): number {
+export function getCategoryValue(category: Category, type: 'expense' | 'income'): number {
   const categoryMap: Record<string, number> = {
-    // Expenses categories
-    [ExpensesCategory.House]: 1,
-    [ExpensesCategory.Food]: 2,
-    [ExpensesCategory.Groceries]: 3,
-    [ExpensesCategory.Health]: 4,
-    [ExpensesCategory.Shop]: 5,
-    [ExpensesCategory.Leisure]: 6,
-    [ExpensesCategory.Donations]: 7,
-    [ExpensesCategory.Transport]: 8,
-    [ExpensesCategory.Education]: 9,
-    [ExpensesCategory.TaxAndTributes]: 10,
-    [ExpensesCategory.Investments]: 11,
+    // Expense categories
+    [Category.House]: 1,
+    [Category.Food]: 2,
+    [Category.Groceries]: 3,
+    [Category.Health]: 4,
+    [Category.Shop]: 5,
+    [Category.Leisure]: 6,
+    [Category.Donations]: 7,
+    [Category.Transport]: 8,
+    [Category.Education]: 9,
+    [Category.TaxAndTributes]: 10,
+    [Category.Investments]: 11,
     
-    // Incomes categories
-    [IncomesCategory.Salary]: 50,
-    [IncomesCategory.Benefits]: 51,
-    [IncomesCategory.TaxReturns]: 52,
-    [IncomesCategory.Bonus]: 53,
-    [IncomesCategory.PaidVacation]: 54,
+    // Income categories
+    [Category.Salary]: 50,
+    [Category.Benefits]: 51,
+    [Category.TaxReturns]: 52,
+    [Category.Bonus]: 53,
+    [Category.PaidVacation]: 54,
 
-    // Generic
-    [IncomesCategory.Others]: 99,
+    // Shared categories
+    [Category.Others]: 99,
+    [Category.Uncategorized]: 0,
   };
 
-  return categoryMap[category] ?? 12; // Default to Others (Expenses) if not found
+  return categoryMap[category] ?? 99; // Default to Others if not found
+}
+
+/**
+ * Returns valid categories for a given transaction type
+ */
+export function getCategoriesByType(type: 'expense' | 'income'): Category[] {
+  if (type === 'expense') {
+    return [
+      Category.House,
+      Category.Food,
+      Category.Groceries,
+      Category.Health,
+      Category.Shop,
+      Category.Leisure,
+      Category.Donations,
+      Category.Transport,
+      Category.Education,
+      Category.TaxAndTributes,
+      Category.Investments,
+      Category.Others,
+      Category.Uncategorized
+    ];
+  } else {
+    return [
+      Category.Salary,
+      Category.Benefits,
+      Category.TaxReturns,
+      Category.Bonus,
+      Category.PaidVacation,
+      Category.Others,
+      Category.Uncategorized
+    ];
+  }
 }

@@ -6,8 +6,8 @@ import { TransactionService, IncomeSummaryTotals } from '../../../services/trans
 import { AuthService } from '../../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { INCOMES_COLORS_DICT } from '../../../helpers/incomes-category-colors.helper';
-import { IncomesCategory } from '../../../models/enums/incomes-category.enum';
+import { CATEGORY_COLORS } from '../../../helpers/category-colors.helper';
+import { Category } from '../../../models/enums/category.enum';
 import { DecimalPipe } from '@angular/common';
 
 @Component({
@@ -29,8 +29,8 @@ export class IncomesComponent {
   isLoading = signal<boolean>(false);
 
   // Expose colors for template
-  readonly colors = INCOMES_COLORS_DICT;
-  readonly IncomesCategory = IncomesCategory;
+  readonly colors = CATEGORY_COLORS;
+  readonly Category = Category;
 
   constructor() {
     // Watch for year changes and reload data
