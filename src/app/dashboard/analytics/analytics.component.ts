@@ -4,8 +4,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageService } from 'primeng/api';
 import { MonthlyExpensesByCategory } from '../../models/monthly-expenses-by-category.interface';
 import { YearService } from '../../header/year.service';
-import { EXPENSES_COLORS_DICT } from '../../helpers/expenses-category-colors.helper';
-import { ExpensesCategory } from '../../models/enums/expenses-category.enum';
+import { CATEGORY_COLORS } from '../../helpers/category-colors.helper';
+import { Category } from '../../models/enums/category.enum';
 import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -29,68 +29,68 @@ export class AnalyticsComponent {
     datasets: [
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.House].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.House].color,
+        label: CATEGORY_COLORS[Category.House].label,
+        backgroundColor: CATEGORY_COLORS[Category.House].color,
         data: this.monthlyExpenses().map(expense => expense.houseTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.Food].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Food].color,
+        label: CATEGORY_COLORS[Category.Food].label,
+        backgroundColor: CATEGORY_COLORS[Category.Food].color,
         data: this.monthlyExpenses().map(expense => expense.foodTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.Groceries].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Groceries].color,
+        label: CATEGORY_COLORS[Category.Groceries].label,
+        backgroundColor: CATEGORY_COLORS[Category.Groceries].color,
         data: this.monthlyExpenses().map(expense => expense.groceriesTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.Health].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Health].color,
+        label: CATEGORY_COLORS[Category.Health].label,
+        backgroundColor: CATEGORY_COLORS[Category.Health].color,
         data: this.monthlyExpenses().map(expense => expense.healthTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.Shop].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Shop].color,
+        label: CATEGORY_COLORS[Category.Shop].label,
+        backgroundColor: CATEGORY_COLORS[Category.Shop].color,
         data: this.monthlyExpenses().map(expense => expense.shopTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.Leisure].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Leisure].color,
+        label: CATEGORY_COLORS[Category.Leisure].label,
+        backgroundColor: CATEGORY_COLORS[Category.Leisure].color,
         data: this.monthlyExpenses().map(expense => expense.leisureTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.Donations].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Donations].color,
+        label: CATEGORY_COLORS[Category.Donations].label,
+        backgroundColor: CATEGORY_COLORS[Category.Donations].color,
         data: this.monthlyExpenses().map(expense => expense.donationsTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.Transport].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Transport].color,
+        label: CATEGORY_COLORS[Category.Transport].label,
+        backgroundColor: CATEGORY_COLORS[Category.Transport].color,
         data: this.monthlyExpenses().map(expense => expense.transportTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.Education].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Education].color,
+        label: CATEGORY_COLORS[Category.Education].label,
+        backgroundColor: CATEGORY_COLORS[Category.Education].color,
         data: this.monthlyExpenses().map(expense => expense.educationTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.TaxAndTributes].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.TaxAndTributes].color,
+        label: CATEGORY_COLORS[Category.TaxAndTributes].label,
+        backgroundColor: CATEGORY_COLORS[Category.TaxAndTributes].color,
         data: this.monthlyExpenses().map(expense => expense.taxAndTributesTotal),
       },
       {
         type: 'bar',
-        label: EXPENSES_COLORS_DICT[ExpensesCategory.Investments].label,
-        backgroundColor: EXPENSES_COLORS_DICT[ExpensesCategory.Investments].color,
+        label: CATEGORY_COLORS[Category.Investments].label,
+        backgroundColor: CATEGORY_COLORS[Category.Investments].color,
         data: this.monthlyExpenses().map(expense => expense.investmentsTotal),
       },
     ],

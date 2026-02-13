@@ -21,41 +21,41 @@
           <tr [style.font-weight]="'bold'">
             <th>-</th>
             <th
-              [style.background-color]="colors[IncomesCategory.Salary].color"
+              [style.background-color]="colors[Category.Salary].color"
               [style.color]="'white'"
             >
               Salary
             </th>
             <th
-              [style.background-color]="colors[IncomesCategory.Benefits].color"
+              [style.background-color]="colors[Category.Benefits].color"
               [style.color]="'white'"
             >
               Benefits
             </th>
             <th
               [style.background-color]="
-                colors[IncomesCategory.TaxReturns].color
+                colors[Category.TaxReturns].color
               "
               [style.color]="'white'"
             >
               Tax Returns
             </th>
             <th
-              [style.background-color]="colors[IncomesCategory.Bonus].color"
+              [style.background-color]="colors[Category.Bonus].color"
               [style.color]="'white'"
             >
               Bonus
             </th>
             <th
               [style.background-color]="
-                colors[IncomesCategory.PaidVacation].color
+                colors[Category.PaidVacation].color
               "
               [style.color]="'white'"
             >
               Paid Vacation
             </th>
             <th
-              [style.background-color]="colors[IncomesCategory.Others].color"
+              [style.background-color]="colors[Category.Others].color"
               [style.color]="'white'"
             >
               Others
@@ -66,41 +66,41 @@
           <tr [style.font-weight]="'bold'">
             <td>{{ income.month }}</td>
             <td
-              [style.background-color]="colors[IncomesCategory.Salary].color"
+              [style.background-color]="colors[Category.Salary].color"
               [style.color]="'white'"
             >
               R$ {{ income.salary | number: "1.2-2" }}
             </td>
             <td
-              [style.background-color]="colors[IncomesCategory.Benefits].color"
+              [style.background-color]="colors[Category.Benefits].color"
               [style.color]="'white'"
             >
               R$ {{ income.benefits | number: "1.2-2" }}
             </td>
             <td
               [style.background-color]="
-                colors[IncomesCategory.TaxReturns].color
+                colors[Category.TaxReturns].color
               "
               [style.color]="'white'"
             >
               R$ {{ income.taxReturns | number: "1.2-2" }}
             </td>
             <td
-              [style.background-color]="colors[IncomesCategory.Bonus].color"
+              [style.background-color]="colors[Category.Bonus].color"
               [style.color]="'white'"
             >
               R$ {{ income.bonus | number: "1.2-2" }}
             </td>
             <td
               [style.background-color]="
-                colors[IncomesCategory.PaidVacation].color
+                colors[Category.PaidVacation].color
               "
               [style.color]="'white'"
             >
               R$ {{ income.paidVacation | number: "1.2-2" }}
             </td>
             <td
-              [style.background-color]="colors[IncomesCategory.Others].color"
+              [style.background-color]="colors[Category.Others].color"
               [style.color]="'white'"
             >
               R$ {{ income.others | number: "1.2-2" }}
@@ -113,42 +113,42 @@
               <td>Averages</td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.Salary].color, 1)
+                  hexToRgba(colors[Category.Salary].color, 1)
                 "
               >
                 R$ {{ averages()!.salary | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.Benefits].color, 1)
+                  hexToRgba(colors[Category.Benefits].color, 1)
                 "
               >
                 R$ {{ averages()!.benefits | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.TaxReturns].color, 1)
+                  hexToRgba(colors[Category.TaxReturns].color, 1)
                 "
               >
                 R$ {{ averages()!.taxReturns | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.Bonus].color, 1)
+                  hexToRgba(colors[Category.Bonus].color, 1)
                 "
               >
                 R$ {{ averages()!.bonus | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.PaidVacation].color, 1)
+                  hexToRgba(colors[Category.PaidVacation].color, 1)
                 "
               >
                 R$ {{ averages()!.paidVacation | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.Others].color, 1)
+                  hexToRgba(colors[Category.Others].color, 1)
                 "
               >
                 R$ {{ averages()!.others | number: "1.2-2" }}
@@ -160,42 +160,42 @@
               <td>Totals</td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.Salary].color, 1)
+                  hexToRgba(colors[Category.Salary].color, 1)
                 "
               >
                 R$ {{ totals()!.salary | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.Benefits].color, 1)
+                  hexToRgba(colors[Category.Benefits].color, 1)
                 "
               >
                 R$ {{ totals()!.benefits | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.TaxReturns].color, 1)
+                  hexToRgba(colors[Category.TaxReturns].color, 1)
                 "
               >
                 R$ {{ totals()!.taxReturns | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.Bonus].color, 1)
+                  hexToRgba(colors[Category.Bonus].color, 1)
                 "
               >
                 R$ {{ totals()!.bonus | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.PaidVacation].color, 1)
+                  hexToRgba(colors[Category.PaidVacation].color, 1)
                 "
               >
                 R$ {{ totals()!.paidVacation | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[IncomesCategory.Others].color, 1)
+                  hexToRgba(colors[Category.Others].color, 1)
                 "
               >
                 R$ {{ totals()!.others | number: "1.2-2" }}

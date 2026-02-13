@@ -21,46 +21,46 @@
           <tr [style.font-weight]="'bold'">
             <th>-</th>
             <th
-              [style.background-color]="colors[ExpensesCategory.House].color"
+              [style.background-color]="colors[Category.House].color"
               [style.color]="'white'"
             >
               House
             </th>
             <th
-              [style.background-color]="colors[ExpensesCategory.Food].color"
+              [style.background-color]="colors[Category.Food].color"
               [style.color]="'white'"
             >
               Food
             </th>
             <th
               [style.background-color]="
-                colors[ExpensesCategory.Groceries].color
+                colors[Category.Groceries].color
               "
               [style.color]="'white'"
             >
               Groceries
             </th>
             <th
-              [style.background-color]="colors[ExpensesCategory.Health].color"
+              [style.background-color]="colors[Category.Health].color"
               [style.color]="'white'"
             >
               Health
             </th>
             <th
-              [style.background-color]="colors[ExpensesCategory.Leisure].color"
+              [style.background-color]="colors[Category.Leisure].color"
               [style.color]="'white'"
             >
               Leisure
             </th>
             <th
-              [style.background-color]="colors[ExpensesCategory.Shop].color"
+              [style.background-color]="colors[Category.Shop].color"
               [style.color]="'white'"
             >
               Shop
             </th>
             <th
               [style.background-color]="
-                colors[ExpensesCategory.Donations].color
+                colors[Category.Donations].color
               "
               [style.color]="'white'"
             >
@@ -68,7 +68,7 @@
             </th>
             <th
               [style.background-color]="
-                colors[ExpensesCategory.Transport].color
+                colors[Category.Transport].color
               "
               [style.color]="'white'"
             >
@@ -76,7 +76,7 @@
             </th>
             <th
               [style.background-color]="
-                colors[ExpensesCategory.Education].color
+                colors[Category.Education].color
               "
               [style.color]="'white'"
             >
@@ -84,7 +84,7 @@
             </th>
             <th
               [style.background-color]="
-                colors[ExpensesCategory.TaxAndTributes].color
+                colors[Category.TaxAndTributes].color
               "
               [style.color]="'white'"
             >
@@ -93,7 +93,7 @@
             <th>Total</th>
             <th
               [style.background-color]="
-                colors[ExpensesCategory.Investments].color
+                colors[Category.Investments].color
               "
               [style.color]="'white'"
             >
@@ -105,46 +105,46 @@
           <tr [style.font-weight]="'bold'">
             <td>{{ expense.month }}</td>
             <td
-              [style.background-color]="colors[ExpensesCategory.House].color"
+              [style.background-color]="colors[Category.House].color"
               [style.color]="'white'"
             >
               R$ {{ expense.houseTotal | number: "1.2-2" }}
             </td>
             <td
-              [style.background-color]="colors[ExpensesCategory.Food].color"
+              [style.background-color]="colors[Category.Food].color"
               [style.color]="'white'"
             >
               R$ {{ expense.foodTotal | number: "1.2-2" }}
             </td>
             <td
               [style.background-color]="
-                colors[ExpensesCategory.Groceries].color
+                colors[Category.Groceries].color
               "
               [style.color]="'white'"
             >
               R$ {{ expense.groceriesTotal | number: "1.2-2" }}
             </td>
             <td
-              [style.background-color]="colors[ExpensesCategory.Health].color"
+              [style.background-color]="colors[Category.Health].color"
               [style.color]="'white'"
             >
               R$ {{ expense.healthTotal | number: "1.2-2" }}
             </td>
             <td
-              [style.background-color]="colors[ExpensesCategory.Leisure].color"
+              [style.background-color]="colors[Category.Leisure].color"
               [style.color]="'white'"
             >
               R$ {{ expense.leisureTotal | number: "1.2-2" }}
             </td>
             <td
-              [style.background-color]="colors[ExpensesCategory.Shop].color"
+              [style.background-color]="colors[Category.Shop].color"
               [style.color]="'white'"
             >
               R$ {{ expense.shopTotal | number: "1.2-2" }}
             </td>
             <td
               [style.background-color]="
-                colors[ExpensesCategory.Donations].color
+                colors[Category.Donations].color
               "
               [style.color]="'white'"
             >
@@ -152,7 +152,7 @@
             </td>
             <td
               [style.background-color]="
-                colors[ExpensesCategory.Transport].color
+                colors[Category.Transport].color
               "
               [style.color]="'white'"
             >
@@ -160,7 +160,7 @@
             </td>
             <td
               [style.background-color]="
-                colors[ExpensesCategory.Education].color
+                colors[Category.Education].color
               "
               [style.color]="'white'"
             >
@@ -168,7 +168,7 @@
             </td>
             <td
               [style.background-color]="
-                colors[ExpensesCategory.TaxAndTributes].color
+                colors[Category.TaxAndTributes].color
               "
               [style.color]="'white'"
             >
@@ -177,7 +177,7 @@
             <td>R$ {{ expense.totalMonth | number: "1.2-2" }}</td>
             <td
               [style.background-color]="
-                colors[ExpensesCategory.Investments].color
+                colors[Category.Investments].color
               "
               [style.color]="'white'"
             >
@@ -191,70 +191,70 @@
               <td>Averages</td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.House].color, 1)
+                  hexToRgba(colors[Category.House].color, 1)
                 "
               >
                 R$ {{ averages()!.houseTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Food].color, 1)
+                  hexToRgba(colors[Category.Food].color, 1)
                 "
               >
                 R$ {{ averages()!.foodTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Groceries].color, 1)
+                  hexToRgba(colors[Category.Groceries].color, 1)
                 "
               >
                 R$ {{ averages()!.groceriesTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Health].color, 1)
+                  hexToRgba(colors[Category.Health].color, 1)
                 "
               >
                 R$ {{ averages()!.healthTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Leisure].color, 1)
+                  hexToRgba(colors[Category.Leisure].color, 1)
                 "
               >
                 R$ {{ averages()!.leisureTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Shop].color, 1)
+                  hexToRgba(colors[Category.Shop].color, 1)
                 "
               >
                 R$ {{ averages()!.shopTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Donations].color, 1)
+                  hexToRgba(colors[Category.Donations].color, 1)
                 "
               >
                 R$ {{ averages()!.donationsTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Transport].color, 1)
+                  hexToRgba(colors[Category.Transport].color, 1)
                 "
               >
                 R$ {{ averages()!.transportTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Education].color, 1)
+                  hexToRgba(colors[Category.Education].color, 1)
                 "
               >
                 R$ {{ averages()!.educationTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.TaxAndTributes].color, 1)
+                  hexToRgba(colors[Category.TaxAndTributes].color, 1)
                 "
               >
                 R$ {{ averages()!.taxAndTributesTotal | number: "1.2-2" }}
@@ -262,7 +262,7 @@
               <td>R$ {{ averages()!.totalMonth | number: "1.2-2" }}</td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Investments].color, 1)
+                  hexToRgba(colors[Category.Investments].color, 1)
                 "
               >
                 R$ {{ averages()!.investmentsTotal | number: "1.2-2" }}
@@ -274,70 +274,70 @@
               <td>Totals</td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.House].color, 1)
+                  hexToRgba(colors[Category.House].color, 1)
                 "
               >
                 R$ {{ totals()!.houseTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Food].color, 1)
+                  hexToRgba(colors[Category.Food].color, 1)
                 "
               >
                 R$ {{ totals()!.foodTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Groceries].color, 1)
+                  hexToRgba(colors[Category.Groceries].color, 1)
                 "
               >
                 R$ {{ totals()!.groceriesTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Health].color, 1)
+                  hexToRgba(colors[Category.Health].color, 1)
                 "
               >
                 R$ {{ totals()!.healthTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Leisure].color, 1)
+                  hexToRgba(colors[Category.Leisure].color, 1)
                 "
               >
                 R$ {{ totals()!.leisureTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Shop].color, 1)
+                  hexToRgba(colors[Category.Shop].color, 1)
                 "
               >
                 R$ {{ totals()!.shopTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Donations].color, 1)
+                  hexToRgba(colors[Category.Donations].color, 1)
                 "
               >
                 R$ {{ totals()!.donationsTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Transport].color, 1)
+                  hexToRgba(colors[Category.Transport].color, 1)
                 "
               >
                 R$ {{ totals()!.transportTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Education].color, 1)
+                  hexToRgba(colors[Category.Education].color, 1)
                 "
               >
                 R$ {{ totals()!.educationTotal | number: "1.2-2" }}
               </td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.TaxAndTributes].color, 1)
+                  hexToRgba(colors[Category.TaxAndTributes].color, 1)
                 "
               >
                 R$ {{ totals()!.taxAndTributesTotal | number: "1.2-2" }}
@@ -345,7 +345,7 @@
               <td>R$ {{ totals()!.totalMonth | number: "1.2-2" }}</td>
               <td
                 [style.color]="
-                  hexToRgba(colors[ExpensesCategory.Investments].color, 1)
+                  hexToRgba(colors[Category.Investments].color, 1)
                 "
               >
                 R$ {{ totals()!.investmentsTotal | number: "1.2-2" }}

@@ -1,5 +1,4 @@
-import { ExpensesCategory } from "./enums/expenses-category.enum";
-import { IncomesCategory } from "./enums/incomes-category.enum";
+import { Category } from "./enums/category.enum";
 
 export interface IncomeTransaction {
     id: string;
@@ -7,7 +6,7 @@ export interface IncomeTransaction {
     origin: string;
     amount: number;
     date: Date;
-    category: IncomesCategory;
+    category: Category;
     description?: string;
 }
 
@@ -17,7 +16,7 @@ export interface ExpenseTransaction {
     origin: string;
     amount: number;
     date: Date;
-    category: ExpensesCategory;
+    category: Category;
     description?: string;
 }
 
