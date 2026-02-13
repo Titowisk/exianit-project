@@ -70,9 +70,9 @@
         </ng-template>
         <ng-template #body let-transaction>
           <tr>
-            <td>{{ transaction.type }}</td>
+            <td [style.color]="transaction.type == 'expense' ? '#bd2b2b' : '#34a853'" [style.font-weight]="'500'">{{ transaction.type }}</td>
             <td>{{ transaction.origin }}</td>
-            <td>{{ transaction.amount | currency : "BRL" }}</td>
+            <td [style.color]="transaction.type === 'expense' ? '#bd2b2b' : '#34a853'" [style.font-weight]="'500'">{{ transaction.amount | currency : "BRL" }}</td>
             <td>{{ transaction.date | date : "dd/MM/yyyy" }}</td>
             <td>
               @if (categorizingId() === transaction.id) {
