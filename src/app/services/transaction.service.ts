@@ -70,4 +70,10 @@ export class TransactionService {
       `${this.apiUrl}/transactions/${transactionId}?userId=${userId}`
     );
   }
+
+  getYears(userId: string): Observable<number[]> {
+    return this.http.get<number[]>(
+      `${this.apiUrl}/transactions/years?userId=${userId}`
+    );
+  }
 }

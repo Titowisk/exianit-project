@@ -108,3 +108,28 @@
 .sidebar {
   animation: slideIn 0.3s ease-out;
 }
+
+/* Year selector states */
+.year-error-container {
+  padding: 1rem;
+  text-align: center;
+  
+  .error-message {
+    color: var(--red-400);
+    font-size: 12px;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+}
+
+.year-loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  
+  ::ng-deep .year-spinner {
+    width: 2rem;
+    height: 2rem;
+  }
+}
