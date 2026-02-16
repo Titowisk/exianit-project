@@ -22,6 +22,11 @@
         @if (hasError('email', 'email') && !hasError('email', 'required')) {
           <small class="error-message">Please enter a valid email address</small>
         }
+        @if (getBackendErrors('email').length > 0) {
+          @for (error of getBackendErrors('email'); track error) {
+            <small class="error-message">{{ error }}</small>
+          }
+        }
       </div>
 
       <!-- Password Field -->
@@ -38,6 +43,11 @@
         />
         @if (hasError('password', 'required')) {
           <small class="error-message">Password is required</small>
+        }
+        @if (getBackendErrors('password').length > 0) {
+          @for (error of getBackendErrors('password'); track error) {
+            <small class="error-message">{{ error }}</small>
+          }
         }
         @if (!hasError('password', 'required')) {
           <div class="password-requirements">
@@ -82,6 +92,11 @@
         }
         @if (registerForm.hasError('passwordMismatch') && confirmPassword?.dirty) {
           <small class="error-message">Passwords do not match</small>
+        }
+        @if (getBackendErrors('confirmPassword').length > 0) {
+          @for (error of getBackendErrors('confirmPassword'); track error) {
+            <small class="error-message">{{ error }}</small>
+          }
         }
       </div>
 

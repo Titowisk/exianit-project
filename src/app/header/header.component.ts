@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, computed, effect } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -8,16 +8,30 @@ import { Button } from 'primeng/button';
 import { YearItem } from '../models/year-item.interface';
 import { Select } from 'primeng/select';
 import { YearService } from './year.service';
+import { AuthService } from '../services/auth.service';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule, RouterModule, MenuModule, Button, Select, FormsModule],
+  imports: [CommonModule, RouterModule, MenuModule, Button, Select, FormsModule, ProgressSpinner],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
   private router = inject(Router);
+  private authService = inject(AuthService);
   yearService = inject(YearService);
+
+  isAuthenticated = computed(() => this.authService.isAuthenticated());
+
+  constructor() {
+    // Watch for authentication changes and load years when user logs in
+    effect(() => {
+      if (this.isAuthenticated()) {
+        this.yearService.loadYears();
+      }
+    });
+  }
 
   toggleDarkMode() {
     const element = document.querySelector('html');
@@ -102,12 +116,15 @@ export class HeaderComponent {
     this.router.navigate([route]);
   }
 
-  selectYearItem = signal<YearItem[]>(this.yearService.getYears());
   selectedYearValue: YearItem = this.yearService.selectedYear();
   
   onYearChange(event: any) {
     const selectedYear = event.value;
     this.yearService.setSelectedYear(selectedYear);
     this.selectedYearValue = selectedYear;
+  }
+
+  retryLoadYears() {
+    this.yearService.loadYears();
   }
 }

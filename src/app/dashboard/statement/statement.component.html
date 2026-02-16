@@ -15,6 +15,8 @@
         [value]="transactions()"
         [paginator]="true"
         [rows]="10"
+        stateStorage="session"
+        stateKey="statement-table"
       >
         <ng-template pTemplate="header">
           <tr>
@@ -81,8 +83,14 @@
                   optionLabel="label"
                   optionValue="value"
                   [(ngModel)]="editingCategory"
+                  (ngModelChange)="onCategoryChange()"
                   placeholder="Select category"
                 />
+                @if (getCategoryBackendErrors('category').length > 0) {
+                  @for (error of getCategoryBackendErrors('category'); track error) {
+                    <small class="error-message">{{ error }}</small>
+                  }
+                }
               } @else {
                 {{ transaction.category }}
               }
@@ -171,7 +179,8 @@
       <label for="date">Date *</label>
       <p-datePicker 
         id="date"
-        [(ngModel)]="editedDate" 
+        [(ngModel)]="editedDate"
+        (ngModelChange)="onDateChange()"
         dateFormat="yy-mm-dd" 
         [showTime]="false"
         [showIcon]="true"
@@ -181,6 +190,11 @@
       @if (!editedDate()) {
         <small class="error-message">Date is required</small>
       }
+      @if (getBackendErrors('date').length > 0) {
+        @for (error of getBackendErrors('date'); track error) {
+          <small class="error-message">{{ error }}</small>
+        }
+      }
     </div>
     <div class="form-field">
       <label for="description">Description *</label>
@@ -188,12 +202,18 @@
         id="description"
         type="text" 
         pInputText 
-        [(ngModel)]="editedDescription" 
+        [(ngModel)]="editedDescription"
+        (ngModelChange)="onDescriptionChange()"
         placeholder="Enter description"
         [style]="{width: '100%'}"
       />
       @if (!editedDescription().trim()) {
         <small class="error-message">Description is required</small>
+      }
+      @if (getBackendErrors('description').length > 0) {
+        @for (error of getBackendErrors('description'); track error) {
+          <small class="error-message">{{ error }}</small>
+        }
       }
     </div>
   </div>

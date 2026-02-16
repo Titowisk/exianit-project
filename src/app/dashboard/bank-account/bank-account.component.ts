@@ -9,6 +9,7 @@ import { TableModule } from 'primeng/table';
 import { BankAccountService } from '../../services/bank-account.service';
 import { BankAccount } from '../../models/bank-account.interface';
 import { Bank } from '../../models/enums/bank.enum';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-bank-account',
@@ -21,9 +22,11 @@ export class BankAccountComponent {
   private fb = inject(FormBuilder);
   private bankAccountService = inject(BankAccountService);
   private messageService = inject(MessageService);
+  private errorHandler = inject(ErrorHandlerService);
 
   isLoading = signal(false);
   bankAccounts = signal<BankAccount[]>([]);
+  backendErrors = signal<Record<string, string[]>>({});
 
   bankForm: FormGroup;
   bankOptions = [
@@ -35,6 +38,21 @@ export class BankAccountComponent {
     this.bankForm = this.fb.group({
       name: ['', [Validators.required]],
       bank: [null, [Validators.required]]
+    });
+
+    // Clear backend errors when form values change
+    this.bankForm.valueChanges.subscribe(() => {
+      const currentErrors = this.backendErrors();
+      const clearedErrors: Record<string, string[]> = {};
+      
+      // Keep errors for fields that haven't changed
+      Object.keys(currentErrors).forEach(field => {
+        if (this.bankForm.get(field)?.pristine) {
+          clearedErrors[field] = currentErrors[field];
+        }
+      });
+      
+      this.backendErrors.set(clearedErrors);
     });
 
     this.loadBankAccounts();
@@ -51,6 +69,10 @@ export class BankAccountComponent {
   hasError(controlName: string, errorName: string): boolean {
     const control = this.bankForm.get(controlName);
     return !!(control && control.hasError(errorName) && (control.dirty || control.touched));
+  }
+
+  getBackendErrors(field: string): string[] {
+    return this.backendErrors()[field] || [];
   }
 
   getBankLabel(bankValue: number): string {
@@ -70,12 +92,7 @@ export class BankAccountComponent {
         this.bankAccounts.set(accounts);
       },
       error: (error) => {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error Loading Accounts',
-          detail: error?.error?.message || 'Failed to load bank accounts.',
-          life: 5000
-        });
+        this.errorHandler.showErrorToast(error, 'Error Loading Accounts', 'Failed to load bank accounts.');
       }
     });
   }
@@ -87,6 +104,7 @@ export class BankAccountComponent {
     }
 
     this.isLoading.set(true);
+    this.backendErrors.set({});
 
     const { name, bank } = this.bankForm.value;
 
@@ -100,17 +118,18 @@ export class BankAccountComponent {
           life: 3000
         });
         this.bankForm.reset();
+        this.backendErrors.set({});
         this.loadBankAccounts();
       },
       error: (error) => {
         this.isLoading.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'An error occurred while creating the bank account.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Creation Failed',
-          detail: errorMessage,
-          life: 5000
-        });
+        
+        // Extract field-specific validation errors
+        const fieldErrors = this.errorHandler.getFieldErrors(error);
+        this.backendErrors.set(fieldErrors);
+        
+        // Show error toast
+        this.errorHandler.showErrorToast(error, 'Creation Failed', 'An error occurred while creating the bank account.');
       }
     });
   }

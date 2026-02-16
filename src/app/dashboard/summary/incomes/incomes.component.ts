@@ -9,6 +9,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CATEGORY_COLORS } from '../../../helpers/category-colors.helper';
 import { Category } from '../../../models/enums/category.enum';
 import { DecimalPipe } from '@angular/common';
+import { ErrorHandlerService } from '../../../services/error-handler.service';
 
 @Component({
   selector: 'app-incomes',
@@ -21,6 +22,7 @@ export class IncomesComponent {
   private transactionService = inject(TransactionService);
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
+  private errorHandler = inject(ErrorHandlerService);
   yearService = inject(YearService);
 
   monthlyIncomes = signal<MonthlyIncomesByCategory[]>([]);
@@ -61,11 +63,7 @@ export class IncomesComponent {
       },
       error: (error) => {
         console.error('Error loading income summary:', error);
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: error?.error?.message || 'Failed to load income summary'
-        });
+        this.errorHandler.showErrorToast(error, 'Error', 'Failed to load income summary');
         this.isLoading.set(false);
       }
     });

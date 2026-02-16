@@ -11,13 +11,38 @@
       [popup]="false"
     >
       <ng-template #start>
-        <p-select 
-          [options]="selectYearItem()" 
-          optionLabel="year" 
-          placeholder="Select a Year"
-          [(ngModel)]="selectedYearValue"
-          (onChange)="onYearChange($event)">
-        </p-select>
+        @if (isAuthenticated()) {
+          @if (yearService.yearsError()) {
+            <div class="year-error-container">
+              <p class="error-message">{{ yearService.yearsError() }}</p>
+              <p-button 
+                icon="pi pi-refresh" 
+                label="Retry" 
+                severity="danger"
+                size="small"
+                (onClick)="retryLoadYears()">
+              </p-button>
+            </div>
+          } @else if (yearService.isLoadingYears()) {
+            <div class="year-loading-container">
+              <p-progressSpinner styleClass="year-spinner" />
+            </div>
+          } @else if (yearService.availableYears().length === 0) {
+            <p-select 
+              [options]="[]" 
+              placeholder="No years available"
+              [disabled]="true">
+            </p-select>
+          } @else {
+            <p-select 
+              [options]="yearService.availableYears()" 
+              optionLabel="year" 
+              placeholder="Select a Year"
+              [(ngModel)]="selectedYearValue"
+              (onChange)="onYearChange($event)">
+            </p-select>
+          }
+        }
       </ng-template>
       <ng-template #item let-item>
         <a pRipple

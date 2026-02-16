@@ -17,6 +17,11 @@
           @if (hasError('name', 'required')) {
             <small class="error-message">Account name is required.</small>
           }
+          @if (getBackendErrors('name').length > 0) {
+            @for (error of getBackendErrors('name'); track error) {
+              <small class="error-message">{{ error }}</small>
+            }
+          }
         </div>
 
         <div class="form-field">
@@ -33,6 +38,11 @@
           />
           @if (hasError('bank', 'required')) {
             <small class="error-message">Bank selection is required.</small>
+          }
+          @if (getBackendErrors('bank').length > 0) {
+            @for (error of getBackendErrors('bank'); track error) {
+              <small class="error-message">{{ error }}</small>
+            }
           }
         </div>
 
