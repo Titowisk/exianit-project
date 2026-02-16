@@ -7,7 +7,7 @@ import { IncomesComponent } from './dashboard/summary/incomes/incomes.component'
 import { LoginComponent } from './dashboard/login/login.component';
 import { RegisterComponent } from './dashboard/register/register.component';
 import { ImportComponent } from './dashboard/import/import.component';
-import { BankAccountComponent } from './dashboard/bank-account/bank-account.component';
+import { SourceAccountComponent } from './dashboard/source-account/source-account.component';
 import { authGuard } from './services/auth.guard';
 
 
@@ -34,7 +34,7 @@ export const routes: Routes = [
   { path: 'incomes', component: IncomesComponent, canActivate: [authGuard] },
   { path: 'analytics', component: AnalyticsComponent, canActivate: [authGuard] },
   { path: 'users', component: UsersComponent, canActivate: [authGuard] },
-  { path: 'bank-account', component: BankAccountComponent, canActivate: [authGuard] },
+  { path: 'source-account', component: SourceAccountComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 ];

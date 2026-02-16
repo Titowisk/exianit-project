@@ -7,9 +7,9 @@ import { Select } from 'primeng/select';
 import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 import { FileUpload, FileUploadHandlerEvent } from 'primeng/fileupload';
-import { BankAccountService } from '../../services/bank-account.service';
-import { BankAccount } from '../../models/bank-account.interface';
-import { getBankStatementTypeOptions } from '../../helpers/bank-statement-type.helper';
+import { SourceAccountService } from '../../services/source-account.service';
+import { SourceAccount } from '../../models/source-account.interface';
+import { getSourceStatementTypeOptions } from '../../helpers/source-statement-type.helper';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
@@ -21,27 +21,27 @@ import { ErrorHandlerService } from '../../services/error-handler.service';
 })
 export class ImportComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private bankAccountService = inject(BankAccountService);
+  private sourceAccountService = inject(SourceAccountService);
   private messageService = inject(MessageService);
   private router = inject(Router);
   private errorHandler = inject(ErrorHandlerService);
 
-  bankAccounts = signal<BankAccount[]>([]);
+  sourceAccounts = signal<SourceAccount[]>([]);
   selectedFile = signal<File | null>(null);
   isUploading = signal(false);
   isLoadingAccounts = signal(true);
   backendErrors = signal<Record<string, string[]>>({});
 
-  hasBankAccounts = computed(() => this.bankAccounts().length > 0);
+  hasSourceAccounts = computed(() => this.sourceAccounts().length > 0);
 
   importForm: FormGroup;
-  statementTypeOptions = getBankStatementTypeOptions();
+  statementTypeOptions = getSourceStatementTypeOptions();
 
   private readonly MAX_FILE_SIZE = 5242880; // 5MB in bytes
 
   constructor() {
     this.importForm = this.fb.group({
-      bankAccountId: ['', [Validators.required]],
+      sourceAccountId: ['', [Validators.required]],
       statementType: [null, [Validators.required]]
     });
 
@@ -62,7 +62,7 @@ export class ImportComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadBankAccounts();
+    this.loadSourceAccounts();
   }
 
   hasError(controlName: string, errorName: string): boolean {
@@ -74,16 +74,16 @@ export class ImportComponent implements OnInit {
     return this.backendErrors()[field] || [];
   }
 
-  private loadBankAccounts(): void {
+  private loadSourceAccounts(): void {
     this.isLoadingAccounts.set(true);
-    this.bankAccountService.getBankAccounts().subscribe({
+    this.sourceAccountService.getSourceAccounts().subscribe({
       next: (accounts) => {
-        this.bankAccounts.set(accounts);
+        this.sourceAccounts.set(accounts);
         this.isLoadingAccounts.set(false);
       },
       error: (error) => {
         this.isLoadingAccounts.set(false);
-        this.errorHandler.showErrorToast(error, 'Error', 'Failed to load bank accounts. Please try again.');
+        this.errorHandler.showErrorToast(error, 'Error', 'Failed to load source accounts. Please try again.');
       }
     });
   }
@@ -131,10 +131,10 @@ export class ImportComponent implements OnInit {
     this.isUploading.set(true);
     this.backendErrors.set({});
 
-    const { bankAccountId, statementType } = this.importForm.value;
+    const { sourceAccountId, statementType } = this.importForm.value;
     const file = this.selectedFile()!;
 
-    this.bankAccountService.uploadStatement(bankAccountId, statementType, file).subscribe({
+    this.sourceAccountService.uploadStatement(sourceAccountId, statementType, file).subscribe({
       next: (response) => {
         this.isUploading.set(false);
         this.messageService.add({
