@@ -7,6 +7,7 @@ import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';
 import { Button } from 'primeng/button';
 import { AuthService } from '../../services/auth.service';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-register',
@@ -20,8 +21,10 @@ export class RegisterComponent {
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
   private router = inject(Router);
+  private errorHandler = inject(ErrorHandlerService);
 
   isLoading = signal(false);
+  backendErrors = signal<Record<string, string[]>>({});
 
   registerForm: FormGroup;
 
@@ -35,6 +38,21 @@ export class RegisterComponent {
       ]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordMatchValidator });
+
+    // Clear backend errors when form values change
+    this.registerForm.valueChanges.subscribe(() => {
+      const currentErrors = this.backendErrors();
+      const clearedErrors: Record<string, string[]> = {};
+      
+      // Keep errors for fields that haven't changed
+      Object.keys(currentErrors).forEach(field => {
+        if (this.registerForm.get(field)?.pristine) {
+          clearedErrors[field] = currentErrors[field];
+        }
+      });
+      
+      this.backendErrors.set(clearedErrors);
+    });
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
@@ -81,6 +99,10 @@ export class RegisterComponent {
     return !!(this.password?.value && /[@$!%*?&]/.test(this.password.value));
   }
 
+  getBackendErrors(field: string): string[] {
+    return this.backendErrors()[field] || [];
+  }
+
   onSubmit(): void {
     if (this.registerForm.invalid) {
       this.registerForm.markAllAsTouched();
@@ -88,6 +110,7 @@ export class RegisterComponent {
     }
 
     this.isLoading.set(true);
+    this.backendErrors.set({});
 
     const { email, password } = this.registerForm.value;
 
@@ -95,17 +118,18 @@ export class RegisterComponent {
       next: () => {
         this.isLoading.set(false);
         this.registerForm.reset();
+        this.backendErrors.set({});
         this.router.navigate(['/login']);
       },
       error: (error) => {
         this.isLoading.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'An error occurred during sign up. Please try again.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Sign Up Failed',
-          detail: errorMessage,
-          life: 5000
-        });
+        
+        // Extract field-specific validation errors
+        const fieldErrors = this.errorHandler.getFieldErrors(error);
+        this.backendErrors.set(fieldErrors);
+        
+        // Show error toast
+        this.errorHandler.showErrorToast(error, 'Sign Up Failed', 'An error occurred during sign up. Please try again.');
       }
     });
   }

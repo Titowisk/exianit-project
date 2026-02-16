@@ -39,6 +39,11 @@
           @if (importForm.get('bankAccountId')?.invalid && importForm.get('bankAccountId')?.touched) {
             <small class="error-message">Please select a bank account.</small>
           }
+          @if (getBackendErrors('bankAccountId').length > 0) {
+            @for (error of getBackendErrors('bankAccountId'); track error) {
+              <small class="error-message">{{ error }}</small>
+            }
+          }
         </div>
 
         <div class="form-field">
@@ -55,6 +60,11 @@
           />
           @if (importForm.get('statementType')?.invalid && importForm.get('statementType')?.touched) {
             <small class="error-message">Please select a statement type.</small>
+          }
+          @if (getBackendErrors('statementType').length > 0) {
+            @for (error of getBackendErrors('statementType'); track error) {
+              <small class="error-message">{{ error }}</small>
+            }
           }
         </div>
 

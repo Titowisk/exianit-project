@@ -18,6 +18,7 @@ import { DatePicker } from 'primeng/datepicker';
 import { InputText } from 'primeng/inputtext';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Tooltip } from 'primeng/tooltip';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-statement',
@@ -32,6 +33,7 @@ export class StatementComponent {
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
+  private errorHandler = inject(ErrorHandlerService);
   yearService = inject(YearService);
 
   transactions = signal<StatementTransaction[]>([]);
@@ -39,12 +41,14 @@ export class StatementComponent {
   categorizingId = signal<string | null>(null);
   editingCategory = signal<string>('');
   savingId = signal<string | null>(null);
+  categoryBackendErrors = signal<Record<string, string[]>>({});
   
   showEditModal = signal<boolean>(false);
   selectedTransaction = signal<StatementTransaction | null>(null);
   editedDate = signal<Date | null>(null);
   editedDescription = signal<string>('');
   isSavingDetails = signal<boolean>(false);
+  detailsBackendErrors = signal<Record<string, string[]>>({});
   deletingId = signal<string | null>(null);
 
   constructor() {
@@ -60,13 +64,7 @@ export class StatementComponent {
       },
       error: (error) => {
         this.isLoading.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Failed to load statements. Please try again.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Load Failed',
-          detail: errorMessage,
-          life: 5000
-        });
+        this.errorHandler.showErrorToast(error, 'Load Failed', 'Failed to load statements. Please try again.');
       }
     });
   }
@@ -82,6 +80,12 @@ export class StatementComponent {
   startCategorize(transaction: StatementTransaction): void {
     this.categorizingId.set(transaction.id);
     this.editingCategory.set(transaction.category);
+    this.categoryBackendErrors.set({}); // Clear errors when starting edit
+  }
+
+  onCategoryChange(): void {
+    // Clear backend errors when category is changed
+    this.categoryBackendErrors.set({});
   }
 
   cancelEdit(): void {
@@ -103,6 +107,7 @@ export class StatementComponent {
 
     const categoryValue = getCategoryValue(this.editingCategory() as Category, transaction.type);
     this.savingId.set(transaction.id);
+    this.categoryBackendErrors.set({});
 
     this.transactionService.updateCategory(transaction.id, userId, categoryValue).subscribe({
       next: () => {
@@ -118,13 +123,13 @@ export class StatementComponent {
       },
       error: (error) => {
         this.savingId.set(null);
-        const errorMessage = error?.error?.message || error?.message || 'Failed to update category. Please try again.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Update Failed',
-          detail: errorMessage,
-          life: 5000
-        });
+        
+        // Extract field-specific validation errors
+        const fieldErrors = this.errorHandler.getFieldErrors(error);
+        this.categoryBackendErrors.set(fieldErrors);
+        
+        // Show error toast
+        this.errorHandler.showErrorToast(error, 'Update Failed', 'Failed to update category. Please try again.');
       }
     });
   }
@@ -143,6 +148,7 @@ export class StatementComponent {
 
     const categoryValue = getCategoryValue(this.editingCategory() as Category, transaction.type);
     this.savingId.set(transaction.id);
+    this.categoryBackendErrors.set({});
 
     this.transactionService.updateSimilarOriginCategory(transaction.id, userId, categoryValue).subscribe({
       next: () => {
@@ -158,13 +164,13 @@ export class StatementComponent {
       },
       error: (error) => {
         this.savingId.set(null);
-        const errorMessage = error?.error?.message || error?.message || 'Failed to update categories. Please try again.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Update Failed',
-          detail: errorMessage,
-          life: 5000
-        });
+        
+        // Extract field-specific validation errors
+        const fieldErrors = this.errorHandler.getFieldErrors(error);
+        this.categoryBackendErrors.set(fieldErrors);
+        
+        // Show error toast
+        this.errorHandler.showErrorToast(error, 'Update Failed', 'Failed to update categories. Please try again.');
       }
     });
   }
@@ -174,6 +180,7 @@ export class StatementComponent {
     this.selectedTransaction.set(transaction);
     this.editedDate.set(new Date(transaction.date));
     this.editedDescription.set(transaction.description || '');
+    this.detailsBackendErrors.set({}); // Clear errors when opening modal
     this.showEditModal.set(true);
   }
 
@@ -182,6 +189,29 @@ export class StatementComponent {
     this.selectedTransaction.set(null);
     this.editedDate.set(null);
     this.editedDescription.set('');
+    this.detailsBackendErrors.set({});
+  }
+
+  onDateChange(): void {
+    // Clear backend date errors when date is changed
+    const currentErrors = this.detailsBackendErrors();
+    const { date, ...restErrors } = currentErrors;
+    this.detailsBackendErrors.set(restErrors);
+  }
+
+  onDescriptionChange(): void {
+    // Clear backend description errors when description is changed
+    const currentErrors = this.detailsBackendErrors();
+    const { description, ...restErrors } = currentErrors;
+    this.detailsBackendErrors.set(restErrors);
+  }
+
+  getBackendErrors(field: string): string[] {
+    return this.detailsBackendErrors()[field] || [];
+  }
+
+  getCategoryBackendErrors(field: string): string[] {
+    return this.categoryBackendErrors()[field] || [];
   }
 
   saveDetails(): void {
@@ -202,6 +232,7 @@ export class StatementComponent {
 
     const isoDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)).toISOString();
     this.isSavingDetails.set(true);
+    this.detailsBackendErrors.set({});
 
     this.transactionService.updateTransactionDetails(transaction.id, userId, isoDate, description).subscribe({
       next: () => {
@@ -217,13 +248,13 @@ export class StatementComponent {
       },
       error: (error) => {
         this.isSavingDetails.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Failed to update transaction. Please try again.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Update Failed',
-          detail: errorMessage,
-          life: 5000
-        });
+        
+        // Extract field-specific validation errors
+        const fieldErrors = this.errorHandler.getFieldErrors(error);
+        this.detailsBackendErrors.set(fieldErrors);
+        
+        // Show error toast
+        this.errorHandler.showErrorToast(error, 'Update Failed', 'Failed to update transaction. Please try again.');
       }
     });
   }
@@ -260,13 +291,7 @@ export class StatementComponent {
           },
           error: (error) => {
             this.deletingId.set(null);
-            const errorMessage = error?.error?.message || error?.message || 'Failed to delete transaction. Please try again.';
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Delete Failed',
-              detail: errorMessage,
-              life: 5000
-            });
+            this.errorHandler.showErrorToast(error, 'Delete Failed', 'Failed to delete transaction. Please try again.');
           }
         });
       }

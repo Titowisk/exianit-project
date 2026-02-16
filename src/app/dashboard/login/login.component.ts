@@ -7,6 +7,7 @@ import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';
 import { Button } from 'primeng/button';
 import { AuthService } from '../../services/auth.service';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-login',
@@ -21,8 +22,10 @@ export class LoginComponent {
   private messageService = inject(MessageService);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
+  private errorHandler = inject(ErrorHandlerService);
 
   isLoading = signal(false);
+  backendErrors = signal<Record<string, string[]>>({});
 
   loginForm: FormGroup;
 
@@ -30,6 +33,21 @@ export class LoginComponent {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
+    });
+
+    // Clear backend errors when form values change
+    this.loginForm.valueChanges.subscribe((values) => {
+      const currentErrors = this.backendErrors();
+      const clearedErrors: Record<string, string[]> = {};
+      
+      // Keep errors for fields that haven't changed
+      Object.keys(currentErrors).forEach(field => {
+        if (this.loginForm.get(field)?.pristine) {
+          clearedErrors[field] = currentErrors[field];
+        }
+      });
+      
+      this.backendErrors.set(clearedErrors);
     });
   }
 
@@ -46,6 +64,10 @@ export class LoginComponent {
     return !!(control && control.hasError(errorName) && (control.dirty || control.touched));
   }
 
+  getBackendErrors(field: string): string[] {
+    return this.backendErrors()[field] || [];
+  }
+
   onSubmit(): void {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -53,6 +75,7 @@ export class LoginComponent {
     }
 
     this.isLoading.set(true);
+    this.backendErrors.set({});
 
     const { email, password } = this.loginForm.value;
 
@@ -72,13 +95,13 @@ export class LoginComponent {
       },
       error: (error) => {
         this.isLoading.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'An error occurred during login. Please try again.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Login Failed',
-          detail: errorMessage,
-          life: 5000
-        });
+        
+        // Extract field-specific validation errors
+        const fieldErrors = this.errorHandler.getFieldErrors(error);
+        this.backendErrors.set(fieldErrors);
+        
+        // Show error toast
+        this.errorHandler.showErrorToast(error, 'Login Failed', 'An error occurred during login. Please try again.');
       }
     });
   }

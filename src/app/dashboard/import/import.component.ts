@@ -10,6 +10,7 @@ import { FileUpload, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { BankAccountService } from '../../services/bank-account.service';
 import { BankAccount } from '../../models/bank-account.interface';
 import { getBankStatementTypeOptions } from '../../helpers/bank-statement-type.helper';
+import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
   selector: 'app-import',
@@ -23,11 +24,13 @@ export class ImportComponent implements OnInit {
   private bankAccountService = inject(BankAccountService);
   private messageService = inject(MessageService);
   private router = inject(Router);
+  private errorHandler = inject(ErrorHandlerService);
 
   bankAccounts = signal<BankAccount[]>([]);
   selectedFile = signal<File | null>(null);
   isUploading = signal(false);
   isLoadingAccounts = signal(true);
+  backendErrors = signal<Record<string, string[]>>({});
 
   hasBankAccounts = computed(() => this.bankAccounts().length > 0);
 
@@ -41,10 +44,34 @@ export class ImportComponent implements OnInit {
       bankAccountId: ['', [Validators.required]],
       statementType: [null, [Validators.required]]
     });
+
+    // Clear backend errors when form values change
+    this.importForm.valueChanges.subscribe(() => {
+      const currentErrors = this.backendErrors();
+      const clearedErrors: Record<string, string[]> = {};
+      
+      // Keep errors for fields that haven't changed
+      Object.keys(currentErrors).forEach(field => {
+        if (this.importForm.get(field)?.pristine) {
+          clearedErrors[field] = currentErrors[field];
+        }
+      });
+      
+      this.backendErrors.set(clearedErrors);
+    });
   }
 
   ngOnInit(): void {
     this.loadBankAccounts();
+  }
+
+  hasError(controlName: string, errorName: string): boolean {
+    const control = this.importForm.get(controlName);
+    return !!(control && control.hasError(errorName) && (control.dirty || control.touched));
+  }
+
+  getBackendErrors(field: string): string[] {
+    return this.backendErrors()[field] || [];
   }
 
   private loadBankAccounts(): void {
@@ -56,13 +83,7 @@ export class ImportComponent implements OnInit {
       },
       error: (error) => {
         this.isLoadingAccounts.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Failed to load bank accounts. Please try again.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: errorMessage,
-          life: 5000
-        });
+        this.errorHandler.showErrorToast(error, 'Error', 'Failed to load bank accounts. Please try again.');
       }
     });
   }
@@ -108,6 +129,7 @@ export class ImportComponent implements OnInit {
     }
 
     this.isUploading.set(true);
+    this.backendErrors.set({});
 
     const { bankAccountId, statementType } = this.importForm.value;
     const file = this.selectedFile()!;
@@ -125,13 +147,13 @@ export class ImportComponent implements OnInit {
       },
       error: (error) => {
         this.isUploading.set(false);
-        const errorMessage = error?.error?.message || error?.message || 'Failed to import statement. Please try again.';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Import Failed',
-          detail: errorMessage,
-          life: 5000
-        });
+        
+        // Extract field-specific validation errors
+        const fieldErrors = this.errorHandler.getFieldErrors(error);
+        this.backendErrors.set(fieldErrors);
+        
+        // Show error toast
+        this.errorHandler.showErrorToast(error, 'Import Failed', 'Failed to import statement. Please try again.');
       }
     });
   }
@@ -139,5 +161,6 @@ export class ImportComponent implements OnInit {
   private resetForm(): void {
     this.importForm.reset();
     this.selectedFile.set(null);
+    this.backendErrors.set({});
   }
 }

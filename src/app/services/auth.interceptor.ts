@@ -4,11 +4,13 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   const messageService = inject(MessageService);
+  const errorHandler = inject(ErrorHandlerService);
 
   // Only attach token if it's valid
   const token = authService.getToken();
@@ -29,11 +31,15 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         // Clear the invalid token
         authService.logout();
 
+        // Parse Problem Details for user-friendly message
+        const problemDetails = errorHandler.parseProblemDetails(error);
+        const errorMessage = problemDetails?.detail || problemDetails?.title || 'Your session has expired. Please login again.';
+
         // Show session expired message
         messageService.add({
           severity: 'error',
           summary: 'Session Expired',
-          detail: 'Your session has expired. Please login again.',
+          detail: errorMessage,
           life: 5000
         });
 
