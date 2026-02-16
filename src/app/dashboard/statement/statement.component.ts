@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { StatementService } from '../statement.service';
 import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
@@ -53,6 +53,12 @@ export class StatementComponent {
 
   constructor() {
     this.loadTransactions();
+    
+    // Watch for year changes and reload data
+    effect(() => {
+      this.yearService.selectedYear();
+      this.loadTransactions();
+    });
   }
 
   private loadTransactions(): void {

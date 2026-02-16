@@ -15,6 +15,8 @@
         [value]="transactions()"
         [paginator]="true"
         [rows]="10"
+        stateStorage="session"
+        stateKey="statement-table"
       >
         <ng-template pTemplate="header">
           <tr>
