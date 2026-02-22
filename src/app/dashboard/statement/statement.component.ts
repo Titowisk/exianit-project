@@ -1,5 +1,4 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { StatementService } from '../statement.service';
 import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
 import { getCategoryValue, getCategoriesByType } from '../../helpers/category-enum.helper';
@@ -8,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { YearService } from '../../header/year.service';
-import { StatementTransaction } from '../../models/statement.interface';
+import { Transaction } from '../../models/transaction.interface';
 import { Category } from '../../models/enums/category.enum';
 import { Select } from 'primeng/select';
 import { Button } from 'primeng/button';
@@ -28,7 +27,6 @@ import { ErrorHandlerService } from '../../services/error-handler.service';
   styleUrl: './statement.component.scss'
 })
 export class StatementComponent {
-  private statementService = inject(StatementService);
   private transactionService = inject(TransactionService);
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
@@ -36,7 +34,7 @@ export class StatementComponent {
   private errorHandler = inject(ErrorHandlerService);
   yearService = inject(YearService);
 
-  transactions = signal<StatementTransaction[]>([]);
+  transactions = signal<Transaction[]>([]);
   isLoading = signal<boolean>(false);
   categorizingId = signal<string | null>(null);
   editingCategory = signal<string>('');
@@ -44,7 +42,7 @@ export class StatementComponent {
   categoryBackendErrors = signal<Record<string, string[]>>({});
   
   showEditModal = signal<boolean>(false);
-  selectedTransaction = signal<StatementTransaction | null>(null);
+  selectedTransaction = signal<Transaction | null>(null);
   editedDate = signal<Date | null>(null);
   editedDescription = signal<string>('');
   isSavingDetails = signal<boolean>(false);
@@ -63,7 +61,8 @@ export class StatementComponent {
 
   private loadTransactions(): void {
     this.isLoading.set(true);
-    this.statementService.getAllStatements().subscribe({
+    const year = this.yearService.selectedYear().year;
+    this.transactionService.getUserTransactionsByYear(year).subscribe({
       next: (data) => {
         this.transactions.set(data);
         this.isLoading.set(false);
@@ -75,7 +74,7 @@ export class StatementComponent {
     });
   }
 
-  getCategoryOptions(transaction: StatementTransaction): { label: string; value: string }[] {
+  getCategoryOptions(transaction: Transaction): { label: string; value: string }[] {
     const categories = getCategoriesByType(transaction.type);
     return categories.map(cat => ({
       label: cat,
@@ -83,7 +82,7 @@ export class StatementComponent {
     }));
   }
 
-  startCategorize(transaction: StatementTransaction): void {
+  startCategorize(transaction: Transaction): void {
     this.categorizingId.set(transaction.id);
     this.editingCategory.set(transaction.category);
     this.categoryBackendErrors.set({}); // Clear errors when starting edit
@@ -99,7 +98,7 @@ export class StatementComponent {
     this.editingCategory.set('');
   }
 
-  saveCategory(transaction: StatementTransaction): void {
+  saveCategory(transaction: Transaction): void {
     const userId = this.authService.userId();
     if (!userId) {
       this.messageService.add({
@@ -140,7 +139,7 @@ export class StatementComponent {
     });
   }
 
-  saveSimilarOriginCategory(transaction: StatementTransaction): void {
+  saveSimilarOriginCategory(transaction: Transaction): void {
     const userId = this.authService.userId();
     if (!userId) {
       this.messageService.add({
@@ -181,7 +180,7 @@ export class StatementComponent {
     });
   }
 
-  openEditModal(transaction: StatementTransaction): void {
+  openEditModal(transaction: Transaction): void {
     this.cancelEdit();
     this.selectedTransaction.set(transaction);
     this.editedDate.set(new Date(transaction.date));
@@ -265,7 +264,7 @@ export class StatementComponent {
     });
   }
 
-  deleteTransaction(transaction: StatementTransaction): void {
+  deleteTransaction(transaction: Transaction): void {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete this transaction from "${transaction.origin}" (${transaction.amount})?`,
       header: 'Delete Confirmation',

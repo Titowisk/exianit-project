@@ -5,42 +5,42 @@
     @if (isLoadingAccounts()) {
       <div class="loading-message">
         <i class="pi pi-spin pi-spinner"></i>
-        <span>Loading bank accounts...</span>
+        <span>Loading source accounts...</span>
       </div>
     }
 
-    @if (!hasBankAccounts() && !isLoadingAccounts()) {
-      <p-message severity="warn" text="You don't have any bank accounts configured." styleClass="w-full mb-3" />
+    @if (!hasSourceAccounts() && !isLoadingAccounts()) {
+      <p-message severity="warn" text="You don't have any source accounts configured." styleClass="w-full mb-3" />
       <p class="no-accounts-message">
-        Please create a bank account before importing statements.
+        Please create a source account before importing statements.
       </p>
       <p-button 
-        label="Manage Bank Accounts" 
+        label="Manage Source Accounts" 
         icon="pi pi-building-columns"
-        routerLink="/bank-account"
+        routerLink="/source-account"
         styleClass="w-full"
       />
     }
 
-    @if (hasBankAccounts() && !isLoadingAccounts()) {
+    @if (hasSourceAccounts() && !isLoadingAccounts()) {
       <form [formGroup]="importForm" (ngSubmit)="onSubmit()" class="import-form">
         <div class="form-field">
-          <label for="bankAccount" class="form-label">Bank Account</label>
+          <label for="sourceAccount" class="form-label">Source Account</label>
           <p-select
-            id="bankAccount"
-            formControlName="bankAccountId"
-            [options]="bankAccounts()"
+            id="sourceAccount"
+            formControlName="sourceAccountId"
+            [options]="sourceAccounts()"
             optionLabel="name"
             optionValue="id"
-            placeholder="Select Bank Account"
+            placeholder="Select Source Account"
             styleClass="w-full"
             [disabled]="isUploading()"
           />
-          @if (importForm.get('bankAccountId')?.invalid && importForm.get('bankAccountId')?.touched) {
-            <small class="error-message">Please select a bank account.</small>
+          @if (importForm.get('sourceAccountId')?.invalid && importForm.get('sourceAccountId')?.touched) {
+            <small class="error-message">Please select a source account.</small>
           }
-          @if (getBackendErrors('bankAccountId').length > 0) {
-            @for (error of getBackendErrors('bankAccountId'); track error) {
+          @if (getBackendErrors('sourceAccountId').length > 0) {
+            @for (error of getBackendErrors('sourceAccountId'); track error) {
               <small class="error-message">{{ error }}</small>
             }
           }

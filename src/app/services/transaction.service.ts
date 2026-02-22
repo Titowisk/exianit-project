@@ -1,8 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { MonthlyExpensesByCategory, ExpensesSummaryTotals } from '../models/monthly-expenses-by-category.interface';
 import { MonthlyIncomesByCategory } from '../models/monthly-incomes-by-category.interface';
+import { Transaction } from '../models/transaction.interface';
+import { Category } from '../models/enums/category.enum';
+import { AuthService } from './auth.service';
+
+interface ApiTransaction {
+  id: string;
+  type: string;
+  origin: string;
+  amount: number;
+  date: string;
+  category: string;
+  description?: string;
+  sourceStatementId: string;
+}
 
 export interface ExpensesSummaryResponse {
   monthlyExpenses: MonthlyExpensesByCategory[];
@@ -30,7 +44,43 @@ export interface IncomesSummaryResponse {
 })
 export class TransactionService {
   private http = inject(HttpClient);
+  private authService = inject(AuthService);
   private apiUrl = 'https://localhost:7080/api';
+
+  getUserTransactionsByYear(year: number): Observable<Transaction[]> {
+    const userId = this.authService.userId();
+    const url = `${this.apiUrl}/transactions?userId=${userId}&year=${year}`;
+    
+    return this.http.get<ApiTransaction[]>(url)
+      .pipe(
+        map(transactions => this.mapApiResponse(transactions))
+      );
+  }
+
+  private mapApiResponse(apiData: ApiTransaction[]): Transaction[] {
+    return apiData.map(transaction => {
+      const type = transaction.type.toLowerCase() as 'income' | 'expense';
+      const category = this.mapCategoryToEnum(transaction.category, type);
+      
+      return {
+        id: transaction.id,
+        type,
+        origin: transaction.origin,
+        amount: transaction.amount,
+        date: new Date(transaction.date),
+        category,
+        description: transaction.description
+      } as Transaction;
+    });
+  }
+
+  private mapCategoryToEnum(category: string, type: 'income' | 'expense'): Category {
+    const categoryEnum = Category[category as keyof typeof Category];
+    if (!categoryEnum) {
+      throw new Error(`Unknown category: ${category}`);
+    }
+    return categoryEnum;
+  }
 
   updateCategory(transactionId: string, userId: string, category: number): Observable<void> {
     return this.http.patch<void>(
@@ -68,12 +118,6 @@ export class TransactionService {
   deleteTransaction(transactionId: string, userId: string): Observable<void> {
     return this.http.delete<void>(
       `${this.apiUrl}/transactions/${transactionId}?userId=${userId}`
-    );
-  }
-
-  getYears(userId: string): Observable<number[]> {
-    return this.http.get<number[]>(
-      `${this.apiUrl}/transactions/years?userId=${userId}`
     );
   }
 }

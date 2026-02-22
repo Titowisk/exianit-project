@@ -1,9 +1,9 @@
-<div class="bank-account-container">
-  <!-- Create Bank Account Section -->
+<div class="source-account-container">
+  <!-- Create Source Account Section -->
   <div class="form-section">
     <div class="card">
-      <h2>Create Bank Account</h2>
-      <form [formGroup]="bankForm" (ngSubmit)="onSubmit()">
+      <h2>Create Source Account</h2>
+      <form [formGroup]="sourceForm" (ngSubmit)="onSubmit()">
         <div class="form-field">
           <label for="name">Account Name</label>
           <input
@@ -25,22 +25,22 @@
         </div>
 
         <div class="form-field">
-          <label for="bank">Bank</label>
+          <label for="source">Source</label>
           <p-select
-            id="bank"
-            formControlName="bank"
-            [options]="bankOptions"
-            placeholder="Select a bank"
+            id="source"
+            formControlName="source"
+            [options]="sourceOptions"
+            placeholder="Select a source"
             optionLabel="label"
             optionValue="value"
-            [class.ng-invalid]="hasError('bank', 'required')"
-            [class.ng-dirty]="bank?.dirty || bank?.touched"
+            [class.ng-invalid]="hasError('source', 'required')"
+            [class.ng-dirty]="source?.dirty || source?.touched"
           />
-          @if (hasError('bank', 'required')) {
-            <small class="error-message">Bank selection is required.</small>
+          @if (hasError('source', 'required')) {
+            <small class="error-message">Source selection is required.</small>
           }
-          @if (getBackendErrors('bank').length > 0) {
-            @for (error of getBackendErrors('bank'); track error) {
+          @if (getBackendErrors('source').length > 0) {
+            @for (error of getBackendErrors('source'); track error) {
               <small class="error-message">{{ error }}</small>
             }
           }
@@ -56,27 +56,27 @@
     </div>
   </div>
 
-  <!-- Bank Accounts List Section -->
+  <!-- Source Accounts List Section -->
   <div class="list-section">
     <div class="card">
-      <h2>Bank Accounts</h2>
-      @if (bankAccounts().length === 0) {
+      <h2>Source Accounts</h2>
+      @if (sourceAccounts().length === 0) {
         <div class="empty-state">
-          <p>No bank accounts found.</p>
-          <p class="empty-state-hint">Create your first bank account using the form above.</p>
+          <p>No source accounts found.</p>
+          <p class="empty-state-hint">Create your first source account using the form above.</p>
         </div>
       } @else {
-        <p-table [value]="bankAccounts()" [paginator]="true" [rows]="10">
+        <p-table [value]="sourceAccounts()" [paginator]="true" [rows]="10">
           <ng-template #header>
             <tr>
               <th>Account Name</th>
-              <th>Bank</th>
+              <th>Source</th>
             </tr>
           </ng-template>
           <ng-template #body let-account>
             <tr>
               <td>{{ account.name }}</td>
-              <td>{{ getBankLabel(account.bank) }}</td>
+              <td>{{ getSourceLabel(account.source) }}</td>
             </tr>
           </ng-template>
         </p-table>
