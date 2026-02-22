@@ -1,6 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { YearItem } from '../models/year-item.interface';
-import { TransactionService } from '../services/transaction.service';
 import { AuthService } from '../services/auth.service';
 
 const SELECTED_YEAR_KEY = 'selectedYear';
@@ -9,8 +10,9 @@ const SELECTED_YEAR_KEY = 'selectedYear';
   providedIn: 'root'
 })
 export class YearService {
-  private transactionService = inject(TransactionService);
+  private http = inject(HttpClient);
   private authService = inject(AuthService);
+  private apiUrl = 'https://localhost:7080/api';
   
   private _selectedYear = signal<YearItem>({ year: new Date().getFullYear() });
   private _availableYears = signal<YearItem[]>([]);
@@ -37,7 +39,7 @@ export class YearService {
     this._isLoadingYears.set(true);
     this._yearsError.set(null);
 
-    this.transactionService.getYears(userId).subscribe({
+    this.fetchYears(userId).subscribe({
       next: (years) => {
         // Map number[] to YearItem[] format
         const yearItems = years.map(year => ({ year }));
@@ -93,5 +95,12 @@ export class YearService {
   // Get the current selected year value
   getCurrentYear(): number {
     return this._selectedYear().year;
+  }
+
+  // Fetch available years from API
+  private fetchYears(userId: string): Observable<number[]> {
+    return this.http.get<number[]>(
+      `${this.apiUrl}/transactions/years?userId=${userId}`
+    );
   }
 }

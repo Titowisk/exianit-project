@@ -1,12 +1,17 @@
 # ToDo List
 
 ## 1.0 Tasks
-- [ ] Change statement component name to transaction component
-  - merge statement and transacion services
-    - also in the dropdown selector in the statement component
+- [ ] Use environment variables for API URL and other configuration values
 - [ ] File upload backend validation errors in import component (file field not in form control)
 
+## 1.1 Tasks
+- [ ] Add log out feature
+- [ ] Add user profile component + password change feature
+
 ## Completed
+- [X] Change statement component name to transaction component
+  - merge statement and transacion services
+    - also in the dropdown selector in the statement component
 - [X] How to deal with year dropdown in the nav bar?
 - [X] When table reloads, keep current filters and pagination
 - [X] How to deal with 4xx and 5xx errors from the API?

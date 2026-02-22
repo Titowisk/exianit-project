@@ -20,4 +20,4 @@ export interface ExpenseTransaction {
     description?: string;
 }
 
-export type StatementTransaction = IncomeTransaction | ExpenseTransaction;
+export type Transaction = IncomeTransaction | ExpenseTransaction;
