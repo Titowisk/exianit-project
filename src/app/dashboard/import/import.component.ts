@@ -9,7 +9,6 @@ import { Message } from 'primeng/message';
 import { FileUpload, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { SourceAccountService } from '../../services/source-account.service';
 import { SourceAccount } from '../../models/source-account.interface';
-import { getSourceStatementTypeOptions } from '../../helpers/source-statement-type.helper';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 
 @Component({
@@ -27,15 +26,21 @@ export class ImportComponent implements OnInit {
   private errorHandler = inject(ErrorHandlerService);
 
   sourceAccounts = signal<SourceAccount[]>([]);
+  selectedAccount = signal<SourceAccount | null>(null);
   selectedFile = signal<File | null>(null);
   isUploading = signal(false);
   isLoadingAccounts = signal(true);
   backendErrors = signal<Record<string, string[]>>({});
 
   hasSourceAccounts = computed(() => this.sourceAccounts().length > 0);
+  statementTypeOptions = computed(() =>
+    this.selectedAccount()?.availableStatementTypes.map(t => ({
+      value: t.id,
+      label: this.mapStatementTypeLabel(t.name)
+    })) ?? []
+  );
 
   importForm: FormGroup;
-  statementTypeOptions = getSourceStatementTypeOptions();
 
   private readonly MAX_FILE_SIZE = 5242880; // 5MB in bytes
 
@@ -43,6 +48,12 @@ export class ImportComponent implements OnInit {
     this.importForm = this.fb.group({
       sourceAccountId: ['', [Validators.required]],
       statementType: [null, [Validators.required]]
+    });
+
+    this.importForm.get('sourceAccountId')!.valueChanges.subscribe((accountId: string) => {
+      const account = this.sourceAccounts().find(a => a.id === accountId) ?? null;
+      this.selectedAccount.set(account);
+      this.importForm.get('statementType')!.reset();
     });
 
     // Clear backend errors when form values change
@@ -158,9 +169,14 @@ export class ImportComponent implements OnInit {
     });
   }
 
+  private mapStatementTypeLabel(name: string): string {
+    return name.replace(/(?<=[a-z\d])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])/g, ' ');
+  }
+
   private resetForm(): void {
     this.importForm.reset();
     this.selectedFile.set(null);
+    this.selectedAccount.set(null);
     this.backendErrors.set({});
   }
 }

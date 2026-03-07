@@ -2,5 +2,6 @@ export interface SourceAccount {
   id: string;
   userId: string;
   name: string;
-  source: number;
+  source: { id: number; name: string };
+  availableStatementTypes: { id: number; name: string }[];
 }

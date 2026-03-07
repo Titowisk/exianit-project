@@ -31,7 +31,8 @@ export class SourceAccountComponent {
   sourceForm: FormGroup;
   sourceOptions = [
     { label: 'BTG', value: Source.BTG },
-    { label: 'NUBANK', value: Source.NUBANK }
+    { label: 'NUBANK', value: Source.NUBANK },
+    { label: 'Flash', value: Source.FLASH },
   ];
 
   constructor() {
@@ -73,17 +74,6 @@ export class SourceAccountComponent {
 
   getBackendErrors(field: string): string[] {
     return this.backendErrors()[field] || [];
-  }
-
-  getSourceLabel(sourceValue: number): string {
-    switch (sourceValue) {
-      case Source.BTG:
-        return 'BTG';
-      case Source.NUBANK:
-        return 'NUBANK';
-      default:
-        return 'Unknown';
-    }
   }
 
   loadSourceAccounts(): void {

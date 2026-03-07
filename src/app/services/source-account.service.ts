@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SourceAccount } from '../models/source-account.interface';
 import { ImportResponse } from '../models/import-response.interface';
-import { SourceStatementType } from '../models/enums/source-statement-type.enum';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -24,7 +23,7 @@ export class SourceAccountService {
     return this.http.post<SourceAccount>(`${this.apiUrl}/source-accounts/${userId}`, { name, source });
   }
 
-  uploadStatement(accountId: string, statementType: SourceStatementType, file: File): Observable<ImportResponse> {
+  uploadStatement(accountId: string, statementType: number, file: File): Observable<ImportResponse> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('statement-type', statementType.toString());
