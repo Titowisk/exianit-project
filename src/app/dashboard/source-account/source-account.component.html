@@ -76,7 +76,7 @@
           <ng-template #body let-account>
             <tr>
               <td>{{ account.name }}</td>
-              <td>{{ getSourceLabel(account.source) }}</td>
+              <td>{{ account.source.name }}</td>
             </tr>
           </ng-template>
         </p-table>
