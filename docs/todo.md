@@ -2,13 +2,17 @@
 
 ## 1.0 Tasks
 - [ ] Use environment variables for API URL and other configuration values
-- [ ] File upload backend validation errors in import component (file field not in form control)
 
 ## 1.1 Tasks
 - [ ] Add log out feature
 - [ ] Add user profile component + password change feature
 
+## UnPlanned Tasks
+- [ ] File upload backend validation errors in import component (file field not in form control)
+
+
 ## Completed
+- [X] Replace `source-statement-type.helper.ts` with a api call to get the statement types
 - [X] Change statement component name to transaction component
   - merge statement and transacion services
     - also in the dropdown selector in the statement component
