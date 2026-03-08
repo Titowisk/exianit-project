@@ -1,18 +1,24 @@
 import {
   ApplicationConfig,
+  inject,
   provideBrowserGlobalErrorListeners,
+  provideAppInitializer,
   provideZonelessChangeDetection,
 } from '@angular/core';
+import { firstValueFrom } from 'rxjs';
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideRouter } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './services/auth.interceptor';
+import { APP_CONFIG, AppConfig } from './models/app-config.interface';
+
+const appConfigData: AppConfig = { apiUrl: '' };
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,5 +37,12 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(withInterceptors([authInterceptor])),
     MessageService,
+    { provide: APP_CONFIG, useFactory: () => appConfigData },
+    provideAppInitializer(() => {
+      const http = inject(HttpClient);
+      return firstValueFrom(http.get<AppConfig>('/assets/config.json')).then(config => {
+        Object.assign(appConfigData, config);
+      });
+    }),
   ],
 };

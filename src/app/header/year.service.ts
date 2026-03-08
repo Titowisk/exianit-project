@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { YearItem } from '../models/year-item.interface';
 import { AuthService } from '../services/auth.service';
+import { APP_CONFIG } from '../models/app-config.interface';
 
 const SELECTED_YEAR_KEY = 'selectedYear';
 
@@ -12,7 +13,7 @@ const SELECTED_YEAR_KEY = 'selectedYear';
 export class YearService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = 'https://localhost:7080/api';
+  private apiUrl = inject(APP_CONFIG).apiUrl;
   
   private _selectedYear = signal<YearItem>({ year: new Date().getFullYear() });
   private _availableYears = signal<YearItem[]>([]);
