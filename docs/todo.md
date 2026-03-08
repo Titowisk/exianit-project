@@ -1,7 +1,6 @@
 # ToDo List
 
 ## 1.0 Tasks
-- [ ] Use environment variables for API URL and other configuration values
 
 ## 1.1 Tasks
 - [ ] Add log out feature
@@ -12,6 +11,7 @@
 
 
 ## Completed
+- [X] Use environment variables for API URL and other configuration values
 - [X] Replace `source-statement-type.helper.ts` with a api call to get the statement types
 - [X] Change statement component name to transaction component
   - merge statement and transacion services
