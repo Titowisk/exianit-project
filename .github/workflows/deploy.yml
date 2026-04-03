@@ -26,8 +26,7 @@ jobs:
         run: npm ci
 
       - name: Set production config
-        run: |
-          echo '{"apiUrl":"https://exianitproject-production.up.railway.app/api"}' > src/assets/config.json
+        run: printf '{"apiUrl":"%s"}' "${{ secrets.PRODUCTION_API_URL }}" > src/assets/config.json
 
       - name: Build
         run: npm run build -- --base-href /exianit-project/
