@@ -1,10 +1,17 @@
 # ToDo List
 
 ## 1.0 Tasks
+- [ ] Configure Github Actions for CI/CD
+  - some way to automate tagging in github repository
+  - action must publish images to Github Packages Registry
+- [ ] Configure ArgoCD to track a repository with manifests and deploy to Kubernetes cluster. (where ?)
+
+  
 
 ## 1.1 Tasks
 - [ ] Add log out feature
 - [ ] Add user profile component + password change feature
+- [ ] Add unit tests for components and services
 
 ## UnPlanned Tasks
 - [ ] File upload backend validation errors in import component (file field not in form control)
