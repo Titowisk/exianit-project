@@ -40,7 +40,7 @@ export const appConfig: ApplicationConfig = {
     { provide: APP_CONFIG, useFactory: () => appConfigData },
     provideAppInitializer(() => {
       const http = inject(HttpClient);
-      return firstValueFrom(http.get<AppConfig>('/assets/config.json')).then(config => {
+      return firstValueFrom(http.get<AppConfig>('assets/config.json')).then(config => {
         Object.assign(appConfigData, config);
       });
     }),
