@@ -2,6 +2,7 @@ import { inject, Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { APP_CONFIG } from '../models/app-config.interface';
 
 export interface SignUpResponse {
   id: string;
@@ -26,7 +27,7 @@ interface JwtPayload {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://localhost:7080/api/auth';
+  private apiUrl = inject(APP_CONFIG).apiUrl + '/auth';
   private readonly TOKEN_KEY = 'auth_token';
 
   private _userId = signal<string | null>(null);

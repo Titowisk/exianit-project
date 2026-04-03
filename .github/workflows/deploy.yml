@@ -1,0 +1,38 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Set production config
+        run: |
+          echo '{"apiUrl":"https://exianitproject-production.up.railway.app/api"}' > src/assets/config.json
+
+      - name: Build
+        run: npm run build -- --base-href /exianit-project/
+
+      - name: Add .nojekyll
+        run: touch dist/exianit-project/browser/.nojekyll
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/exianit-project/browser

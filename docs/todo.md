@@ -1,17 +1,24 @@
 # ToDo List
 
 ## 1.0 Tasks
-- [ ] Use environment variables for API URL and other configuration values
+- [ ] Configure Github Actions for CI/CD
+  - some way to automate tagging in github repository
+  - action must publish images to Github Packages Registry
+- [ ] Configure ArgoCD to track a repository with manifests and deploy to Kubernetes cluster. (where ?)
+
+  
 
 ## 1.1 Tasks
 - [ ] Add log out feature
 - [ ] Add user profile component + password change feature
+- [ ] Add unit tests for components and services
 
 ## UnPlanned Tasks
 - [ ] File upload backend validation errors in import component (file field not in form control)
 
 
 ## Completed
+- [X] Use environment variables for API URL and other configuration values
 - [X] Replace `source-statement-type.helper.ts` with a api call to get the statement types
 - [X] Change statement component name to transaction component
   - merge statement and transacion services

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SourceAccount } from '../models/source-account.interface';
 import { ImportResponse } from '../models/import-response.interface';
 import { AuthService } from './auth.service';
+import { APP_CONFIG } from '../models/app-config.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { AuthService } from './auth.service';
 export class SourceAccountService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = 'https://localhost:7080/api';
+  private apiUrl = inject(APP_CONFIG).apiUrl;
 
   getSourceAccounts(): Observable<SourceAccount[]> {
     const userId = this.authService.userId();

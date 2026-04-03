@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import { APP_CONFIG } from '../models/app-config.interface';
 import { MonthlyExpensesByCategory, ExpensesSummaryTotals } from '../models/monthly-expenses-by-category.interface';
 import { MonthlyIncomesByCategory } from '../models/monthly-incomes-by-category.interface';
 import { Transaction } from '../models/transaction.interface';
@@ -45,7 +46,7 @@ export interface IncomesSummaryResponse {
 export class TransactionService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = 'https://localhost:7080/api';
+  private apiUrl = inject(APP_CONFIG).apiUrl;
 
   getUserTransactionsByYear(year: number): Observable<Transaction[]> {
     const userId = this.authService.userId();
