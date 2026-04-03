@@ -12,7 +12,8 @@ import { APP_CONFIG } from '../models/app-config.interface';
 export class SourceAccountService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = inject(APP_CONFIG).apiUrl;
+  private config = inject(APP_CONFIG);
+  private get apiUrl() { return this.config.apiUrl; }
 
   getSourceAccounts(): Observable<SourceAccount[]> {
     const userId = this.authService.userId();

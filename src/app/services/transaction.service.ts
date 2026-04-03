@@ -46,7 +46,8 @@ export interface IncomesSummaryResponse {
 export class TransactionService {
   private http = inject(HttpClient);
   private authService = inject(AuthService);
-  private apiUrl = inject(APP_CONFIG).apiUrl;
+  private config = inject(APP_CONFIG);
+  private get apiUrl() { return this.config.apiUrl; }
 
   getUserTransactionsByYear(year: number): Observable<Transaction[]> {
     const userId = this.authService.userId();

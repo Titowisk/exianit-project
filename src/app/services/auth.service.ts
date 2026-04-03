@@ -27,7 +27,8 @@ interface JwtPayload {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = inject(APP_CONFIG).apiUrl + '/auth';
+  private config = inject(APP_CONFIG);
+  private get apiUrl() { return this.config.apiUrl + '/auth'; }
   private readonly TOKEN_KEY = 'auth_token';
 
   private _userId = signal<string | null>(null);
