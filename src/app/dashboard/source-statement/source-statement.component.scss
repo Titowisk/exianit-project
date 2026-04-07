@@ -1,0 +1,68 @@
+.source-statement-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .page-header {
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-color);
+      margin: 0;
+    }
+  }
+
+  .card {
+    background: var(--surface-card);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1.25rem;
+      color: var(--text-color);
+      font-weight: 600;
+    }
+  }
+
+  .account-selector {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 0;
+  }
+
+  .empty-hint {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-color-secondary);
+    margin: 0;
+  }
+
+  ::ng-deep {
+    .p-datatable {
+      .p-datatable-thead > tr > th {
+        background: var(--surface-100);
+        color: var(--text-color);
+        font-weight: 600;
+        padding: 1rem;
+      }
+
+      .p-datatable-tbody > tr > td {
+        padding: 1rem;
+      }
+
+      .p-datatable-tbody > tr:hover {
+        background: var(--surface-hover);
+      }
+    }
+  }
+}

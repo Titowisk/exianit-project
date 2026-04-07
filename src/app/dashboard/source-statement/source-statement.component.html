@@ -1,0 +1,77 @@
+<div class="source-statement-container">
+  <div class="page-header">
+    <h1>Source Statements</h1>
+  </div>
+
+  <section class="content">
+    <div class="card account-selector">
+      <h2>Select Source Account</h2>
+      @if (isLoadingAccounts()) {
+        <div class="loading-container">
+          <p-progressSpinner />
+        </div>
+      } @else if (sourceAccounts().length === 0) {
+        <p class="empty-hint">No source accounts found. Create a source account first.</p>
+      } @else {
+        <p-select
+          [options]="sourceAccounts()"
+          optionLabel="name"
+          placeholder="Select an account"
+          [(ngModel)]="selectedAccount"
+          [showClear]="true"
+          [style]="{ 'min-width': '16rem' }"
+        />
+      }
+    </div>
+
+    @if (selectedAccount()) {
+      <div class="card">
+        <h2>Statements for {{ selectedAccount()!.name }}</h2>
+
+        @if (isLoadingStatements()) {
+          <div class="loading-container">
+            <p-progressSpinner />
+          </div>
+        } @else if (sourceStatements().length === 0) {
+          <p class="empty-hint">No statements found for this account.</p>
+        } @else {
+          <p-table [value]="sourceStatements()" [paginator]="true" [rows]="10">
+            <ng-template #header>
+              <tr>
+                <th>Statement Date</th>
+                <th>Source File</th>
+                <th>Statement Type</th>
+                <th>Transactions</th>
+                <th>Actions</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-statement>
+              <tr>
+                <td>{{ statement.statementDate | date : 'dd/MM/yyyy' }}</td>
+                <td>{{ statement.sourceName }}</td>
+                <td>{{ statement.sourceStatementType.name }}</td>
+                <td>{{ statement.transactionCount }}</td>
+                <td>
+                  <p-button
+                    icon="pi pi-trash"
+                    severity="danger"
+                    size="small"
+                    [rounded]="true"
+                    [text]="true"
+                    [loading]="deletingId() === statement.id"
+                    [disabled]="deletingId() !== null"
+                    (onClick)="deleteStatement(statement)"
+                    pTooltip="Delete Statement"
+                    tooltipPosition="top"
+                  />
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </div>
+    }
+  </section>
+</div>
+
+<p-confirmDialog />
