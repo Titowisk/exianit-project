@@ -93,6 +93,12 @@ export class HeaderComponent {
       routerLink: '/source-account',
     },
     {
+      label: 'Source Statements',
+      icon: 'pi pi-folder-open',
+      command: () => this.navigateTo('/source-statement'),
+      routerLink: '/source-statement',
+    },
+    {
       label: 'Profile',
       icon: 'pi pi-user',
       command: () => this.navigateTo('/dashboard'),

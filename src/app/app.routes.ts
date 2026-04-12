@@ -8,6 +8,7 @@ import { LoginComponent } from './dashboard/login/login.component';
 import { RegisterComponent } from './dashboard/register/register.component';
 import { ImportComponent } from './dashboard/import/import.component';
 import { SourceAccountComponent } from './dashboard/source-account/source-account.component';
+import { SourceStatementComponent } from './dashboard/source-statement/source-statement.component';
 import { authGuard } from './services/auth.guard';
 
 
@@ -35,6 +36,7 @@ export const routes: Routes = [
   { path: 'analytics', component: AnalyticsComponent, canActivate: [authGuard] },
   { path: 'users', component: UsersComponent, canActivate: [authGuard] },
   { path: 'source-account', component: SourceAccountComponent, canActivate: [authGuard] },
+  { path: 'source-statement', component: SourceStatementComponent, canActivate: [authGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
 ];
