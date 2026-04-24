@@ -196,6 +196,7 @@
         [showIcon]="true"
         placeholder="Select date"
         [style]="{width: '100%'}"
+        appendTo="body"
       />
       @if (!editedDate()) {
         <small class="error-message">Date is required</small>
@@ -269,6 +270,7 @@
           [(ngModel)]="createSourceAccountId"
           placeholder="Select source account"
           [style]="{width: '100%'}"
+          appendTo="body"
         />
       }
       @if (!createSourceAccountId()) {
@@ -288,6 +290,7 @@
         [(ngModel)]="createType"
         (ngModelChange)="onCreateTypeChange()"
         [style]="{width: '100%'}"
+        appendTo="body"
       />
       @for (error of getCreateBackendErrors('type'); track error) {
         <small class="error-message">{{ error }}</small>
@@ -340,6 +343,7 @@
         [showIcon]="true"
         placeholder="Select date"
         [style]="{width: '100%'}"
+        appendTo="body"
       />
       @if (!createDate()) {
         <small class="error-message">Date is required</small>
@@ -358,6 +362,7 @@
         [(ngModel)]="createCategory"
         placeholder="Select category"
         [style]="{width: '100%'}"
+        appendTo="body"
       />
       @if (!createCategory()) {
         <small class="error-message">Category is required</small>
