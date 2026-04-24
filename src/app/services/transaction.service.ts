@@ -122,4 +122,29 @@ export class TransactionService {
       `${this.apiUrl}/transactions/${transactionId}?userId=${userId}`
     );
   }
+
+  createTransaction(
+    sourceAccountId: string,
+    type: 'income' | 'expense',
+    origin: string,
+    amount: number,
+    date: string,
+    category: number,
+    description: string | null
+  ): Observable<{ id: string }> {
+    const userId = this.authService.userId();
+    const typeMap: Record<'income' | 'expense', number> = { income: 1, expense: 2 };
+    return this.http.post<{ id: string }>(
+      `${this.apiUrl}/transactions?userId=${userId}`,
+      {
+        sourceAccountId,
+        type: typeMap[type],
+        origin,
+        amount,
+        date,
+        category,
+        description: description || null
+      }
+    );
+  }
 }
