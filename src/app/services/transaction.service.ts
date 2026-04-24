@@ -64,12 +64,13 @@ export class TransactionService {
       const type = transaction.type.toLowerCase() as 'income' | 'expense';
       const category = this.mapCategoryToEnum(transaction.category, type);
       
+      const d = new Date(transaction.date);
       return {
         id: transaction.id,
         type,
         origin: transaction.origin,
         amount: transaction.amount,
-        date: new Date(transaction.date),
+        date: new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()),
         category,
         description: transaction.description
       } as Transaction;
