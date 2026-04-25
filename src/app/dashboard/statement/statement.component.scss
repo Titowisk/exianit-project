@@ -47,3 +47,14 @@
     color: var(--green-600);
     font-weight: 500;
 }
+
+.source-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.source-icon {
+    display: block;
+    flex-shrink: 0;
+}
