@@ -75,17 +75,21 @@
         <ng-template #body let-transaction>
           <tr>
             <td [style.color]="transaction.type == 'expense' ? '#bd2b2b' : '#34a853'" [style.font-weight]="'500'">{{ transaction.type }}</td>
-            <td class="source-cell">
+            <td>
               @if (transaction.sourceAccount && getSourceIconPath(transaction.sourceAccount.source.id)) {
-                <img
-                  [ngSrc]="getSourceIconPath(transaction.sourceAccount.source.id)"
-                  [alt]="transaction.sourceAccount.source.name"
-                  width="20"
-                  height="20"
-                  class="source-icon"
-                />
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <img
+                    [ngSrc]="getSourceIconPath(transaction.sourceAccount.source.id)"
+                    [alt]="transaction.sourceAccount.source.name"
+                    width="20"
+                    height="20"
+                    style="display: block; flex-shrink: 0;"
+                  />
+                  {{ transaction.sourceAccount.name }}
+                </div>
+              } @else {
+                -
               }
-              {{ transaction.sourceAccount?.name ?? '-' }}
             </td>
             <td>{{ transaction.origin }}</td>
             <td [style.color]="transaction.type === 'expense' ? '#bd2b2b' : '#34a853'" [style.font-weight]="'500'">{{ transaction.amount | currency : "BRL" }}</td>
