@@ -1,6 +1,7 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
+import { SourceAccountService } from '../../services/source-account.service';
 import { getCategoryValue, getCategoriesByType } from '../../helpers/category-enum.helper';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -8,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { YearService } from '../../header/year.service';
 import { Transaction } from '../../models/transaction.interface';
+import { SourceAccount } from '../../models/source-account.interface';
 import { Category } from '../../models/enums/category.enum';
 import { Select } from 'primeng/select';
 import { Button } from 'primeng/button';
@@ -29,6 +31,7 @@ import { ErrorHandlerService } from '../../services/error-handler.service';
 export class StatementComponent {
   private transactionService = inject(TransactionService);
   private authService = inject(AuthService);
+  private sourceAccountService = inject(SourceAccountService);
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private errorHandler = inject(ErrorHandlerService);
@@ -48,6 +51,19 @@ export class StatementComponent {
   isSavingDetails = signal<boolean>(false);
   detailsBackendErrors = signal<Record<string, string[]>>({});
   deletingId = signal<string | null>(null);
+
+  showCreateModal = signal<boolean>(false);
+  createSourceAccountId = signal<string>('');
+  createType = signal<'income' | 'expense'>('expense');
+  createOrigin = signal<string>('');
+  createAmount = signal<number | null>(null);
+  createDate = signal<Date | null>(null);
+  createCategory = signal<string>('');
+  createDescription = signal<string>('');
+  isSavingCreate = signal<boolean>(false);
+  createBackendErrors = signal<Record<string, string[]>>({});
+  sourceAccounts = signal<SourceAccount[]>([]);
+  isLoadingSourceAccounts = signal<boolean>(false);
 
   constructor() {
     this.loadTransactions();
@@ -307,5 +323,107 @@ export class StatementComponent {
     const date = this.editedDate();
     const description = this.editedDescription();
     return date !== null && description.trim().length > 0;
+  }
+
+  openCreateModal(transaction: Transaction): void {
+    this.cancelEdit();
+    this.createType.set(transaction.type);
+    this.createOrigin.set(transaction.origin);
+    this.createAmount.set(transaction.amount);
+    this.createDate.set(new Date(transaction.date));
+    this.createCategory.set(transaction.category);
+    this.createDescription.set(transaction.description || '');
+    this.createSourceAccountId.set('');
+    this.createBackendErrors.set({});
+
+    this.isLoadingSourceAccounts.set(true);
+    this.sourceAccountService.getSourceAccounts().subscribe({
+      next: (accounts) => {
+        this.sourceAccounts.set(accounts);
+        this.isLoadingSourceAccounts.set(false);
+      },
+      error: (error) => {
+        this.isLoadingSourceAccounts.set(false);
+        this.errorHandler.showErrorToast(error, 'Load Failed', 'Failed to load source accounts.');
+      }
+    });
+
+    this.showCreateModal.set(true);
+  }
+
+  closeCreateModal(): void {
+    this.showCreateModal.set(false);
+    this.createSourceAccountId.set('');
+    this.createType.set('expense');
+    this.createOrigin.set('');
+    this.createAmount.set(null);
+    this.createDate.set(null);
+    this.createCategory.set('');
+    this.createDescription.set('');
+    this.createBackendErrors.set({});
+  }
+
+  onCreateTypeChange(): void {
+    this.createCategory.set('');
+    this.createBackendErrors.set({});
+  }
+
+  getCreateCategoryOptions(): { label: string; value: string }[] {
+    return getCategoriesByType(this.createType()).map(cat => ({ label: cat, value: cat }));
+  }
+
+  isCreateFormValid(): boolean {
+    const amount = this.createAmount();
+    return (
+      this.createSourceAccountId().length > 0 &&
+      this.createOrigin().trim().length > 0 &&
+      amount !== null && amount > 0 &&
+      this.createDate() !== null &&
+      this.createCategory().length > 0
+    );
+  }
+
+  getCreateBackendErrors(field: string): string[] {
+    return this.createBackendErrors()[field] || [];
+  }
+
+  saveCreate(): void {
+    const amount = this.createAmount();
+    const date = this.createDate();
+    if (!this.isCreateFormValid() || amount === null || date === null) return;
+
+    const isoDate = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)).toISOString();
+    const categoryValue = getCategoryValue(this.createCategory() as Category, this.createType());
+
+    this.isSavingCreate.set(true);
+    this.createBackendErrors.set({});
+
+    this.transactionService.createTransaction(
+      this.createSourceAccountId(),
+      this.createType(),
+      this.createOrigin().trim(),
+      amount,
+      isoDate,
+      categoryValue,
+      this.createDescription().trim() || null
+    ).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Transaction Created',
+          detail: 'Transaction created successfully',
+          life: 3000
+        });
+        this.isSavingCreate.set(false);
+        this.closeCreateModal();
+        this.loadTransactions();
+      },
+      error: (error) => {
+        this.isSavingCreate.set(false);
+        const fieldErrors = this.errorHandler.getFieldErrors(error);
+        this.createBackendErrors.set(fieldErrors);
+        this.errorHandler.showErrorToast(error, 'Create Failed', 'Failed to create transaction. Please try again.');
+      }
+    });
   }
 }

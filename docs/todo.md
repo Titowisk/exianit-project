@@ -1,7 +1,13 @@
 # ToDo List
 
+## Bugs
+- [X] When user tries to edit a transaction, the date picker is not shown properly. It is cut off and sometimes the user can't select the date it wants.
+- [X] Editing date from 2025-02-03 to 2025-03-04, actually saves to 2025-03-03 (one day less)
+
 ## 0.1 Tasks
-- [ ] Add sorting and filtering for amount and date
+- [X] Add sorting and filtering for amount and date
+- [ ] Add SourceAccount information to the statement component table
+  - [ ] Remember to refactor transaction creation to make it easier to fetch the sourceAccountId
   
 
 ## 0.2 Tasks

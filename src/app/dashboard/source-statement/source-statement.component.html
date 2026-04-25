@@ -47,7 +47,7 @@
             </ng-template>
             <ng-template #body let-statement>
               <tr>
-                <td>{{ statement.statementDate | date : 'dd/MM/yyyy' }}</td>
+                <td>{{ statement.statementDate | date : 'dd/MM/yyyy' : 'UTC' }}</td>
                 <td>{{ statement.sourceName }}</td>
                 <td>{{ statement.sourceStatementType.name }}</td>
                 <td>{{ statement.transactionCount }}</td>

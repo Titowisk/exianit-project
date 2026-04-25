@@ -157,6 +157,16 @@
                   pTooltip="Update Category"
                   tooltipPosition="top"
                 />
+                <p-button 
+                  icon="pi pi-plus" 
+                  (onClick)="openCreateModal(transaction)"
+                  severity="success" 
+                  size="small"
+                  [rounded]="true"
+                  [text]="true"
+                  pTooltip="Create Similar Transaction"
+                  tooltipPosition="top"
+                />
               }
             </td>
           </tr>
@@ -186,6 +196,7 @@
         [showIcon]="true"
         placeholder="Select date"
         [style]="{width: '100%'}"
+        appendTo="body"
       />
       @if (!editedDate()) {
         <small class="error-message">Date is required</small>
@@ -236,3 +247,159 @@
 </p-dialog>
 
 <p-confirmDialog></p-confirmDialog>
+
+<p-dialog
+  header="Create Transaction"
+  [(visible)]="showCreateModal"
+  [modal]="true"
+  [style]="{width: '500px'}"
+  [closable]="true"
+  (onHide)="closeCreateModal()"
+>
+  <div class="edit-form">
+    <div class="form-field">
+      <label for="create-source-account">Source Account *</label>
+      @if (isLoadingSourceAccounts()) {
+        <p-progressSpinner [style]="{width: '24px', height: '24px'}" />
+      } @else {
+        <p-select
+          id="create-source-account"
+          [options]="sourceAccounts()"
+          optionLabel="name"
+          optionValue="id"
+          [(ngModel)]="createSourceAccountId"
+          placeholder="Select source account"
+          [style]="{width: '100%'}"
+          appendTo="body"
+        />
+      }
+      @if (!createSourceAccountId()) {
+        <small class="error-message">Source account is required</small>
+      }
+      @for (error of getCreateBackendErrors('sourceAccountId'); track error) {
+        <small class="error-message">{{ error }}</small>
+      }
+    </div>
+    <div class="form-field">
+      <label for="create-type">Type *</label>
+      <p-select
+        id="create-type"
+        [options]="[{label: 'Expense', value: 'expense'}, {label: 'Income', value: 'income'}]"
+        optionLabel="label"
+        optionValue="value"
+        [(ngModel)]="createType"
+        (ngModelChange)="onCreateTypeChange()"
+        [style]="{width: '100%'}"
+        appendTo="body"
+      />
+      @for (error of getCreateBackendErrors('type'); track error) {
+        <small class="error-message">{{ error }}</small>
+      }
+    </div>
+    <div class="form-field">
+      <label for="create-origin">Origin *</label>
+      <input
+        id="create-origin"
+        type="text"
+        pInputText
+        [(ngModel)]="createOrigin"
+        placeholder="Enter origin"
+        [style]="{width: '100%'}"
+      />
+      @if (!createOrigin().trim()) {
+        <small class="error-message">Origin is required</small>
+      }
+      @for (error of getCreateBackendErrors('origin'); track error) {
+        <small class="error-message">{{ error }}</small>
+      }
+    </div>
+    <div class="form-field">
+      <label for="create-amount">Amount *</label>
+      <input
+        id="create-amount"
+        type="number"
+        pInputText
+        [value]="createAmount()"
+        (input)="createAmount.set(+$any($event.target).value || null)"
+        placeholder="Enter amount"
+        step="0.01"
+        min="0"
+        [style]="{width: '100%'}"
+      />
+      @if (createAmount() === null || createAmount()! <= 0) {
+        <small class="error-message">Amount must be greater than 0</small>
+      }
+      @for (error of getCreateBackendErrors('amount'); track error) {
+        <small class="error-message">{{ error }}</small>
+      }
+    </div>
+    <div class="form-field">
+      <label for="create-date">Date *</label>
+      <p-datePicker
+        id="create-date"
+        [(ngModel)]="createDate"
+        dateFormat="yy-mm-dd"
+        [showTime]="false"
+        [showIcon]="true"
+        placeholder="Select date"
+        [style]="{width: '100%'}"
+        appendTo="body"
+      />
+      @if (!createDate()) {
+        <small class="error-message">Date is required</small>
+      }
+      @for (error of getCreateBackendErrors('date'); track error) {
+        <small class="error-message">{{ error }}</small>
+      }
+    </div>
+    <div class="form-field">
+      <label for="create-category">Category *</label>
+      <p-select
+        id="create-category"
+        [options]="getCreateCategoryOptions()"
+        optionLabel="label"
+        optionValue="value"
+        [(ngModel)]="createCategory"
+        placeholder="Select category"
+        [style]="{width: '100%'}"
+        appendTo="body"
+      />
+      @if (!createCategory()) {
+        <small class="error-message">Category is required</small>
+      }
+      @for (error of getCreateBackendErrors('category'); track error) {
+        <small class="error-message">{{ error }}</small>
+      }
+    </div>
+    <div class="form-field">
+      <label for="create-description">Description</label>
+      <input
+        id="create-description"
+        type="text"
+        pInputText
+        [(ngModel)]="createDescription"
+        placeholder="Enter description (optional)"
+        [style]="{width: '100%'}"
+      />
+      @for (error of getCreateBackendErrors('description'); track error) {
+        <small class="error-message">{{ error }}</small>
+      }
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancel"
+      icon="pi pi-times"
+      (onClick)="closeCreateModal()"
+      severity="secondary"
+      [disabled]="isSavingCreate()"
+    />
+    <p-button
+      label="Create"
+      icon="pi pi-check"
+      (onClick)="saveCreate()"
+      [disabled]="!isCreateFormValid() || isSavingCreate()"
+      [loading]="isSavingCreate()"
+    />
+  </ng-template>
+</p-dialog>
