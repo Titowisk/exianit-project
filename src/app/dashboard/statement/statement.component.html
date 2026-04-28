@@ -23,6 +23,7 @@
             <th>Type</th>
             <th pSortableColumn="sourceAccount.name">Source <p-sortIcon field="sourceAccount.name" /></th>
             <th pSortableColumn="origin">Origin <p-sortIcon field="origin" /></th>
+
             <th pSortableColumn="amount">Amount <p-sortIcon field="amount" /></th>
             <th pSortableColumn="date">Date <p-sortIcon field="date" /></th>
             <th>Category</th>
@@ -39,7 +40,15 @@
                 filterOn="input"
               ></p-column-filter>
             </th>
-            <th>-</th>
+            <th>
+              <p-column-filter
+                type="text"
+                field="sourceAccount.name"
+                placeholder="Search by source"
+                ariaLabel="Filter Source"
+                filterOn="input"
+              ></p-column-filter>
+            </th>
             <th>
               <p-column-filter
                 type="text"
