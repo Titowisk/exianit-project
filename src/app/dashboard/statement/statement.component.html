@@ -94,10 +94,7 @@
                     height="20"
                     style="display: block; flex-shrink: 0;"
                   />
-                  <span
-                    [pTooltip]="needsTruncation(transaction.sourceAccount.name) ? transaction.sourceAccount.name : null"
-                    tooltipPosition="top"
-                  >{{ truncateText(transaction.sourceAccount.name) }}</span>
+                  {{ transaction.sourceAccount.name }}
                 </div>
               } @else {
                 -
@@ -127,10 +124,7 @@
                   }
                 }
               } @else {
-                <span
-                  [pTooltip]="needsTruncation(transaction.category) ? transaction.category : null"
-                  tooltipPosition="top"
-                >{{ truncateText(transaction.category) }}</span>
+                {{ transaction.category }}
               }
             </td>
             <td>
