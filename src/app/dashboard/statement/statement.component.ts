@@ -397,6 +397,15 @@ export class StatementComponent {
     return iconMap[sourceId] ?? '';
   }
 
+  truncateText(text: string | null | undefined, threshold = 35): string {
+    if (!text) return text ?? '';
+    return text.length > threshold ? text.slice(0, threshold) + '...' : text;
+  }
+
+  needsTruncation(text: string | null | undefined, threshold = 35): boolean {
+    return !!text && text.length > threshold;
+  }
+
   saveCreate(): void {
     const amount = this.createAmount();
     const date = this.createDate();

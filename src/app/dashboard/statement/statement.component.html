@@ -94,13 +94,21 @@
                     height="20"
                     style="display: block; flex-shrink: 0;"
                   />
-                  {{ transaction.sourceAccount.name }}
+                  <span
+                    [pTooltip]="needsTruncation(transaction.sourceAccount.name) ? transaction.sourceAccount.name : null"
+                    tooltipPosition="top"
+                  >{{ truncateText(transaction.sourceAccount.name) }}</span>
                 </div>
               } @else {
                 -
               }
             </td>
-            <td>{{ transaction.origin }}</td>
+            <td>
+              <span
+                [pTooltip]="needsTruncation(transaction.origin) ? transaction.origin : null"
+                tooltipPosition="top"
+              >{{ truncateText(transaction.origin) }}</span>
+            </td>
             <td [style.color]="transaction.type === 'expense' ? '#bd2b2b' : '#34a853'" [style.font-weight]="'500'">{{ transaction.amount | currency : "BRL" }}</td>
             <td>{{ transaction.date | date : "dd/MM/yyyy" }}</td>
             <td>
@@ -119,10 +127,18 @@
                   }
                 }
               } @else {
-                {{ transaction.category }}
+                <span
+                  [pTooltip]="needsTruncation(transaction.category) ? transaction.category : null"
+                  tooltipPosition="top"
+                >{{ truncateText(transaction.category) }}</span>
               }
             </td>
-            <td>{{ transaction.description || "N/A" }}</td>
+            <td>
+              <span
+                [pTooltip]="needsTruncation(transaction.description) ? transaction.description : null"
+                tooltipPosition="top"
+              >{{ truncateText(transaction.description) || 'N/A' }}</span>
+            </td>
             <td>
               @if (categorizingId() === transaction.id) {
                 <p-button 
