@@ -21,7 +21,9 @@
         <ng-template pTemplate="header">
           <tr>
             <th>Type</th>
+            <th pSortableColumn="sourceAccount.name">Source <p-sortIcon field="sourceAccount.name" /></th>
             <th pSortableColumn="origin">Origin <p-sortIcon field="origin" /></th>
+
             <th pSortableColumn="amount">Amount <p-sortIcon field="amount" /></th>
             <th pSortableColumn="date">Date <p-sortIcon field="date" /></th>
             <th>Category</th>
@@ -35,6 +37,15 @@
                 field="type"
                 placeholder="Search by type"
                 ariaLabel="Filter Type"
+                filterOn="input"
+              ></p-column-filter>
+            </th>
+            <th>
+              <p-column-filter
+                type="text"
+                field="sourceAccount.name"
+                placeholder="Search by source"
+                ariaLabel="Filter Source"
                 filterOn="input"
               ></p-column-filter>
             </th>
@@ -73,6 +84,22 @@
         <ng-template #body let-transaction>
           <tr>
             <td [style.color]="transaction.type == 'expense' ? '#bd2b2b' : '#34a853'" [style.font-weight]="'500'">{{ transaction.type }}</td>
+            <td>
+              @if (transaction.sourceAccount && getSourceIconPath(transaction.sourceAccount.source.id)) {
+                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                  <img
+                    [ngSrc]="getSourceIconPath(transaction.sourceAccount.source.id)"
+                    [alt]="transaction.sourceAccount.source.name"
+                    width="20"
+                    height="20"
+                    style="display: block; flex-shrink: 0;"
+                  />
+                  {{ transaction.sourceAccount.name }}
+                </div>
+              } @else {
+                -
+              }
+            </td>
             <td>{{ transaction.origin }}</td>
             <td [style.color]="transaction.type === 'expense' ? '#bd2b2b' : '#34a853'" [style.font-weight]="'500'">{{ transaction.amount | currency : "BRL" }}</td>
             <td>{{ transaction.date | date : "dd/MM/yyyy" }}</td>

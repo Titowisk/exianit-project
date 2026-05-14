@@ -47,3 +47,19 @@
     color: var(--green-600);
     font-weight: 500;
 }
+
+.source-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    .source-icon {
+    align-items: center;
+        // display: block;
+        // flex-shrink: 0;
+    }
+
+    .source-text{
+        align-self: center;
+    }
+}

@@ -17,6 +17,10 @@ interface ApiTransaction {
   category: string;
   description?: string;
   sourceStatementId: string;
+  sourceAccount?: {
+    name: string;
+    source: { id: number; name: string };
+  };
 }
 
 export interface ExpensesSummaryResponse {
@@ -72,7 +76,8 @@ export class TransactionService {
         amount: transaction.amount,
         date: new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()),
         category,
-        description: transaction.description
+        description: transaction.description,
+        sourceAccount: transaction.sourceAccount
       } as Transaction;
     });
   }

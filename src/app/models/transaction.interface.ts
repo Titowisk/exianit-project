@@ -1,5 +1,10 @@
 import { Category } from "./enums/category.enum";
 
+export interface TransactionSourceAccount {
+    name: string;
+    source: { id: number; name: string };
+}
+
 export interface IncomeTransaction {
     id: string;
     type: 'income';
@@ -8,6 +13,7 @@ export interface IncomeTransaction {
     date: Date;
     category: Category;
     description?: string;
+    sourceAccount?: TransactionSourceAccount;
 }
 
 export interface ExpenseTransaction {
@@ -18,6 +24,7 @@ export interface ExpenseTransaction {
     date: Date;
     category: Category;
     description?: string;
+    sourceAccount?: TransactionSourceAccount;
 }
 
 export type Transaction = IncomeTransaction | ExpenseTransaction;
