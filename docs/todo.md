@@ -1,13 +1,13 @@
 # ToDo List
 
 ## Bugs
-- [X] When user tries to edit a transaction, the date picker is not shown properly. It is cut off and sometimes the user can't select the date it wants.
-- [X] Editing date from 2025-02-03 to 2025-03-04, actually saves to 2025-03-03 (one day less)
+
 
 ## 0.1 Tasks
-- [X] Add sorting and filtering for amount and date
-- [ ] Add SourceAccount information to the statement component table
-  - [ ] Remember to refactor transaction creation to make it easier to fetch the sourceAccountId
+- [ ] Add tags visualization page
+- [X] Add search filter for Source column in the statement component
+- [X] Add trimming for cells in the statement component table that contains texts larger than some threshold (e.g. 20 characters) and show the full text in a tooltip on hover
+- [ ] Remember to refactor transaction creation to make it easier to fetch the sourceAccountId when backend provides it in the response
   
 
 ## 0.2 Tasks
@@ -23,7 +23,11 @@
 - [ ] Configure ArgoCD to track a repository with manifests and deploy to Kubernetes cluster. (where ?)
 
 ## Completed
-- [X] Use environment variables for API URL and other configuration values
+- [X] Use environment variables for API URL and other configuration
+- [X] When user tries to edit a transaction, the date picker is not shown properly. It is cut off and sometimes the user can't select the date it wants.
+- [X] Editing date from 2025-02-03 to 2025-03-04, actually saves to 2025-03-03 (one day less) values
+- [X] Add sorting and filtering for amount and date
+- [X] Add SourceAccount information to the statement component table
 - [X] Replace `source-statement-type.helper.ts` with a api call to get the statement types
 - [X] Change statement component name to transaction component
   - merge statement and transacion services
