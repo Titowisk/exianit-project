@@ -20,11 +20,10 @@ import { InputText } from 'primeng/inputtext';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Tooltip } from 'primeng/tooltip';
 import { ErrorHandlerService } from '../../services/error-handler.service';
-import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'app-statement',
-  imports: [TableModule, CommonModule, FormsModule, Select, Button, ProgressSpinner, Dialog, DatePicker, InputText, ConfirmDialog, Tooltip, NgOptimizedImage],
+  imports: [TableModule, CommonModule, FormsModule, Select, Button, ProgressSpinner, Dialog, DatePicker, InputText, ConfirmDialog, Tooltip],
   providers: [ConfirmationService],
   templateUrl: './statement.component.html',
   styleUrl: './statement.component.scss'
@@ -390,11 +389,20 @@ export class StatementComponent {
 
   getSourceIconPath(sourceId: number): string {
     const iconMap: Record<number, string> = {
-      1: '/assets/bank-icons/btg.1.svg',
-      2: '/assets/bank-icons/nubank.2.svg',
-      3: '/assets/bank-icons/flash-card.3.svg',
+      1: 'assets/bank-icons/btg.1.svg',
+      2: 'assets/bank-icons/nubank.2.svg',
+      3: 'assets/bank-icons/flash-card.3.svg',
     };
     return iconMap[sourceId] ?? '';
+  }
+
+  truncateText(text: string | null | undefined, threshold = 35): string {
+    if (!text) return text ?? '';
+    return text.length > threshold ? text.slice(0, threshold) + '...' : text;
+  }
+
+  needsTruncation(text: string | null | undefined, threshold = 35): boolean {
+    return !!text && text.length > threshold;
   }
 
   saveCreate(): void {
