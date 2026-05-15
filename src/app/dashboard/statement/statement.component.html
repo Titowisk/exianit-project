@@ -88,7 +88,7 @@
               @if (transaction.sourceAccount && getSourceIconPath(transaction.sourceAccount.source.id)) {
                 <div style="display: flex; align-items: center; gap: 0.4rem;">
                   <img
-                    [ngSrc]="getSourceIconPath(transaction.sourceAccount.source.id)"
+                    [src]="getSourceIconPath(transaction.sourceAccount.source.id)"
                     [alt]="transaction.sourceAccount.source.name"
                     width="20"
                     height="20"
