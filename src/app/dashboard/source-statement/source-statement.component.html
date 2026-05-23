@@ -25,7 +25,7 @@
     </div>
 
     @if (selectedAccount()) {
-      <div class="card table-card">
+      <div class="card">
         <h2>Statements for {{ selectedAccount()!.name }}</h2>
 
         @if (isLoadingStatements()) {
@@ -35,7 +35,7 @@
         } @else if (sourceStatements().length === 0) {
           <p class="empty-hint">No statements found for this account.</p>
         } @else {
-          <p-table [value]="filteredStatements()" [paginator]="true" [rows]="10" [scrollable]="true" scrollHeight="flex">
+          <p-table [value]="filteredStatements()">
             <ng-template #header>
               <tr>
                 <th>Statement Date</th>
