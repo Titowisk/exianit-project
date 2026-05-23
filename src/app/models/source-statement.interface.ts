@@ -6,6 +6,7 @@ export interface SourceStatement {
   sourceStatementType: {
     id: number;
     name: string;
-  };
+  } | null;
   transactionCount: number;
+  isPlaceholder: boolean;
 }

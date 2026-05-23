@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, computed, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
@@ -12,6 +12,7 @@ import { SourceStatementService } from '../../services/source-statement.service'
 import { SourceAccount } from '../../models/source-account.interface';
 import { SourceStatement } from '../../models/source-statement.interface';
 import { ErrorHandlerService } from '../../services/error-handler.service';
+import { YearService } from '../../header/year.service';
 
 @Component({
   selector: 'app-source-statement',
@@ -27,6 +28,7 @@ export class SourceStatementComponent {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private errorHandler = inject(ErrorHandlerService);
+  private yearService = inject(YearService);
 
   isLoadingAccounts = signal(false);
   isLoadingStatements = signal(false);
@@ -34,6 +36,30 @@ export class SourceStatementComponent {
   selectedAccount = signal<SourceAccount | null>(null);
   sourceStatements = signal<SourceStatement[]>([]);
   deletingId = signal<string | null>(null);
+  selectedTypeFilter = signal<number | null>(null);
+
+  availableStatementTypes = computed(() => {
+    const seen = new Set<number>();
+    const types: { id: number; name: string }[] = [];
+    for (const s of this.sourceStatements()) {
+      if (s.sourceStatementType && !seen.has(s.sourceStatementType.id)) {
+        seen.add(s.sourceStatementType.id);
+        types.push(s.sourceStatementType);
+      }
+    }
+    return types;
+  });
+
+  filteredStatements = computed(() => {
+    const typeFilter = this.selectedTypeFilter();
+    const year = this.yearService.selectedYear().year;
+    const statements = this.sourceStatements();
+    return statements.filter(s => {
+      const matchesType = typeFilter === null || s.sourceStatementType?.id === typeFilter;
+      const matchesYear = new Date(s.statementDate).getUTCFullYear() === year;
+      return matchesType && matchesYear;
+    });
+  });
 
   constructor() {
     this.loadSourceAccounts();
@@ -44,6 +70,7 @@ export class SourceStatementComponent {
         this.loadSourceStatements(account.id);
       } else {
         this.sourceStatements.set([]);
+        this.selectedTypeFilter.set(null);
       }
     });
   }
@@ -67,6 +94,8 @@ export class SourceStatementComponent {
     this.sourceStatementService.getSourceStatements(sourceAccountId).subscribe({
       next: (statements) => {
         this.sourceStatements.set(statements);
+        const firstType = statements.find(s => !s.isPlaceholder && s.sourceStatementType);
+        this.selectedTypeFilter.set(firstType?.sourceStatementType?.id ?? null);
         this.isLoadingStatements.set(false);
       },
       error: (error) => {

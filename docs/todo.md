@@ -5,12 +5,13 @@
 
 ## 0.1 Tasks
 - [ ] Add tags visualization page
-- [X] Add search filter for Source column in the statement component
-- [X] Add trimming for cells in the statement component table that contains texts larger than some threshold (e.g. 20 characters) and show the full text in a tooltip on hover
+- [ ] Add a way to check, in the source statements page, what are the missing months I need to import to complete the whole year.
+   - maybe change the page to show a table where source accounts are rows and months are columns, and the cells are colored based on wheter the statement was imported or not, and also show the number of transactions in each cell. Clicking on the cell would open the modal to import the statement for that month and source account.
 - [ ] Remember to refactor transaction creation to make it easier to fetch the sourceAccountId when backend provides it in the response
   
 
 ## 0.2 Tasks
+- [ ] In Imports Page, display the last imported file name to make it easier for users to identify which statement they imported for each month and source account.
 - [ ] Add log out feature
 - [ ] Add user profile component + password change feature
 - [ ] Add unit tests for components and services
@@ -41,3 +42,5 @@
 - [X] When user is logged in soft block access to register page
 - [X] When user gets 401, redirect to login page
 - [X] Changing year should reload the current component
+- [X] Add search filter for Source column in the statement component
+- [X] Add trimming for cells in the statement component table that contains texts larger than some threshold (e.g. 20 characters) and show the full text in a tooltip on hover

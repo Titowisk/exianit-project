@@ -27,6 +27,7 @@
 .main-content {
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 /* Responsive adjustments */
