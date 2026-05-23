@@ -12,6 +12,7 @@ import { SourceStatementService } from '../../services/source-statement.service'
 import { SourceAccount } from '../../models/source-account.interface';
 import { SourceStatement } from '../../models/source-statement.interface';
 import { ErrorHandlerService } from '../../services/error-handler.service';
+import { YearService } from '../../header/year.service';
 
 @Component({
   selector: 'app-source-statement',
@@ -27,6 +28,7 @@ export class SourceStatementComponent {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private errorHandler = inject(ErrorHandlerService);
+  private yearService = inject(YearService);
 
   isLoadingAccounts = signal(false);
   isLoadingStatements = signal(false);
@@ -40,7 +42,7 @@ export class SourceStatementComponent {
     const seen = new Set<number>();
     const types: { id: number; name: string }[] = [];
     for (const s of this.sourceStatements()) {
-      if (!s.isPlaceholder && s.sourceStatementType && !seen.has(s.sourceStatementType.id)) {
+      if (s.sourceStatementType && !seen.has(s.sourceStatementType.id)) {
         seen.add(s.sourceStatementType.id);
         types.push(s.sourceStatementType);
       }
@@ -49,10 +51,14 @@ export class SourceStatementComponent {
   });
 
   filteredStatements = computed(() => {
-    const filter = this.selectedTypeFilter();
+    const typeFilter = this.selectedTypeFilter();
+    const year = this.yearService.selectedYear().year;
     const statements = this.sourceStatements();
-    if (filter === null) return statements;
-    return statements.filter(s => s.isPlaceholder || s.sourceStatementType?.id === filter);
+    return statements.filter(s => {
+      const matchesType = typeFilter === null || s.sourceStatementType?.id === typeFilter;
+      const matchesYear = new Date(s.statementDate).getUTCFullYear() === year;
+      return matchesType && matchesYear;
+    });
   });
 
   constructor() {
