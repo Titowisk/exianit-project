@@ -25,7 +25,7 @@
     </div>
 
     @if (selectedAccount()) {
-      <div class="card">
+      <div class="card table-card">
         <h2>Statements for {{ selectedAccount()!.name }}</h2>
 
         @if (isLoadingStatements()) {
@@ -35,35 +35,51 @@
         } @else if (sourceStatements().length === 0) {
           <p class="empty-hint">No statements found for this account.</p>
         } @else {
-          <p-table [value]="sourceStatements()" [paginator]="true" [rows]="10">
+          <p-table [value]="filteredStatements()" [paginator]="true" [rows]="10" [scrollable]="true" scrollHeight="flex">
             <ng-template #header>
               <tr>
                 <th>Statement Date</th>
                 <th>Source File</th>
-                <th>Statement Type</th>
+                <th>
+                  <div class="th-filter">
+                    <span>Statement Type</span>
+                    <p-select
+                      [options]="availableStatementTypes()"
+                      optionLabel="name"
+                      optionValue="id"
+                      [ngModel]="selectedTypeFilter()"
+                      (ngModelChange)="selectedTypeFilter.set($event)"
+                      [showClear]="true"
+                      placeholder="All types"
+                      [style]="{ 'min-width': '11rem' }"
+                    />
+                  </div>
+                </th>
                 <th>Transactions</th>
                 <th>Actions</th>
               </tr>
             </ng-template>
             <ng-template #body let-statement>
-              <tr>
+              <tr [class.placeholder-row]="statement.isPlaceholder">
                 <td>{{ statement.statementDate | date : 'dd/MM/yyyy' : 'UTC' }}</td>
-                <td>{{ statement.sourceName }}</td>
-                <td>{{ statement.sourceStatementType.name }}</td>
-                <td>{{ statement.transactionCount }}</td>
+                <td>{{ statement.isPlaceholder ? '—' : statement.sourceName }}</td>
+                <td>{{ statement.sourceStatementType?.name ?? '—' }}</td>
+                <td>{{ statement.isPlaceholder ? '—' : statement.transactionCount }}</td>
                 <td>
-                  <p-button
-                    icon="pi pi-trash"
-                    severity="danger"
-                    size="small"
-                    [rounded]="true"
-                    [text]="true"
-                    [loading]="deletingId() === statement.id"
-                    [disabled]="deletingId() !== null"
-                    (onClick)="deleteStatement(statement)"
-                    pTooltip="Delete Statement"
-                    tooltipPosition="top"
-                  />
+                  @if (!statement.isPlaceholder) {
+                    <p-button
+                      icon="pi pi-trash"
+                      severity="danger"
+                      size="small"
+                      [rounded]="true"
+                      [text]="true"
+                      [loading]="deletingId() === statement.id"
+                      [disabled]="deletingId() !== null"
+                      (onClick)="deleteStatement(statement)"
+                      pTooltip="Delete Statement"
+                      tooltipPosition="top"
+                    />
+                  }
                 </td>
               </tr>
             </ng-template>

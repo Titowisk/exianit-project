@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, computed, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
@@ -34,6 +34,26 @@ export class SourceStatementComponent {
   selectedAccount = signal<SourceAccount | null>(null);
   sourceStatements = signal<SourceStatement[]>([]);
   deletingId = signal<string | null>(null);
+  selectedTypeFilter = signal<number | null>(null);
+
+  availableStatementTypes = computed(() => {
+    const seen = new Set<number>();
+    const types: { id: number; name: string }[] = [];
+    for (const s of this.sourceStatements()) {
+      if (!s.isPlaceholder && s.sourceStatementType && !seen.has(s.sourceStatementType.id)) {
+        seen.add(s.sourceStatementType.id);
+        types.push(s.sourceStatementType);
+      }
+    }
+    return types;
+  });
+
+  filteredStatements = computed(() => {
+    const filter = this.selectedTypeFilter();
+    const statements = this.sourceStatements();
+    if (filter === null) return statements;
+    return statements.filter(s => s.isPlaceholder || s.sourceStatementType?.id === filter);
+  });
 
   constructor() {
     this.loadSourceAccounts();
@@ -44,6 +64,7 @@ export class SourceStatementComponent {
         this.loadSourceStatements(account.id);
       } else {
         this.sourceStatements.set([]);
+        this.selectedTypeFilter.set(null);
       }
     });
   }
@@ -67,6 +88,8 @@ export class SourceStatementComponent {
     this.sourceStatementService.getSourceStatements(sourceAccountId).subscribe({
       next: (statements) => {
         this.sourceStatements.set(statements);
+        const firstType = statements.find(s => !s.isPlaceholder && s.sourceStatementType);
+        this.selectedTypeFilter.set(firstType?.sourceStatementType?.id ?? null);
         this.isLoadingStatements.set(false);
       },
       error: (error) => {
