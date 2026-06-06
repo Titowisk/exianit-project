@@ -53,16 +53,10 @@ export class HeaderComponent {
       routerLink: '/statement',
     },
     {
-      label: 'Expenses',
+      label: 'Expenses & Incomes',
       icon: 'pi pi-table',
-      command: () => this.navigateTo('/expenses'),
-      routerLink: '/expenses',
-    },
-    {
-      label: 'Incomes',
-      icon: 'pi pi-table',
-      command: () => this.navigateTo('/incomes'),
-      routerLink: '/incomes',
+      command: () => this.navigateTo('/summary'),
+      routerLink: '/summary',
     },
     {
       label: 'Analytics',

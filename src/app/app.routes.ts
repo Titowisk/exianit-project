@@ -2,8 +2,7 @@ import { Routes } from '@angular/router';
 import { Component } from '@angular/core';
 import { StatementComponent } from './dashboard/statement/statement.component';
 import { AnalyticsComponent } from './dashboard/analytics/analytics.component';
-import { ExpensesComponent } from './dashboard/summary/expenses/expenses.component';
-import { IncomesComponent } from './dashboard/summary/incomes/incomes.component';
+import { SummaryComponent } from './dashboard/summary/summary.component';
 import { LoginComponent } from './dashboard/login/login.component';
 import { RegisterComponent } from './dashboard/register/register.component';
 import { ImportComponent } from './dashboard/import/import.component';
@@ -31,8 +30,7 @@ export const routes: Routes = [
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: 'import', component: ImportComponent, canActivate: [authGuard] },
   { path: 'statement', component: StatementComponent, canActivate: [authGuard] },
-  { path: 'expenses', component: ExpensesComponent, canActivate: [authGuard] },
-  { path: 'incomes', component: IncomesComponent, canActivate: [authGuard] },
+  { path: 'summary', component: SummaryComponent, canActivate: [authGuard] },
   { path: 'analytics', component: AnalyticsComponent, canActivate: [authGuard] },
   { path: 'users', component: UsersComponent, canActivate: [authGuard] },
   { path: 'source-account', component: SourceAccountComponent, canActivate: [authGuard] },

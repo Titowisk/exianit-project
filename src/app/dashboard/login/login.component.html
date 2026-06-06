@@ -9,9 +9,11 @@
         <label for="email">Email</label>
         <input 
           pInputText 
-          id="email" 
+          id="email"
+          name="email"
           formControlName="email" 
           type="email"
+          autocomplete="email"
           placeholder="Enter your email"
           [class.ng-invalid]="hasError('email', 'required') || hasError('email', 'email')"
           [class.ng-dirty]="email?.dirty || email?.touched"
@@ -33,7 +35,9 @@
       <div class="form-field">
         <label for="password">Password</label>
         <p-password 
-          id="password" 
+          id="password"
+          name="password"
+          autocomplete="current-password"
           formControlName="password"
           placeholder="Enter your password"
           [feedback]="false"

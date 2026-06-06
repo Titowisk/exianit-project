@@ -54,12 +54,14 @@
             >
               Paid Vacation
             </th>
+            <th>Main Total</th>
             <th
               [style.background-color]="colors[Category.Others].color"
               [style.color]="'white'"
             >
               Others
             </th>
+            <th>Total</th>
           </tr>
         </ng-template>
         <ng-template #body let-income>
@@ -99,11 +101,17 @@
             >
               R$ {{ income.paidVacation | number: "1.2-2" }}
             </td>
+            <td>
+              R$ {{ income.totalMainIncome | number: "1.2-2" }}
+            </td>
             <td
               [style.background-color]="colors[Category.Others].color"
               [style.color]="'white'"
             >
               R$ {{ income.others | number: "1.2-2" }}
+            </td>
+            <td>
+              R$ {{ income.total | number: "1.2-2" }}
             </td>
           </tr>
         </ng-template>
@@ -146,12 +154,18 @@
               >
                 R$ {{ averages()!.paidVacation | number: "1.2-2" }}
               </td>
+              <td>
+                R$ {{ averages()!.totalMainIncome | number: "1.2-2" }}
+              </td>
               <td
                 [style.color]="
                   hexToRgba(colors[Category.Others].color, 1)
                 "
               >
                 R$ {{ averages()!.others | number: "1.2-2" }}
+              </td>
+              <td>
+                R$ {{ averages()!.total | number: "1.2-2" }}
               </td>
             </tr>
           }
@@ -193,12 +207,18 @@
               >
                 R$ {{ totals()!.paidVacation | number: "1.2-2" }}
               </td>
+              <td>
+                R$ {{ totals()!.totalMainIncome | number: "1.2-2" }}
+              </td>
               <td
                 [style.color]="
                   hexToRgba(colors[Category.Others].color, 1)
                 "
               >
                 R$ {{ totals()!.others | number: "1.2-2" }}
+              </td>
+              <td>
+                R$ {{ totals()!.total | number: "1.2-2" }}
               </td>
             </tr>
           }
