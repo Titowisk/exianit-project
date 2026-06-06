@@ -4,6 +4,7 @@ import { Observable, map } from 'rxjs';
 import { APP_CONFIG } from '../models/app-config.interface';
 import { MonthlyExpensesByCategory, ExpensesSummaryTotals } from '../models/monthly-expenses-by-category.interface';
 import { MonthlyIncomesByCategory } from '../models/monthly-incomes-by-category.interface';
+import { BalanceSummaryResponse } from '../models/monthly-balance.interface';
 import { Transaction } from '../models/transaction.interface';
 import { Category } from '../models/enums/category.enum';
 import { AuthService } from './auth.service';
@@ -115,6 +116,12 @@ export class TransactionService {
   getIncomeSummary(userId: string, year: number): Observable<IncomesSummaryResponse> {
     return this.http.get<IncomesSummaryResponse>(
       `${this.apiUrl}/transactions/income-summary?userId=${userId}&year=${year}`
+    );
+  }
+
+  getBalanceSummary(userId: string, year: number): Observable<BalanceSummaryResponse> {
+    return this.http.get<BalanceSummaryResponse>(
+      `${this.apiUrl}/transactions/balance-summary?userId=${userId}&year=${year}`
     );
   }
 
