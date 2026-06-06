@@ -35,7 +35,9 @@ export interface IncomeSummaryTotals {
   taxReturns: number;
   bonus: number;
   paidVacation: number;
+  totalMainIncome: number;
   others: number;
+  total: number;
 }
 
 export interface IncomesSummaryResponse {

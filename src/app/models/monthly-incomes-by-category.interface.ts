@@ -6,5 +6,7 @@ export interface MonthlyIncomesByCategory {
   taxReturns: number;
   bonus: number;
   paidVacation: number;
+  totalMainIncome: number;
   others: number;
+  total: number;
 }
