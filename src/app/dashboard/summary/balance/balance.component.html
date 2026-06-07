@@ -1,0 +1,119 @@
+<div class="dashboard-container">
+  <div class="dashboard-title">
+    <h1>
+      Balance Summary
+      <span class="year-display">{{ yearService.selectedYearText() }}</span>
+    </h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <p-progressSpinner />
+    </div>
+  } @else if (!isLoading() && monthlyBalances().length === 0) {
+    <div class="empty-state">
+      <p>No balance data available for this year.</p>
+    </div>
+  } @else {
+    <section class="dashboard-content">
+      <p-table [value]="monthlyBalances()">
+        <ng-template #header>
+          <tr [style.font-weight]="'bold'">
+            <th>-</th>
+            <th
+              [style.background-color]="colors[Category.Salary].color"
+              [style.color]="'white'"
+            >
+              Main Income
+            </th>
+            <th
+              [style.background-color]="totalCostColor"
+              [style.color]="'white'"
+            >
+              Total Cost
+            </th>
+            <th>Main Balance</th>
+            <th
+              [style.background-color]="colors[Category.Others].color"
+              [style.color]="'white'"
+            >
+              Others
+            </th>
+            <th>Total Balance</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-balance>
+          <tr [style.font-weight]="'bold'">
+            <td>{{ balance.month }}</td>
+            <td
+              [style.background-color]="colors[Category.Salary].color"
+              [style.color]="'white'"
+            >
+              R$ {{ balance.totalMainIncome | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="totalCostColor"
+              [style.color]="'white'"
+            >
+              R$ {{ balance.totalCost | number: "1.2-2" }}
+            </td>
+            <td [style.color]="balance.totalMainBalance >= 0 ? 'green' : 'red'">
+              R$ {{ balance.totalMainBalance | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="colors[Category.Others].color"
+              [style.color]="'white'"
+            >
+              R$ {{ balance.totalOthers | number: "1.2-2" }}
+            </td>
+            <td [style.color]="balance.totalBalance >= 0 ? 'green' : 'red'">
+              R$ {{ balance.totalBalance | number: "1.2-2" }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template #footer>
+          @if (averages()) {
+            <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+              <td>Averages</td>
+              <td [style.color]="colors[Category.Salary].color">
+                R$ {{ averages()!.totalMainIncome | number: "1.2-2" }}
+              </td>
+              <td [style.color]="totalCostColor">
+                R$ {{ averages()!.totalCost | number: "1.2-2" }}
+              </td>
+              <td [style.color]="averages()!.totalMainBalance >= 0 ? 'green' : 'red'">
+                R$ {{ averages()!.totalMainBalance | number: "1.2-2" }}
+              </td>
+              <td [style.color]="colors[Category.Others].color">
+                R$ {{ averages()!.totalOthers | number: "1.2-2" }}
+              </td>
+              <td [style.color]="averages()!.totalBalance >= 0 ? 'green' : 'red'">
+                R$ {{ averages()!.totalBalance | number: "1.2-2" }}
+              </td>
+            </tr>
+          }
+          @if (totals()) {
+            <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+              <td>Totals</td>
+              <td [style.color]="colors[Category.Salary].color">
+                R$ {{ totals()!.totalMainIncome | number: "1.2-2" }}
+              </td>
+              <td [style.color]="totalCostColor">
+                R$ {{ totals()!.totalCost | number: "1.2-2" }}
+              </td>
+              <td [style.color]="totals()!.totalMainBalance >= 0 ? 'green' : 'red'">
+                R$ {{ totals()!.totalMainBalance | number: "1.2-2" }}
+              </td>
+              <td [style.color]="colors[Category.Others].color">
+                R$ {{ totals()!.totalOthers | number: "1.2-2" }}
+              </td>
+              <td [style.color]="totals()!.totalBalance >= 0 ? 'green' : 'red'">
+                R$ {{ totals()!.totalBalance | number: "1.2-2" }}
+              </td>
+            </tr>
+          }
+        </ng-template>
+      </p-table>
+    </section>
+  }
+</div>
