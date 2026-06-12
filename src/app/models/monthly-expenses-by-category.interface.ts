@@ -12,6 +12,7 @@ export interface MonthlyExpensesByCategory {
   educationTotal: number;
   taxAndTributesTotal: number;
   investmentsTotal: number;
+  vacationTotal: number;
 
   totalMonth: number;
 }
@@ -28,6 +29,7 @@ export interface ExpensesSummaryTotals {
   educationTotal: number;
   taxAndTributesTotal: number;
   investmentsTotal: number;
+  vacationTotal: number;
 
   totalMonth: number;
 }

@@ -11,6 +11,7 @@ export enum Category {
     Education = 'Education',
     TaxAndTributes = 'TaxAndTributes',
     Investments = 'Investments',
+    Vacation = 'Vacation',
     
     // Income categories
     Salary = 'Salary',

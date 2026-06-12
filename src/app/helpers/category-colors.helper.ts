@@ -58,6 +58,11 @@ export const CATEGORY_COLORS: Record<Category, CategoryAnalytics> = {
     label: 'Investments',
     color: '#0404e1'
   },
+  [Category.Vacation]: {
+    category: Category.Vacation,
+    label: 'Vacation',
+    color: '#7dbafb'
+  },
   
   // Income categories
   [Category.Salary]: {

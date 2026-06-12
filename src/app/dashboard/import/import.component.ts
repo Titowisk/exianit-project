@@ -11,6 +11,8 @@ import { SourceAccountService } from '../../services/source-account.service';
 import { SourceAccount } from '../../models/source-account.interface';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 
+const IMPORT_FORM_KEY = 'exianit_import_last_values';
+
 @Component({
   selector: 'app-import',
   imports: [CommonModule, ReactiveFormsModule, Select, Button, Message, FileUpload, RouterLink],
@@ -85,11 +87,40 @@ export class ImportComponent implements OnInit {
     return this.backendErrors()[field] || [];
   }
 
+  private saveLastValues(): void {
+    const { sourceAccountId, statementType } = this.importForm.value;
+    localStorage.setItem(IMPORT_FORM_KEY, JSON.stringify({ sourceAccountId, statementType }));
+  }
+
+  private restoreLastValues(): void {
+    const raw = localStorage.getItem(IMPORT_FORM_KEY);
+    if (!raw) return;
+
+    try {
+      const { sourceAccountId, statementType } = JSON.parse(raw) as { sourceAccountId: string; statementType: number };
+
+      const accountExists = this.sourceAccounts().some(a => a.id === sourceAccountId);
+      if (!accountExists) return;
+
+      // Patch account first — triggers the valueChanges subscription that sets selectedAccount
+      this.importForm.patchValue({ sourceAccountId }, { emitEvent: true });
+
+      const account = this.sourceAccounts().find(a => a.id === sourceAccountId);
+      const typeExists = account?.availableStatementTypes.some(t => t.id === statementType);
+      if (typeExists) {
+        this.importForm.patchValue({ statementType }, { emitEvent: false });
+      }
+    } catch {
+      localStorage.removeItem(IMPORT_FORM_KEY);
+    }
+  }
+
   private loadSourceAccounts(): void {
     this.isLoadingAccounts.set(true);
     this.sourceAccountService.getSourceAccounts().subscribe({
       next: (accounts) => {
         this.sourceAccounts.set(accounts);
+        this.restoreLastValues();
         this.isLoadingAccounts.set(false);
       },
       error: (error) => {
@@ -154,6 +185,7 @@ export class ImportComponent implements OnInit {
           detail: response.message || 'Statement imported successfully.',
           life: 3000
         });
+        this.saveLastValues();
         this.resetForm();
       },
       error: (error) => {
@@ -174,9 +206,7 @@ export class ImportComponent implements OnInit {
   }
 
   private resetForm(): void {
-    this.importForm.reset();
     this.selectedFile.set(null);
-    this.selectedAccount.set(null);
     this.backendErrors.set({});
   }
 }
