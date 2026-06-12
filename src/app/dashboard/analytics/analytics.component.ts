@@ -93,6 +93,12 @@ export class AnalyticsComponent {
         backgroundColor: CATEGORY_COLORS[Category.Investments].color,
         data: this.monthlyExpenses().map(expense => expense.investmentsTotal),
       },
+      {
+        type: 'bar',
+        label: CATEGORY_COLORS[Category.Vacation].label,
+        backgroundColor: CATEGORY_COLORS[Category.Vacation].color,
+        data: this.monthlyExpenses().map(expense => expense.vacationTotal),
+      },
     ],
   }));
 

@@ -99,6 +99,14 @@
             >
               Investments
             </th>
+            <th
+              [style.background-color]="
+                colors[Category.Vacation].color
+              "
+              [style.color]="'white'"
+            >
+              Vacation
+            </th>
           </tr>
         </ng-template>
         <ng-template #body let-expense>
@@ -182,6 +190,14 @@
               [style.color]="'white'"
             >
               R$ {{ expense.investmentsTotal | number: "1.2-2" }}
+            </td>
+            <td
+              [style.background-color]="
+                colors[Category.Vacation].color
+              "
+              [style.color]="'white'"
+            >
+              R$ {{ expense.vacationTotal | number: "1.2-2" }}
             </td>
           </tr>
         </ng-template>
@@ -267,6 +283,13 @@
               >
                 R$ {{ averages()!.investmentsTotal | number: "1.2-2" }}
               </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[Category.Vacation].color, 1)
+                "
+              >
+                R$ {{ averages()!.vacationTotal | number: "1.2-2" }}
+              </td>
             </tr>
           }
           @if (totals()) {
@@ -349,6 +372,13 @@
                 "
               >
                 R$ {{ totals()!.investmentsTotal | number: "1.2-2" }}
+              </td>
+              <td
+                [style.color]="
+                  hexToRgba(colors[Category.Vacation].color, 1)
+                "
+              >
+                R$ {{ totals()!.vacationTotal | number: "1.2-2" }}
               </td>
             </tr>
           }

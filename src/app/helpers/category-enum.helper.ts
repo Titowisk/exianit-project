@@ -17,6 +17,7 @@ export function getCategoryValue(category: Category, type: 'expense' | 'income')
     [Category.Education]: 9,
     [Category.TaxAndTributes]: 10,
     [Category.Investments]: 11,
+    [Category.Vacation]: 12,
     
     // Income categories
     [Category.Salary]: 50,
@@ -50,6 +51,7 @@ export function getCategoriesByType(type: 'expense' | 'income'): Category[] {
       Category.Education,
       Category.TaxAndTributes,
       Category.Investments,
+      Category.Vacation,
       Category.Others,
       Category.Uncategorized
     ];
