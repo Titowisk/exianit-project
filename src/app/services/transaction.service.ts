@@ -22,6 +22,7 @@ interface ApiTransaction {
     name: string;
     source: { id: number; name: string };
   };
+  tag?: { id: string; name: string; color: string } | null;
 }
 
 export interface ExpensesSummaryResponse {
@@ -80,7 +81,8 @@ export class TransactionService {
         date: new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()),
         category,
         description: transaction.description,
-        sourceAccount: transaction.sourceAccount
+        sourceAccount: transaction.sourceAccount,
+        tag: transaction.tag ?? null
       } as Transaction;
     });
   }

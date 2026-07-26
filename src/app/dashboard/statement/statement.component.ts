@@ -2,6 +2,7 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
 import { SourceAccountService } from '../../services/source-account.service';
+import { TagService } from '../../services/tag.service';
 import { getCategoryValue, getCategoriesByType } from '../../helpers/category-enum.helper';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -11,6 +12,7 @@ import { YearService } from '../../header/year.service';
 import { Transaction } from '../../models/transaction.interface';
 import { SourceAccount } from '../../models/source-account.interface';
 import { Category } from '../../models/enums/category.enum';
+import { Tag } from '../../models/tag.interface';
 import { Select } from 'primeng/select';
 import { Button } from 'primeng/button';
 import { ProgressSpinner } from 'primeng/progressspinner';
@@ -35,6 +37,7 @@ export class StatementComponent {
   private messageService = inject(MessageService);
   private confirmationService = inject(ConfirmationService);
   private errorHandler = inject(ErrorHandlerService);
+  private tagService = inject(TagService);
   yearService = inject(YearService);
 
   transactions = signal<Transaction[]>([]);
@@ -43,6 +46,10 @@ export class StatementComponent {
   editingCategory = signal<string>('');
   savingId = signal<string | null>(null);
   categoryBackendErrors = signal<Record<string, string[]>>({});
+  userTags = signal<Tag[]>([]);
+  taggingId = signal<string | null>(null);
+  selectedTagId = signal<string | null>(null);
+  savingTagId = signal<string | null>(null);
   
   showEditModal = signal<boolean>(false);
   selectedTransaction = signal<Transaction | null>(null);
@@ -67,6 +74,7 @@ export class StatementComponent {
 
   constructor() {
     this.loadTransactions();
+    this.loadTags();
     
     // Watch for year changes and reload data
     effect(() => {
@@ -99,6 +107,7 @@ export class StatementComponent {
   }
 
   startCategorize(transaction: Transaction): void {
+    this.cancelTagging();
     this.categorizingId.set(transaction.id);
     this.editingCategory.set(transaction.category);
     this.categoryBackendErrors.set({}); // Clear errors when starting edit
@@ -112,6 +121,77 @@ export class StatementComponent {
   cancelEdit(): void {
     this.categorizingId.set(null);
     this.editingCategory.set('');
+  }
+
+  loadTags(): void {
+    this.tagService.getTags().subscribe({
+      next: (tags) => this.userTags.set(tags),
+      error: (error) => this.errorHandler.showErrorToast(error, 'Load Failed', 'Failed to load tags.')
+    });
+  }
+
+  getTagOptions(): { label: string; value: string | null }[] {
+    return [
+      { label: '\u2014 No tag \u2014', value: null },
+      ...this.userTags().map(tag => ({ label: tag.name, value: tag.id }))
+    ];
+  }
+
+  startTagging(transaction: Transaction): void {
+    this.cancelEdit();
+    this.taggingId.set(transaction.id);
+    this.selectedTagId.set(transaction.tag?.id ?? null);
+  }
+
+  cancelTagging(): void {
+    this.taggingId.set(null);
+    this.selectedTagId.set(null);
+  }
+
+  saveTag(transaction: Transaction): void {
+    this.savingTagId.set(transaction.id);
+    this.tagService.tagTransaction(transaction.id, this.selectedTagId()).subscribe({
+      next: () => {
+        const tagId = this.selectedTagId();
+        const tag = tagId ? (this.userTags().find(t => t.id === tagId) ?? null) : null;
+        this.transactions.update(ts =>
+          ts.map(t => t.id === transaction.id ? { ...t, tag } : t)
+        );
+        this.savingTagId.set(null);
+        this.cancelTagging();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Tag Updated',
+          detail: 'Transaction tag updated successfully',
+          life: 3000
+        });
+      },
+      error: (error) => {
+        this.savingTagId.set(null);
+        this.errorHandler.showErrorToast(error, 'Tag Failed', 'Failed to update tag. Please try again.');
+      }
+    });
+  }
+
+  saveSimilarOriginTag(transaction: Transaction): void {
+    this.savingTagId.set(transaction.id);
+    this.tagService.tagSimilarOriginTransactions(transaction.id, this.selectedTagId()).subscribe({
+      next: (result) => {
+        this.savingTagId.set(null);
+        this.cancelTagging();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Tags Updated',
+          detail: `${result.updatedCount} transaction(s) from "${transaction.origin}" updated`,
+          life: 3000
+        });
+        this.loadTransactions();
+      },
+      error: (error) => {
+        this.savingTagId.set(null);
+        this.errorHandler.showErrorToast(error, 'Tag Failed', 'Failed to update tags. Please try again.');
+      }
+    });
   }
 
   saveCategory(transaction: Transaction): void {

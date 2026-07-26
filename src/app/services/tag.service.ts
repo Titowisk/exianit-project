@@ -23,4 +23,20 @@ export class TagService {
     const userId = this.authService.userId();
     return this.http.post<Tag>(`${this.apiUrl}/tags?userId=${userId}`, { name, color });
   }
+
+  tagTransaction(transactionId: string, tagId: string | null): Observable<void> {
+    const userId = this.authService.userId();
+    return this.http.patch<void>(
+      `${this.apiUrl}/transactions/${transactionId}/tag?userId=${userId}`,
+      { tagId }
+    );
+  }
+
+  tagSimilarOriginTransactions(transactionId: string, tagId: string | null): Observable<{ updatedCount: number }> {
+    const userId = this.authService.userId();
+    return this.http.patch<{ updatedCount: number }>(
+      `${this.apiUrl}/transactions/${transactionId}/similar-origin-tag?userId=${userId}`,
+      { tagId }
+    );
+  }
 }
