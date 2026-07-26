@@ -65,6 +65,12 @@ export class HeaderComponent {
       routerLink: '/analytics',
     },
     {
+      label: 'Tagged Summary',
+      icon: 'pi pi-tags',
+      command: () => this.navigateTo('/tagged-summary'),
+      routerLink: '/tagged-summary',
+    },
+    {
       label: 'Predictions',
       icon: 'pi pi-calendar-clock',
       command: () => this.navigateTo('/dashboard'),
