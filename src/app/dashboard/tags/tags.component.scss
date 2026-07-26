@@ -1,0 +1,135 @@
+.tags-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .card {
+    background: var(--surface-card);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+      color: var(--text-color);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .tag-count {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: var(--text-color-secondary);
+      }
+    }
+  }
+
+  .form-section {
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          font-weight: 500;
+          color: var(--text-color);
+          font-size: 0.95rem;
+        }
+
+        input[pInputText] {
+          width: 100%;
+        }
+
+        .error-message {
+          color: var(--red-500);
+          font-size: 0.875rem;
+        }
+
+        .color-field {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+
+          .color-input {
+            width: 48px;
+            height: 40px;
+            border: 1px solid var(--surface-border);
+            border-radius: 6px;
+            padding: 2px;
+            cursor: pointer;
+            background: none;
+          }
+
+          .color-value {
+            font-size: 0.9rem;
+            color: var(--text-color-secondary);
+            font-family: monospace;
+          }
+        }
+      }
+    }
+  }
+
+  .limit-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--yellow-100);
+    color: var(--yellow-800);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-color-secondary);
+
+    p {
+      margin: 0.25rem 0;
+    }
+
+    .empty-state-hint {
+      font-size: 0.875rem;
+    }
+  }
+
+  .tags-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+
+      i {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}

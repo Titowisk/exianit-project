@@ -93,6 +93,12 @@ export class HeaderComponent {
       routerLink: '/source-statement',
     },
     {
+      label: 'Tags',
+      icon: 'pi pi-tag',
+      command: () => this.navigateTo('/tags'),
+      routerLink: '/tags',
+    },
+    {
       label: 'Profile',
       icon: 'pi pi-user',
       command: () => this.navigateTo('/dashboard'),

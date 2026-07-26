@@ -1,0 +1,95 @@
+<div class="tags-container">
+  <div class="form-section">
+    <div class="card">
+      <h2>Create Tag</h2>
+
+      @if (isAtLimit()) {
+        <div class="limit-notice">
+          <i class="pi pi-info-circle"></i>
+          You have reached the maximum of 15 tags.
+        </div>
+      }
+
+      <form [formGroup]="tagForm" (ngSubmit)="onSubmit()">
+        <div class="form-field">
+          <label for="name">Tag Name</label>
+          <input
+            pInputText
+            id="name"
+            formControlName="name"
+            placeholder="e.g. Groceries"
+            maxlength="30"
+            [class.ng-invalid]="hasError('name', 'required') || hasError('name', 'maxlength')"
+            [class.ng-dirty]="name?.dirty || name?.touched"
+          />
+          @if (hasError('name', 'required')) {
+            <small class="error-message">Tag name is required.</small>
+          }
+          @if (hasError('name', 'maxlength')) {
+            <small class="error-message">Tag name must be 30 characters or fewer.</small>
+          }
+          @if (getBackendErrors('name').length > 0) {
+            @for (error of getBackendErrors('name'); track error) {
+              <small class="error-message">{{ error }}</small>
+            }
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="color">Color</label>
+          <div class="color-field">
+            <input
+              type="color"
+              id="color"
+              formControlName="color"
+              class="color-input"
+            />
+            <span class="color-value">{{ color?.value }}</span>
+          </div>
+          @if (getBackendErrors('color').length > 0) {
+            @for (error of getBackendErrors('color'); track error) {
+              <small class="error-message">{{ error }}</small>
+            }
+          }
+        </div>
+
+        <p-button
+          type="submit"
+          label="Create Tag"
+          icon="pi pi-plus"
+          [loading]="isCreating()"
+          [disabled]="isCreating() || isAtLimit()"
+        />
+      </form>
+    </div>
+  </div>
+
+  <div class="list-section">
+    <div class="card">
+      <h2>Your Tags <span class="tag-count">{{ tags().length }} / 15</span></h2>
+
+      @if (isLoading()) {
+        <div class="loading-container">
+          <p-progressSpinner />
+        </div>
+      } @else if (tags().length === 0) {
+        <div class="empty-state">
+          <p>No tags created yet.</p>
+          <p class="empty-state-hint">Use the form to create your first tag.</p>
+        </div>
+      } @else {
+        <div class="tags-grid">
+          @for (tag of tags(); track tag.id) {
+            <div
+              class="tag-chip"
+              [style.background-color]="tag.color"
+            >
+              <i class="pi pi-tag"></i>
+              <span>{{ tag.name }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

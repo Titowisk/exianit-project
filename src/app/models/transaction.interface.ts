@@ -1,4 +1,5 @@
 import { Category } from "./enums/category.enum";
+import { Tag } from "./tag.interface";
 
 export interface TransactionSourceAccount {
     name: string;
@@ -14,6 +15,7 @@ export interface IncomeTransaction {
     category: Category;
     description?: string;
     sourceAccount?: TransactionSourceAccount;
+    tag?: Tag | null;
 }
 
 export interface ExpenseTransaction {
@@ -25,6 +27,7 @@ export interface ExpenseTransaction {
     category: Category;
     description?: string;
     sourceAccount?: TransactionSourceAccount;
+    tag?: Tag | null;
 }
 
 export type Transaction = IncomeTransaction | ExpenseTransaction;
