@@ -24,6 +24,16 @@ export class TagService {
     return this.http.post<Tag>(`${this.apiUrl}/tags?userId=${userId}`, { name, color });
   }
 
+  updateTag(tagId: string, changes: { name?: string; color?: string }): Observable<Tag> {
+    const userId = this.authService.userId();
+    return this.http.patch<Tag>(`${this.apiUrl}/tags/${tagId}?userId=${userId}`, changes);
+  }
+
+  deleteTag(tagId: string): Observable<void> {
+    const userId = this.authService.userId();
+    return this.http.delete<void>(`${this.apiUrl}/tags/${tagId}?userId=${userId}`);
+  }
+
   tagTransaction(transactionId: string, tagId: string | null): Observable<void> {
     const userId = this.authService.userId();
     return this.http.patch<void>(

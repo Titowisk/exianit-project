@@ -156,6 +156,73 @@ In `src/app/header/header.component.ts`, add to the `navItems` signal:
 
 ---
 
+## Step 4 — Tag Edit & Delete in Tags Page
+
+Extends the Tags management page so users can rename, recolor, and delete their existing tags inline — no separate page or dialog required.
+
+### 4.1 — Add methods to `TagService`
+
+In `src/app/services/tag.service.ts`, add two new methods:
+
+```ts
+updateTag(tagId: string, changes: { name?: string; color?: string }): Observable<Tag> {
+  const userId = this.authService.userId();
+  return this.http.patch<Tag>(`${this.apiUrl}/tags/${tagId}?userId=${userId}`, changes);
+}
+
+deleteTag(tagId: string): Observable<void> {
+  const userId = this.authService.userId();
+  return this.http.delete<void>(`${this.apiUrl}/tags/${tagId}?userId=${userId}`);
+}
+```
+
+### 4.2 — Update `TagsComponent` signals and methods
+
+Add the following signals to track edit/delete state:
+
+```ts
+editingTagId = signal<string | null>(null);
+isSavingTag = signal(false);
+isDeletingTagId = signal<string | null>(null);
+editBackendErrors = signal<Record<string, string[]>>({});
+editForm: FormGroup;  // initialized in constructor
+```
+
+Initialize `editForm` in the constructor (same validators as `tagForm`):
+```ts
+this.editForm = this.fb.group({
+  name: ['', [Validators.required, Validators.maxLength(30)]],
+  color: ['#4CAF50', [Validators.required]]
+});
+```
+
+Methods to add:
+
+- **`startEditing(tag: Tag)`** — sets `editingTagId` to `tag.id`; patches `editForm` with `{ name: tag.name, color: tag.color }`; resets `editBackendErrors`.
+- **`cancelEditing()`** — clears `editingTagId` and resets `editForm`.
+- **`saveEdit(tag: Tag)`** — validates `editForm`; calls `TagService.updateTag(tag.id, { name, color })`; on success: updates the entry in `tags` signal and calls `cancelEditing()`; on error: populates `editBackendErrors` from the API response via `ErrorHandlerService`.
+- **`deleteTag(tag: Tag)`** — sets `isDeletingTagId` to `tag.id`; calls `TagService.deleteTag(tag.id)`; on success: removes the tag from `tags` signal and shows a success toast; on error: shows an error toast; always clears `isDeletingTagId`.
+
+### 4.3 — Update `TagsComponent` template
+
+In the `tags-grid` section, replace each static `tag-chip` with a conditional block:
+
+**Normal mode** (when `editingTagId() !== tag.id`):
+- Render the existing colored chip (color swatch + tag name).
+- Add an **Edit** icon button (`pi pi-pencil`, `p-button` text/icon variant) → `startEditing(tag)`.
+- Add a **Delete** icon button (`pi pi-trash`, `p-button` text/icon variant, severity `danger`) → `deleteTag(tag)`. Show a spinner via `[loading]="isDeletingTagId() === tag.id"`.
+
+**Edit mode** (when `editingTagId() === tag.id`):
+- Replace the chip with an inline edit row containing:
+  - `pInputText` bound to `editForm.get('name')`, max 30 chars. Show validation/backend errors below (same pattern as create form).
+  - `<input type="color">` bound to `editForm.get('color')`, with the hex value displayed alongside.
+  - **Save** button (`pi pi-check`) → `saveEdit(tag)`, `[loading]="isSavingTag()"`.
+  - **Cancel** button (`pi pi-times`) → `cancelEditing()`, `[disabled]="isSavingTag()"`.
+- Only one tag can be in edit mode at a time (enforced by the single `editingTagId` signal).
+- Disable the delete buttons of all other tags while one is being edited or deleted.
+
+---
+
 ## Implementation Order
 
 1. `Tag` interface + update `Transaction` interface
@@ -163,3 +230,4 @@ In `src/app/header/header.component.ts`, add to the `navItems` signal:
 3. `TagsComponent` + route + header `userItems` entry
 4. Statement tag actions (Step 2)
 5. `TaggedSummaryComponent` + route + header `navItems` entry
+6. Tag edit & delete in Tags page (Step 4)

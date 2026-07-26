@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { Tooltip } from 'primeng/tooltip';
 import { TagService } from '../../services/tag.service';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 import { Tag } from '../../models/tag.interface';
@@ -13,7 +14,7 @@ const MAX_TAGS = 15;
 
 @Component({
   selector: 'app-tags',
-  imports: [CommonModule, ReactiveFormsModule, InputText, Button, ProgressSpinner],
+  imports: [CommonModule, ReactiveFormsModule, InputText, Button, ProgressSpinner, Tooltip],
   templateUrl: './tags.component.html',
   styleUrl: './tags.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -28,10 +29,15 @@ export class TagsComponent {
   isLoading = signal(false);
   isCreating = signal(false);
   backendErrors = signal<Record<string, string[]>>({});
+  editingTagId = signal<string | null>(null);
+  isSavingTag = signal(false);
+  isDeletingTagId = signal<string | null>(null);
+  editBackendErrors = signal<Record<string, string[]>>({});
 
   isAtLimit = computed(() => this.tags().length >= MAX_TAGS);
 
   tagForm: FormGroup;
+  editForm: FormGroup;
 
   constructor() {
     this.tagForm = this.fb.group({
@@ -50,6 +56,11 @@ export class TagsComponent {
       this.backendErrors.set(clearedErrors);
     });
 
+    this.editForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(30)]],
+      color: ['#4CAF50', [Validators.required]]
+    });
+
     this.loadTags();
   }
 
@@ -63,6 +74,82 @@ export class TagsComponent {
 
   getBackendErrors(field: string): string[] {
     return this.backendErrors()[field] || [];
+  }
+
+  editHasError(controlName: string, errorName: string): boolean {
+    const control = this.editForm.get(controlName);
+    return !!(control && control.hasError(errorName) && (control.dirty || control.touched));
+  }
+
+  getEditBackendErrors(field: string): string[] {
+    return this.editBackendErrors()[field] || [];
+  }
+
+  startEditing(tag: Tag): void {
+    this.editingTagId.set(tag.id);
+    this.editForm.reset({ name: tag.name, color: tag.color });
+    this.editBackendErrors.set({});
+  }
+
+  cancelEditing(): void {
+    this.editingTagId.set(null);
+    this.editForm.reset();
+  }
+
+  saveEdit(tag: Tag): void {
+    if (this.editForm.invalid) {
+      this.editForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSavingTag.set(true);
+    this.editBackendErrors.set({});
+
+    const { name, color } = this.editForm.value;
+
+    this.tagService.updateTag(tag.id, { name: name.trim(), color }).subscribe({
+      next: (updated) => {
+        this.isSavingTag.set(false);
+        this.tags.update(tags => tags.map(t => t.id === updated.id ? updated : t));
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Tag Updated',
+          detail: `Tag "${updated.name}" updated successfully!`,
+          life: 3000
+        });
+        this.cancelEditing();
+      },
+      error: (error) => {
+        this.isSavingTag.set(false);
+        const fieldErrors = this.errorHandler.getFieldErrors(error);
+        if (Object.keys(fieldErrors).length > 0) {
+          this.editBackendErrors.set(fieldErrors);
+        } else {
+          this.errorHandler.showErrorToast(error, 'Error Updating Tag', 'Failed to update tag.');
+        }
+      }
+    });
+  }
+
+  deleteTag(tag: Tag): void {
+    this.isDeletingTagId.set(tag.id);
+
+    this.tagService.deleteTag(tag.id).subscribe({
+      next: () => {
+        this.isDeletingTagId.set(null);
+        this.tags.update(tags => tags.filter(t => t.id !== tag.id));
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Tag Deleted',
+          detail: `Tag "${tag.name}" deleted.`,
+          life: 3000
+        });
+      },
+      error: (error) => {
+        this.isDeletingTagId.set(null);
+        this.errorHandler.showErrorToast(error, 'Error Deleting Tag', 'Failed to delete tag.');
+      }
+    });
   }
 
   loadTags(): void {

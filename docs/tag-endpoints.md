@@ -34,6 +34,63 @@ Authorization: Bearer {{token}}
 
 ---
 
+## Update Tag
+`PATCH /api/tags/{tagId}?userId={{userId}}`
+
+Updates a tag's name and/or color. Both fields are optional — send only the fields you want to change.
+
+```http
+PATCH {{ExianitApi_HostAddress}}/api/tags/{{tagId}}?userId={{userId}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Mercado",
+  "color": "#4CAF50"
+}
+```
+
+### Response — 200 OK
+```json
+{
+  "id": "ec34bc5c-a8df-4a5c-8304-efe3b70722c2",
+  "name": "Mercado",
+  "color": "#4CAF50"
+}
+```
+
+### Error responses
+| Status | Reason |
+|--------|--------|
+| 400 | Name contains invalid characters or exceeds 30 chars |
+| 400 | Color is not a valid hex color |
+| 404 | Tag not found |
+| 409 | Tag with that name already exists for the user |
+| 401 | Tag does not belong to the user |
+
+---
+
+## Delete Tag
+`DELETE /api/tags/{tagId}?userId={{userId}}`
+
+Deletes a tag. Transactions that had this tag assigned will have their `tag` field set to `null` — they are not deleted.
+Associated tag rules are also removed.
+
+```http
+DELETE {{ExianitApi_HostAddress}}/api/tags/{{tagId}}?userId={{userId}}
+Authorization: Bearer {{token}}
+```
+
+### Response — 204 No Content
+
+### Error responses
+| Status | Reason |
+|--------|--------|
+| 404 | Tag not found |
+| 401 | Tag does not belong to the user |
+
+---
+
 ## Get User Tags
 `GET /api/tags?userId={{userId}}`
 

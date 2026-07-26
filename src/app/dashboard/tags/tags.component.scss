@@ -117,6 +117,16 @@
     flex-wrap: wrap;
     gap: 0.75rem;
 
+    .tag-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+
+      &.editing {
+        width: 100%;
+      }
+    }
+
     .tag-chip {
       display: inline-flex;
       align-items: center;
@@ -129,6 +139,63 @@
 
       i {
         font-size: 0.8rem;
+      }
+    }
+
+    .tag-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .tag-edit-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+
+      .edit-fields {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+
+        .form-field {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .color-field {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+
+          .color-input {
+            width: 48px;
+            height: 40px;
+            border: 1px solid var(--surface-border);
+            border-radius: 6px;
+            padding: 2px;
+            cursor: pointer;
+            background: none;
+          }
+
+          .color-value {
+            font-size: 0.9rem;
+            color: var(--text-color-secondary);
+            font-family: monospace;
+          }
+        }
+      }
+
+      .edit-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .error-message {
+        color: var(--red-500);
+        font-size: 0.875rem;
       }
     }
   }
