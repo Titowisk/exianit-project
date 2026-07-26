@@ -1,11 +1,12 @@
 import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { Tooltip } from 'primeng/tooltip';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 import { TagService } from '../../services/tag.service';
 import { ErrorHandlerService } from '../../services/error-handler.service';
 import { Tag } from '../../models/tag.interface';
@@ -14,7 +15,7 @@ const MAX_TAGS = 15;
 
 @Component({
   selector: 'app-tags',
-  imports: [CommonModule, ReactiveFormsModule, InputText, Button, ProgressSpinner, Tooltip],
+  imports: [CommonModule, ReactiveFormsModule, InputText, Button, ProgressSpinner, Tooltip, ConfirmDialog],
   templateUrl: './tags.component.html',
   styleUrl: './tags.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,6 +24,7 @@ export class TagsComponent {
   private fb = inject(FormBuilder);
   private tagService = inject(TagService);
   private messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
   private errorHandler = inject(ErrorHandlerService);
 
   tags = signal<Tag[]>([]);
@@ -132,6 +134,18 @@ export class TagsComponent {
   }
 
   deleteTag(tag: Tag): void {
+    this.confirmationService.confirm({
+      message: `Deleting "${tag.name}" is irreversible. Transactions that had this tag will become untagged.`,
+      header: 'Delete Tag',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      acceptButtonStyleClass: 'p-button-danger',
+      accept: () => this.performDeleteTag(tag)
+    });
+  }
+
+  private performDeleteTag(tag: Tag): void {
     this.isDeletingTagId.set(tag.id);
 
     this.tagService.deleteTag(tag.id).subscribe({
