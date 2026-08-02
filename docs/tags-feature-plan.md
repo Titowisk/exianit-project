@@ -223,6 +223,105 @@ In the `tags-grid` section, replace each static `tag-chip` with a conditional bl
 
 ---
 
+---
+
+## Step 5 — Refactor Tagged Summary to Use Dedicated API Endpoints
+
+Replace the frontend calculation logic in `TaggedSummaryComponent` with two dedicated backend endpoints that return pre-aggregated data. The page will display two separate tables: one for tagged expenses and one for tagged incomes.
+
+### 5.1 — Create `TaggedSummaryResponse` interface
+
+Create `src/app/models/tagged-summary.interface.ts`:
+
+```ts
+import { Tag } from './tag.interface';
+
+export interface TaggedSummaryMonth {
+  month: string;
+  tagAmounts: Record<string, number>;
+  total: number;
+}
+
+export interface TaggedSummaryAggregates {
+  tagAmounts: Record<string, number>;
+  total: number;
+}
+
+export interface TaggedSummaryResponse {
+  tags: Tag[];
+  months: TaggedSummaryMonth[];
+  totals: TaggedSummaryAggregates;
+  averages: TaggedSummaryAggregates;
+}
+```
+
+### 5.2 — Add methods to `TagService`
+
+In `src/app/services/tag.service.ts`, add two new methods:
+
+```ts
+getTaggedExpenseSummary(year: number): Observable<TaggedSummaryResponse> {
+  const userId = this.authService.userId();
+  return this.http.get<TaggedSummaryResponse>(
+    `${this.apiUrl}/transactions/tagged-expense-summary?userId=${userId}&year=${year}`
+  );
+}
+
+getTaggedIncomeSummary(year: number): Observable<TaggedSummaryResponse> {
+  const userId = this.authService.userId();
+  return this.http.get<TaggedSummaryResponse>(
+    `${this.apiUrl}/transactions/tagged-income-summary?userId=${userId}&year=${year}`
+  );
+}
+```
+
+### 5.3 — Rewrite `TaggedSummaryComponent` TS
+
+**Remove:**
+- `TransactionService` injection and its import
+- `buildSummary()` and all local calculation logic
+- `MONTH_NAMES` constant and the local `TaggedMonthRow` / `TaggedSummaryAggregates` interfaces
+- `userTags`, `monthRows`, `averages`, `totals` signals
+
+**Add:**
+```ts
+expenseSummary = signal<TaggedSummaryResponse | null>(null);
+incomeSummary = signal<TaggedSummaryResponse | null>(null);
+```
+
+In `loadData(year)`, replace the `forkJoin` call with:
+```ts
+forkJoin({
+  expenses: this.tagService.getTaggedExpenseSummary(year),
+  incomes: this.tagService.getTaggedIncomeSummary(year)
+}).subscribe({
+  next: ({ expenses, incomes }) => {
+    this.expenseSummary.set(expenses);
+    this.incomeSummary.set(incomes);
+    this.isLoading.set(false);
+  },
+  error: ...
+});
+```
+
+### 5.4 — Rewrite `TaggedSummaryComponent` template
+
+Replace the single `p-table` block with two sections. Each section follows the same `p-table` structure — only the data source differs.
+
+**Shared table structure** (applied to both sections):
+- **Header row:** Month column + one `<th>` per `tag` in `summary.tags` (background-color = `tag.color`, white text) + Total column.
+- **Body row:** month name + `row.tagAmounts[tag.id]` per tag + `row.total`, all currency-formatted.
+- **Footer:** Averages row from `summary.averages.tagAmounts[tag.id]` / `.total`, then Totals row from `summary.totals.tagAmounts[tag.id]` / `.total`.
+- Columns generated with `@for (tag of summary.tags; track tag.id)`.
+
+**Page layout:**
+- One `isLoading` spinner covers both fetches.
+- After loading, show two stacked subsections, each with its own `<h2>` title and `p-table`:
+  - **"Tagged Expenses"** — sourced from `expenseSummary()`. Show empty-state ("No tagged expense transactions for this year.") when `expenseSummary()?.months.length === 0`.
+  - **"Tagged Incomes"** — sourced from `incomeSummary()`. Show empty-state ("No tagged income transactions for this year.") when `incomeSummary()?.months.length === 0`.
+
+---
+
 ## Implementation Order
 
 1. `Tag` interface + update `Transaction` interface
@@ -231,3 +330,4 @@ In the `tags-grid` section, replace each static `tag-chip` with a conditional bl
 4. Statement tag actions (Step 2)
 5. `TaggedSummaryComponent` + route + header `navItems` entry
 6. Tag edit & delete in Tags page (Step 4)
+7. Refactor Tagged Summary to use API endpoints (Step 5)

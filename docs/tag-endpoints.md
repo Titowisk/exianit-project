@@ -185,6 +185,81 @@ Authorization: Bearer {{token}}
 
 ---
 
+## Get Tagged Income Summary
+`GET /api/transactions/tagged-income-summary?userId={{userId}}&year={{year}}`
+
+Returns a 12-month breakdown of income transactions grouped by tag. Only tags that appear on at least one income transaction in the requested year are included as columns. Returns empty arrays when there is no data.
+
+```http
+GET {{ExianitApi_HostAddress}}/api/transactions/tagged-income-summary?userId={{userId}}&year=2025
+Authorization: Bearer {{token}}
+```
+
+### Response — 200 OK (with data)
+```json
+{
+  "tags": [
+    { "id": "uuid-1", "name": "Work Bonus", "color": "#4CAF50" }
+  ],
+  "months": [
+    { "month": "January",  "tagAmounts": { "uuid-1": 500.00 }, "total": 500.00 },
+    { "month": "February", "tagAmounts": { "uuid-1": 0.00   }, "total": 0.00   }
+  ],
+  "totals":   { "tagAmounts": { "uuid-1": 6000.00 }, "total": 6000.00 },
+  "averages": { "tagAmounts": { "uuid-1": 500.00  }, "total": 500.00  }
+}
+```
+
+### Response — 200 OK (no tagged income transactions)
+```json
+{ "tags": [], "months": [], "totals": { "tagAmounts": {}, "total": 0 }, "averages": { "tagAmounts": {}, "total": 0 } }
+```
+
+- **`tags`** — only tags used on income transactions that year; empty if none.
+- **`months`** — always 12 entries when there is data; empty array otherwise.
+- **`tagAmounts`** — keyed by tag `id`; zero for months where the tag was not used.
+- **`totals`** / **`averages`** — column totals and averages (`total / 12`, rounded to 2 decimals).
+
+---
+
+## Get Tagged Expense Summary
+`GET /api/transactions/tagged-expense-summary?userId={{userId}}&year={{year}}`
+
+Returns a 12-month breakdown of expense transactions grouped by tag. Only tags that appear on at least one expense transaction in the requested year are included as columns. Returns empty arrays when there is no data.
+
+```http
+GET {{ExianitApi_HostAddress}}/api/transactions/tagged-expense-summary?userId={{userId}}&year=2025
+Authorization: Bearer {{token}}
+```
+
+### Response — 200 OK (with data)
+```json
+{
+  "tags": [
+    { "id": "uuid-2", "name": "Groceries", "color": "#4CAF50" },
+    { "id": "uuid-3", "name": "Reimbursable", "color": "#2196F3" }
+  ],
+  "months": [
+    { "month": "January",  "tagAmounts": { "uuid-2": 320.00, "uuid-3": 80.00 }, "total": 400.00 },
+    { "month": "February", "tagAmounts": { "uuid-2": 290.00, "uuid-3": 0.00  }, "total": 290.00 }
+  ],
+  "totals":   { "tagAmounts": { "uuid-2": 3840.00, "uuid-3": 480.00 }, "total": 4320.00 },
+  "averages": { "tagAmounts": { "uuid-2": 320.00,  "uuid-3": 40.00  }, "total": 360.00  }
+}
+```
+
+### Response — 200 OK (no tagged expense transactions)
+```json
+{ "tags": [], "months": [], "totals": { "tagAmounts": {}, "total": 0 }, "averages": { "tagAmounts": {}, "total": 0 } }
+```
+
+- **`tags`** — only tags used on expense transactions that year; empty if none.
+- **`months`** — always 12 entries when there is data; empty array otherwise.
+- **`tagAmounts`** — keyed by tag `id`; zero for months where the tag was not used.
+- **`totals`** / **`averages`** — column totals and averages (`total / 12`, rounded to 2 decimals).
+
+---
+
 ## Get Transactions (updated)
 `GET /api/transactions?userId={{userId}}&year={{year}}`
 
