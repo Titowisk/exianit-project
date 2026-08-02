@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tag } from '../models/tag.interface';
+import { TaggedSummaryResponse } from '../models/tagged-summary.interface';
 import { AuthService } from './auth.service';
 import { APP_CONFIG } from '../models/app-config.interface';
 
@@ -32,6 +33,20 @@ export class TagService {
   deleteTag(tagId: string): Observable<void> {
     const userId = this.authService.userId();
     return this.http.delete<void>(`${this.apiUrl}/tags/${tagId}?userId=${userId}`);
+  }
+
+  getTaggedExpenseSummary(year: number): Observable<TaggedSummaryResponse> {
+    const userId = this.authService.userId();
+    return this.http.get<TaggedSummaryResponse>(
+      `${this.apiUrl}/transactions/tagged-expense-summary?userId=${userId}&year=${year}`
+    );
+  }
+
+  getTaggedIncomeSummary(year: number): Observable<TaggedSummaryResponse> {
+    const userId = this.authService.userId();
+    return this.http.get<TaggedSummaryResponse>(
+      `${this.apiUrl}/transactions/tagged-income-summary?userId=${userId}&year=${year}`
+    );
   }
 
   tagTransaction(transactionId: string, tagId: string | null): Observable<void> {
