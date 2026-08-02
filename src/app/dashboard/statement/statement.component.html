@@ -28,6 +28,7 @@
             <th pSortableColumn="date">Date <p-sortIcon field="date" /></th>
             <th>Category</th>
             <th>Description</th>
+            <th>Tag</th>
             <th>Actions</th>
           </tr>
           <tr>
@@ -75,6 +76,15 @@
                 field="description"
                 placeholder="Search by description"
                 ariaLabel="Filter Description"
+                filterOn="input"
+              ></p-column-filter>
+            </th>
+            <th>
+              <p-column-filter
+                type="text"
+                field="tag.name"
+                placeholder="Search by tag"
+                ariaLabel="Filter Tag"
                 filterOn="input"
               ></p-column-filter>
             </th>
@@ -134,6 +144,25 @@
               >{{ truncateText(transaction.description) || 'N/A' }}</span>
             </td>
             <td>
+              @if (taggingId() === transaction.id) {
+                <p-select
+                  [options]="getTagOptions()"
+                  optionLabel="label"
+                  optionValue="value"
+                  [ngModel]="selectedTagId()"
+                  (ngModelChange)="selectedTagId.set($event)"
+                  placeholder="Select tag"
+                />
+              } @else if (transaction.tag) {
+                <span
+                  class="tag-badge"
+                  [style.background-color]="transaction.tag.color"
+                >{{ transaction.tag.name }}</span>
+              } @else {
+                <span>—</span>
+              }
+            </td>
+            <td>
               @if (categorizingId() === transaction.id) {
                 <p-button 
                   label="This Transaction" 
@@ -160,6 +189,33 @@
                   severity="secondary" 
                   size="small" 
                   [disabled]="savingId() !== null"
+                />
+              } @else if (taggingId() === transaction.id) {
+                <p-button 
+                  label="This Transaction" 
+                  icon="pi pi-check"
+                  (onClick)="saveTag(transaction)" 
+                  severity="success" 
+                  size="small" 
+                  [loading]="savingTagId() === transaction.id"
+                  [disabled]="savingTagId() !== null"
+                />
+                <p-button 
+                  label="Similar Transactions" 
+                  icon="pi pi-copy"
+                  (onClick)="saveSimilarOriginTag(transaction)" 
+                  severity="success" 
+                  size="small" 
+                  [loading]="savingTagId() === transaction.id"
+                  [disabled]="savingTagId() !== null"
+                />
+                <p-button 
+                  label="Cancel" 
+                  icon="pi pi-times"
+                  (onClick)="cancelTagging()" 
+                  severity="secondary" 
+                  size="small" 
+                  [disabled]="savingTagId() !== null"
                 />
               } @else {
                 <p-button 
@@ -192,6 +248,16 @@
                   [rounded]="true"
                   [text]="true"
                   pTooltip="Update Category"
+                  tooltipPosition="top"
+                />
+                <p-button 
+                  icon="pi pi-tag" 
+                  (onClick)="startTagging(transaction)"
+                  severity="secondary" 
+                  size="small"
+                  [rounded]="true"
+                  [text]="true"
+                  pTooltip="Tag Transaction"
                   tooltipPosition="top"
                 />
                 <p-button 

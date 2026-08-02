@@ -2,13 +2,10 @@
 
 ## Bugs
 
-
 ## 0.1 Tasks
-- [ ] Add tags visualization page
-- [ ] Add a way to check, in the source statements page, what are the missing months I need to import to complete the whole year.
-   - maybe change the page to show a table where source accounts are rows and months are columns, and the cells are colored based on wheter the statement was imported or not, and also show the number of transactions in each cell. Clicking on the cell would open the modal to import the statement for that month and source account.
+- [ ] Tag calculations must be done by the backend, not the frontend. Backend must provide endpoints for that.
+- [ ] Add tag deletion and edition features. Backend must provide endpoints for that.
 - [ ] Remember to refactor transaction creation to make it easier to fetch the sourceAccountId when backend provides it in the response
-  
 
 ## 0.2 Tasks
 - [ ] In Imports Page, display the last imported file name to make it easier for users to identify which statement they imported for each month and source account.
@@ -24,6 +21,8 @@
 - [ ] Configure ArgoCD to track a repository with manifests and deploy to Kubernetes cluster. (where ?)
 
 ## Completed
+- [X] Add tags visualization page
+- [X] Add a way to check, in the source statements page, what are the missing months I need to import to complete the whole year.
 - [X] Use environment variables for API URL and other configuration
 - [X] When user tries to edit a transaction, the date picker is not shown properly. It is cut off and sometimes the user can't select the date it wants.
 - [X] Editing date from 2025-02-03 to 2025-03-04, actually saves to 2025-03-03 (one day less) values

@@ -1,0 +1,166 @@
+<p-confirmDialog />
+<div class="tags-container">
+  <div class="form-section">
+    <div class="card">
+      <h2>Create Tag</h2>
+
+      @if (isAtLimit()) {
+        <div class="limit-notice">
+          <i class="pi pi-info-circle"></i>
+          You have reached the maximum of 15 tags.
+        </div>
+      }
+
+      <form [formGroup]="tagForm" (ngSubmit)="onSubmit()">
+        <div class="form-field">
+          <label for="name">Tag Name</label>
+          <input
+            pInputText
+            id="name"
+            formControlName="name"
+            placeholder="e.g. Groceries"
+            maxlength="30"
+            [class.ng-invalid]="hasError('name', 'required') || hasError('name', 'maxlength')"
+            [class.ng-dirty]="name?.dirty || name?.touched"
+          />
+          @if (hasError('name', 'required')) {
+            <small class="error-message">Tag name is required.</small>
+          }
+          @if (hasError('name', 'maxlength')) {
+            <small class="error-message">Tag name must be 30 characters or fewer.</small>
+          }
+          @if (getBackendErrors('name').length > 0) {
+            @for (error of getBackendErrors('name'); track error) {
+              <small class="error-message">{{ error }}</small>
+            }
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="color">Color</label>
+          <div class="color-field">
+            <input
+              type="color"
+              id="color"
+              formControlName="color"
+              class="color-input"
+            />
+            <span class="color-value">{{ color?.value }}</span>
+          </div>
+          @if (getBackendErrors('color').length > 0) {
+            @for (error of getBackendErrors('color'); track error) {
+              <small class="error-message">{{ error }}</small>
+            }
+          }
+        </div>
+
+        <p-button
+          type="submit"
+          label="Create Tag"
+          icon="pi pi-plus"
+          [loading]="isCreating()"
+          [disabled]="isCreating() || isAtLimit()"
+        />
+      </form>
+    </div>
+  </div>
+
+  <div class="list-section">
+    <div class="card">
+      <h2>Your Tags <span class="tag-count">{{ tags().length }} / 15</span></h2>
+
+      @if (isLoading()) {
+        <div class="loading-container">
+          <p-progressSpinner />
+        </div>
+      } @else if (tags().length === 0) {
+        <div class="empty-state">
+          <p>No tags created yet.</p>
+          <p class="empty-state-hint">Use the form to create your first tag.</p>
+        </div>
+      } @else {
+        <div class="tags-grid">
+          @for (tag of tags(); track tag.id) {
+            <div class="tag-item" [class.editing]="editingTagId() === tag.id">
+              @if (editingTagId() !== tag.id) {
+                <div class="tag-chip" [style.background-color]="tag.color">
+                  <i class="pi pi-tag"></i>
+                  <span>{{ tag.name }}</span>
+                </div>
+                <div class="tag-actions">
+                  <p-button
+                    icon="pi pi-pencil"
+                    [text]="true"
+                    size="small"
+                    pTooltip="Edit tag"
+                    [disabled]="!!editingTagId() || !!isDeletingTagId()"
+                    (onClick)="startEditing(tag)"
+                  />
+                  <p-button
+                    icon="pi pi-trash"
+                    [text]="true"
+                    size="small"
+                    severity="danger"
+                    pTooltip="Delete tag"
+                    [loading]="isDeletingTagId() === tag.id"
+                    [disabled]="!!editingTagId() || (!!isDeletingTagId() && isDeletingTagId() !== tag.id)"
+                    (onClick)="deleteTag(tag)"
+                  />
+                </div>
+              } @else {
+                <form [formGroup]="editForm" (ngSubmit)="saveEdit(tag)" class="tag-edit-form">
+                  <div class="edit-fields">
+                    <div class="form-field">
+                      <input
+                        pInputText
+                        formControlName="name"
+                        placeholder="Tag name"
+                        maxlength="30"
+                        [class.ng-invalid]="editHasError('name', 'required') || editHasError('name', 'maxlength')"
+                        [class.ng-dirty]="editForm.get('name')?.dirty || editForm.get('name')?.touched"
+                      />
+                      @if (editHasError('name', 'required')) {
+                        <small class="error-message">Tag name is required.</small>
+                      }
+                      @if (editHasError('name', 'maxlength')) {
+                        <small class="error-message">Tag name must be 30 characters or fewer.</small>
+                      }
+                      @for (error of getEditBackendErrors('name'); track error) {
+                        <small class="error-message">{{ error }}</small>
+                      }
+                    </div>
+                    <div class="color-field">
+                      <input type="color" formControlName="color" class="color-input" />
+                      <span class="color-value">{{ editForm.get('color')?.value }}</span>
+                    </div>
+                    @for (error of getEditBackendErrors('color'); track error) {
+                      <small class="error-message">{{ error }}</small>
+                    }
+                  </div>
+                  <div class="edit-actions">
+                    <p-button
+                      type="submit"
+                      icon="pi pi-check"
+                      label="Save"
+                      size="small"
+                      [loading]="isSavingTag()"
+                    />
+                    <p-button
+                      type="button"
+                      icon="pi pi-times"
+                      label="Cancel"
+                      size="small"
+                      [text]="true"
+                      [disabled]="isSavingTag()"
+                      (onClick)="cancelEditing()"
+                    />
+                  </div>
+                </form>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -12,7 +12,7 @@ import { provideRouter, withHashLocation } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { routes } from './app.routes';
 import { authInterceptor } from './services/auth.interceptor';
@@ -37,6 +37,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(withInterceptors([authInterceptor])),
     MessageService,
+    ConfirmationService,
     { provide: APP_CONFIG, useFactory: () => appConfigData },
     provideAppInitializer(() => {
       const http = inject(HttpClient);

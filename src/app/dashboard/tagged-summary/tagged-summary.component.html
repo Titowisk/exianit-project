@@ -1,0 +1,122 @@
+<div class="dashboard-container">
+  <div class="dashboard-title">
+    <h1>
+      Tagged Summary
+      <span class="year-display">{{ currentYearText() }}</span>
+    </h1>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <p-progressSpinner />
+    </div>
+  } @else {
+    <section class="dashboard-content">
+
+      <div class="summary-section">
+        <h2>Tagged Expenses</h2>
+        @if ((expenseSummary()?.months?.length ?? 0) === 0) {
+          <div class="empty-state">
+            <p>No tagged expense transactions for this year.</p>
+          </div>
+        } @else {
+          <p-table [value]="expenseSummary()!.months">
+            <ng-template #header>
+              <tr [style.font-weight]="'bold'">
+                <th>-</th>
+                @for (tag of expenseSummary()!.tags; track tag.id) {
+                  <th [style.background-color]="tag.color" [style.color]="'white'">{{ tag.name }}</th>
+                }
+                <th>Total</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-row>
+              <tr [style.font-weight]="'bold'">
+                <td>{{ row.month }}</td>
+                @for (tag of expenseSummary()!.tags; track tag.id) {
+                  <td [style.background-color]="tag.color" [style.color]="'white'">
+                    R$ {{ row.tagAmounts[tag.id] | number: '1.2-2' }}
+                  </td>
+                }
+                <td>R$ {{ row.total | number: '1.2-2' }}</td>
+              </tr>
+            </ng-template>
+            <ng-template #footer>
+              <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+                <td>Averages</td>
+                @for (tag of expenseSummary()!.tags; track tag.id) {
+                  <td [style.color]="tag.color">
+                    R$ {{ expenseSummary()!.averages.tagAmounts[tag.id] | number: '1.2-2' }}
+                  </td>
+                }
+                <td>R$ {{ expenseSummary()!.averages.total | number: '1.2-2' }}</td>
+              </tr>
+              <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+                <td>Totals</td>
+                @for (tag of expenseSummary()!.tags; track tag.id) {
+                  <td [style.color]="tag.color">
+                    R$ {{ expenseSummary()!.totals.tagAmounts[tag.id] | number: '1.2-2' }}
+                  </td>
+                }
+                <td>R$ {{ expenseSummary()!.totals.total | number: '1.2-2' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </div>
+
+      <div class="summary-section">
+        <h2>Tagged Incomes</h2>
+        @if ((incomeSummary()?.months?.length ?? 0) === 0) {
+          <div class="empty-state">
+            <p>No tagged income transactions for this year.</p>
+          </div>
+        } @else {
+          <p-table [value]="incomeSummary()!.months">
+            <ng-template #header>
+              <tr [style.font-weight]="'bold'">
+                <th>-</th>
+                @for (tag of incomeSummary()!.tags; track tag.id) {
+                  <th [style.background-color]="tag.color" [style.color]="'white'">{{ tag.name }}</th>
+                }
+                <th>Total</th>
+              </tr>
+            </ng-template>
+            <ng-template #body let-row>
+              <tr [style.font-weight]="'bold'">
+                <td>{{ row.month }}</td>
+                @for (tag of incomeSummary()!.tags; track tag.id) {
+                  <td [style.background-color]="tag.color" [style.color]="'white'">
+                    R$ {{ row.tagAmounts[tag.id] | number: '1.2-2' }}
+                  </td>
+                }
+                <td>R$ {{ row.total | number: '1.2-2' }}</td>
+              </tr>
+            </ng-template>
+            <ng-template #footer>
+              <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+                <td>Averages</td>
+                @for (tag of incomeSummary()!.tags; track tag.id) {
+                  <td [style.color]="tag.color">
+                    R$ {{ incomeSummary()!.averages.tagAmounts[tag.id] | number: '1.2-2' }}
+                  </td>
+                }
+                <td>R$ {{ incomeSummary()!.averages.total | number: '1.2-2' }}</td>
+              </tr>
+              <tr [style.font-weight]="'bold'" [style.font-size.rem]="'1.1'">
+                <td>Totals</td>
+                @for (tag of incomeSummary()!.tags; track tag.id) {
+                  <td [style.color]="tag.color">
+                    R$ {{ incomeSummary()!.totals.tagAmounts[tag.id] | number: '1.2-2' }}
+                  </td>
+                }
+                <td>R$ {{ incomeSummary()!.totals.total | number: '1.2-2' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        }
+      </div>
+
+    </section>
+  }
+</div>

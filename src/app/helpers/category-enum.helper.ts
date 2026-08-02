@@ -17,7 +17,6 @@ export function getCategoryValue(category: Category, type: 'expense' | 'income')
     [Category.Education]: 9,
     [Category.TaxAndTributes]: 10,
     [Category.Investments]: 11,
-    [Category.Vacation]: 12,
     
     // Income categories
     [Category.Salary]: 50,
@@ -25,8 +24,9 @@ export function getCategoryValue(category: Category, type: 'expense' | 'income')
     [Category.TaxReturns]: 52,
     [Category.Bonus]: 53,
     [Category.PaidVacation]: 54,
-
+    
     // Shared categories
+    [Category.Vacation]: 12,
     [Category.Others]: 99,
     [Category.Uncategorized]: 0,
   };

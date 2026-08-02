@@ -65,6 +65,12 @@ export class HeaderComponent {
       routerLink: '/analytics',
     },
     {
+      label: 'Tagged Summary',
+      icon: 'pi pi-tags',
+      command: () => this.navigateTo('/tagged-summary'),
+      routerLink: '/tagged-summary',
+    },
+    {
       label: 'Predictions',
       icon: 'pi pi-calendar-clock',
       command: () => this.navigateTo('/dashboard'),
@@ -91,6 +97,12 @@ export class HeaderComponent {
       icon: 'pi pi-folder-open',
       command: () => this.navigateTo('/source-statement'),
       routerLink: '/source-statement',
+    },
+    {
+      label: 'Tags',
+      icon: 'pi pi-tag',
+      command: () => this.navigateTo('/tags'),
+      routerLink: '/tags',
     },
     {
       label: 'Profile',

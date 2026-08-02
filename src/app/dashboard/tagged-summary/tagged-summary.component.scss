@@ -1,0 +1,34 @@
+@use '../../_variables';
+
+.dashboard-title {
+    margin-bottom: variables.$default-title-margin-bottom;
+}
+
+.dashboard-content {
+    margin-bottom: variables.$default-content-margin-bottom;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.summary-section {
+    margin-bottom: 2.5rem;
+
+    h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+    }
+}
