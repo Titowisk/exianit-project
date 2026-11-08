@@ -17,6 +17,8 @@
         [rows]="10"
         stateStorage="session"
         stateKey="statement-table"
+        (onPage)="onTablePage($event)"
+        (onFilter)="onTableFilter(dt2)"
       >
         <ng-template pTemplate="header">
           <tr>
@@ -257,6 +259,7 @@
                   size="small"
                   [rounded]="true"
                   [text]="true"
+                  [disabled]="isRefreshingTransactions()"
                   pTooltip="Tag Transaction"
                   tooltipPosition="top"
                 />

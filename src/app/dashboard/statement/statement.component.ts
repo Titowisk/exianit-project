@@ -1,10 +1,10 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { afterNextRender, Component, effect, inject, Injector, signal, viewChild } from '@angular/core';
 import { TransactionService } from '../../services/transaction.service';
 import { AuthService } from '../../services/auth.service';
 import { SourceAccountService } from '../../services/source-account.service';
 import { TagService } from '../../services/tag.service';
 import { getCategoryValue, getCategoriesByType } from '../../helpers/category-enum.helper';
-import { TableModule } from 'primeng/table';
+import { Table, TableModule, TablePageEvent } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService, ConfirmationService } from 'primeng/api';
@@ -31,6 +31,10 @@ import { ErrorHandlerService } from '../../services/error-handler.service';
   styleUrl: './statement.component.scss'
 })
 export class StatementComponent {
+  private injector = inject(Injector);
+  private table = viewChild<Table<Transaction>>('dt2');
+  private transactionRequestId = 0;
+  private pendingTableUpdate: { data: Transaction[]; first: number } | null = null;
   private transactionService = inject(TransactionService);
   private authService = inject(AuthService);
   private sourceAccountService = inject(SourceAccountService);
@@ -42,6 +46,7 @@ export class StatementComponent {
 
   transactions = signal<Transaction[]>([]);
   isLoading = signal<boolean>(false);
+  isRefreshingTransactions = signal<boolean>(false);
   categorizingId = signal<string | null>(null);
   editingCategory = signal<string>('');
   savingId = signal<string | null>(null);
@@ -73,7 +78,6 @@ export class StatementComponent {
   isLoadingSourceAccounts = signal<boolean>(false);
 
   constructor() {
-    this.loadTransactions();
     this.loadTags();
     
     // Watch for year changes and reload data
@@ -83,19 +87,87 @@ export class StatementComponent {
     });
   }
 
-  private loadTransactions(): void {
-    this.isLoading.set(true);
+  private loadTransactions(preserveTable = false): void {
+    const backgroundRefresh = preserveTable && !this.isLoading() && !!this.table();
+    const requestId = ++this.transactionRequestId;
+    this.isRefreshingTransactions.set(backgroundRefresh);
+    if (!backgroundRefresh) {
+      this.pendingTableUpdate = null;
+      this.isLoading.set(true);
+    }
     const year = this.yearService.selectedYear().year;
     this.transactionService.getUserTransactionsByYear(year).subscribe({
       next: (data) => {
-        this.transactions.set(data);
+        if (requestId !== this.transactionRequestId || year !== this.yearService.selectedYear().year) return;
+        if (backgroundRefresh) {
+          this.updateTransactionsPreservingPage(data);
+        } else {
+          this.transactions.set(data);
+        }
         this.isLoading.set(false);
+        this.isRefreshingTransactions.set(false);
       },
       error: (error) => {
+        if (requestId !== this.transactionRequestId || year !== this.yearService.selectedYear().year) return;
         this.isLoading.set(false);
+        this.isRefreshingTransactions.set(false);
         this.errorHandler.showErrorToast(error, 'Load Failed', 'Failed to load statements. Please try again.');
       }
     });
+  }
+
+  private updateTransactionsPreservingPage(data: Transaction[]): void {
+    const table = this.table();
+    if (!table) {
+      this.transactions.set(data);
+      return;
+    }
+
+    const pending = { data, first: table.first ?? 0 };
+    this.pendingTableUpdate = pending;
+    this.transactions.set(data);
+
+    afterNextRender(() => {
+      if (this.pendingTableUpdate !== pending) return;
+      if (this.table() === table && this.hasPendingData(table, pending.data)) {
+        const first = this.validTablePage(table, pending.first);
+        if (table.first !== first) {
+          table.onPageChange({ first, rows: table.rows ?? 10 });
+        }
+      }
+      this.pendingTableUpdate = null;
+    }, { injector: this.injector });
+  }
+
+  onTablePage(event: TablePageEvent): void {
+    if (this.pendingTableUpdate) {
+      this.pendingTableUpdate.first = event.first;
+    }
+  }
+
+  onTableFilter(table: Table<Transaction>): void {
+    const pending = this.pendingTableUpdate;
+    if (!pending) return;
+    if (!this.hasPendingData(table, pending.data)) {
+      pending.first = table.first ?? 0;
+      return;
+    }
+    table.first = this.validTablePage(table, pending.first);
+    this.pendingTableUpdate = null;
+    table.saveState();
+  }
+
+  private hasPendingData(table: Table<Transaction>, data: Transaction[]): boolean {
+    const value = table.value;
+    // PrimeNG copies the value array when sorting, but retains the row references.
+    return !!value && value.length === data.length && value.every((row, index) => row === data[index]);
+  }
+
+  private validTablePage(table: Table<Transaction>, first: number): number {
+    const count = table.filteredValue?.length ?? table.value?.length ?? 0;
+    const rows = table.rows ?? 10;
+    const lastPage = count > 0 && rows > 0 ? Math.floor((count - 1) / rows) * rows : 0;
+    return Math.min(first, lastPage);
   }
 
   getCategoryOptions(transaction: Transaction): { label: string; value: string }[] {
@@ -149,14 +221,21 @@ export class StatementComponent {
   }
 
   saveTag(transaction: Transaction): void {
+    const tagId = this.selectedTagId();
+    const year = this.yearService.selectedYear().year;
     this.savingTagId.set(transaction.id);
-    this.tagService.tagTransaction(transaction.id, this.selectedTagId()).subscribe({
+    this.tagService.tagTransaction(transaction.id, tagId).subscribe({
       next: () => {
-        const tagId = this.selectedTagId();
         const tag = tagId ? (this.userTags().find(t => t.id === tagId) ?? null) : null;
-        this.transactions.update(ts =>
-          ts.map(t => t.id === transaction.id ? { ...t, tag } : t)
-        );
+        if (year === this.yearService.selectedYear().year) {
+          if (this.isLoading()) {
+            this.loadTransactions();
+          } else {
+            this.updateTransactionsPreservingPage(
+              this.transactions().map(t => t.id === transaction.id ? { ...t, tag } : t)
+            );
+          }
+        }
         this.savingTagId.set(null);
         this.cancelTagging();
         this.messageService.add({
@@ -185,7 +264,7 @@ export class StatementComponent {
           detail: `${result.updatedCount} transaction(s) from "${transaction.origin}" updated`,
           life: 3000
         });
-        this.loadTransactions();
+        this.loadTransactions(true);
       },
       error: (error) => {
         this.savingTagId.set(null);
